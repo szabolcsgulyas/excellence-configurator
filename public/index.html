@@ -767,7 +767,8 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
       <div><b>Érvényes még</b><span class="cd" id="cd"></span> ${f(v)}-ig. Utána az ár újraszámolódik.</div>
       <div><b>Indulás 1 munkanapon belül</b>Elfogadás után a díjbekérő azonnal megy, a beérkezés másnapján a csapat már tanulhat.</div>
       ${nextTip}<div><b>3 évre 30% kedvezmény</b>Ha 3 évre egy összegben rendeled meg, a díj ${ft(T.net*3*0.7)} nettó a ${ft(T.net*3)} helyett, árgaranciával.</div>
-      <div><b>30 napos pénzvisszafizetési garancia</b>Ha a csapat nem elégedett, egy e-mail, és visszautaljuk a teljes díjat.</div>`;
+      <div><b>30 napos pénzvisszafizetési garancia</b>Ha a csapat nem elégedett, egy e-mail, és visszautaljuk a teljes díjat.</div>
+      <div><b>Árgarancia a hosszabbításra</b>Egy év múlva a mostani áron folytathatod, áremelés esetén is.</div>`;
     const left=Math.max(0,Math.ceil((v-new Date())/864e5));$('#cd').textContent=left+' nap';
     setStatus('Kiküldve',true);$('#cmodal').hidden=true;$('#cdone').hidden=true;$('#customBtn').hidden=false;
   }
@@ -800,7 +801,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
 
     <div class="pg"><div class="grid"></div><div class="num">03</div><h1>Ár</h1><p class="muted">Az árak nettó árak, 27% áfa terheli őket. Az ajánlat ${fmtDate(v)}-ig érvényes.</p>
       <div class="pricebox" style="margin-top:8px"><table>${tableHTML(T)}</table></div>${alt}
-      <h3>Miért érdemes most dönteni</h3><div class="why light"><div><b>Gyors döntési kedvezmény −5%</b>${fmtDate(d7)}-ig elfogadva további ${ft(T.fast)} kedvezmény, így nettó ${ft(T.netFast)}.</div><div><b>Indulás 1 munkanapon belül</b>Az összeg beérkezését követő munkanapon a csapat kezdhet.</div><div><b>30 napos pénzvisszafizetési garancia</b>Minden képzésre: egy e-mail, és visszautaljuk a teljes díjat.</div><div><b>3 évre egy összegben: −30%</b>Árgaranciával, ${ft(T.net*3*0.7)} nettó a ${ft(T.net*3)} helyett.</div></div>${foot(3)}</div>
+      <h3>Miért érdemes most dönteni</h3><div class="why light"><div><b>Gyors döntési kedvezmény −5%</b>${fmtDate(d7)}-ig elfogadva további ${ft(T.fast)} kedvezmény, így nettó ${ft(T.netFast)}.</div><div><b>Indulás 1 munkanapon belül</b>Az összeg beérkezését követő munkanapon a csapat kezdhet.</div><div><b>30 napos pénzvisszafizetési garancia</b>Minden képzésre: egy e-mail, és visszautaljuk a teljes díjat.</div><div><b>3 évre egy összegben: −30%</b>Árgaranciával, ${ft(T.net*3*0.7)} nettó a ${ft(T.net*3)} helyett.</div><div><b>Árgarancia a hosszabbításra</b>Egy év múlva a mostani áron folytathatod, áremelés esetén is.</div></div>${foot(3)}</div>
 
     <div class="pg navy"><div class="grid"></div><div class="num">04</div><h1>Így zajlik, és hogyan dönthetsz</h1>
       <div class="tl5" style="margin-top:18px"><div><i>1</i>Elfogadás az ajánlatoldalon</div><div><i>2</i>Szerződés és díjbekérő azonnal</div><div><i>3</i>Átutalás</div><div><i>4</i>Hozzáférés másnap</div><div><i>5</i>Tanulás 1 évig, tanúsítvánnyal</div></div>
