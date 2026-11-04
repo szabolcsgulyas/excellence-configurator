@@ -373,6 +373,8 @@ body:not(.print) .main>.rail{display:none}
 .busy .spin{display:flex;gap:10px} .busy .spin span{width:16px;height:16px;border-radius:50%;background:var(--accent);animation:bounce 1.1s infinite ease-in-out} .busy .spin span:nth-child(2){animation-delay:.18s;background:var(--brand)} .busy .spin span:nth-child(3){animation-delay:.36s;background:#1aa3a3}
 @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-14px);opacity:1}}
 .bsteps{display:flex;flex-direction:column;gap:6px;text-align:left;font-size:.9rem;color:var(--muted)} .bsteps div{display:flex;gap:8px;align-items:center;opacity:.35;transition:opacity .3s} .bsteps div.on{opacity:1;color:var(--fg)} .bsteps div::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--line-2)} .bsteps div.on::before{background:var(--good)}
+/* ---- Aláírás ---- */
+.sig{display:flex;gap:14px;align-items:center} .sig img{height:30px;width:auto;padding-right:14px;border-right:2px solid #1aa3a3} .sig div{display:flex;flex-direction:column;gap:2px;font-size:.9rem} .sig b{font-family:var(--display);font-size:1rem} .sig a{color:var(--brand-ink);text-decoration:none;font-weight:600} .sig a:hover{text-decoration:underline}
 /* ---- Lábléc ---- */
 .site-foot{background:var(--navy);color:rgba(255,255,255,.8);margin-top:48px;padding:40px 0 28px;font-size:.9rem}
 .site-foot .in{max-width:1160px;margin:0 auto;padding-inline:16px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
@@ -521,7 +523,7 @@ body:not(.print) .main>.rail{display:none}
         <li><b>Résztvevők:</b> kérjük, küldd el a résztvevők nevét és e-mail-címét (válasz e-mailben vagy táblázatban). Ha nincs még meg a lista, ráér a fizetésig.</li>
         <li><b>Indulás:</b> az összeg beérkezését követő munkanapon aktiváljuk a hozzáféréseket, és minden résztvevő belépőt kap.</li>
       </ol>
-      <div class="card" style="background:var(--surface-2);box-shadow:none"><b>Kérdés esetén:</b> Gulyás Szabolcs · +36 70 691 0920 · <span id="tMail">gulyas.szabolcs@excellence.hu</span><div class="muted small">Munkanapokon 9–17 között, e-mailre 1 munkanapon belül válaszolok.</div></div>
+      <div class="card" style="background:var(--surface-2);box-shadow:none"><div class="muted small" style="margin-bottom:8px">Kérdés esetén:</div><div class="sig"><img id="sigLogo" alt="Excellence"><div><b>Gulyás Szabolcs</b><span>értékesítési partner · Excellence Training Kft.</span><span><a href="mailto:gulyas.szabolcs@excellence.hu">gulyas.szabolcs@excellence.hu</a> · <a href="tel:+36706910920">+36 70 691 0920</a></span><span class="muted small">Munkanapokon 9–17 között, e-mailre 1 munkanapon belül válaszolok.</span></div></div></div>
       <div class="row"><button class="btn ghost" data-go="quote">← Vissza az ajánlathoz</button><button class="btn sec" id="tPdf">Ajánlat PDF megtekintése</button></div>
     </div>
     <p class="proto">Prototípus: élesben a szerződés és a díjbekérő a Számlázz.hu-ból és a szerződéssablonból automatikusan készül, a linkek a valódi PDF-ekre mutatnak.</p>
@@ -757,7 +759,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
       if(l.type==='live')return`<div class="sel-item"><div class="h"><b>${l.name}</b><span class="muted small" style="display:block">élő képzés · tájékoztató ár</span></div><div class="b"><div class="who">${l.desc} A végleges díjat (napszám, kiszállás, kedvezmény) az Excellence egyezteti.</div></div><div class="n"><b>${l.n} alkalom</b><br><span class="muted">helyszíni / online</span></div></div>`;
       return`<div class="sel-item"><div class="h">${ico(l.id,20)} <b>${l.name}</b> <span class="muted small">· e-learning</span></div><div class="b"><div class="who">${l.videos} videó, ${l.length}. ${l.desc}<br><button class="tlink" data-syl="${l.id}">Tematika megnyitása</button></div></div><div class="n"><b>${l.n} fő</b><br><span class="muted">1 év hozzáférés</span></div></div>`;}).join('');
     const first=(state.company.contact||'').split(' ').slice(-1)[0];const hasE=T.L.some(l=>l.type!=='live'),hasL=T.L.some(l=>l.type==='live');
-    $('#qIntro').innerHTML=`<h3>${hasE&&hasL?'Komplex':hasL?'Élő':'E-learning'} képzési ajánlat – ${state.company.name||'a csapatod'} részére</h3><p>Kedves ${first||'Ajánlatkérő'}!</p><p>Köszönöm, hogy érdeklődsz az Excellence képzései iránt. Örülünk, hogy partnerként támogathatjuk a csapatodat: a programjainkat úgy építettük fel, hogy mérhető fejlődést és tartós változást hozzanak a napi munkában. Lent részletezem az összeállított képzéseket és a díjakat; ha bármi kérdésed van, keress bátran.</p><p class="muted small">Gulyás Szabolcs · +36 70 691 0920</p>`;
+    $('#qIntro').innerHTML=`<h3>${hasE&&hasL?'Komplex':hasL?'Élő':'E-learning'} képzési ajánlat – ${state.company.name||'a csapatod'} részére</h3><p>Kedves ${first||'Ajánlatkérő'}!</p><p>Köszönöm, hogy érdeklődsz az Excellence képzései iránt. Örülünk, hogy partnerként támogathatjuk a csapatodat: a programjainkat úgy építettük fel, hogy mérhető fejlődést és tartós változást hozzanak a napi munkában. Lent részletezem az összeállított képzéseket és a díjakat; ha bármi kérdésed van, keress bátran.</p><div class="sig" style="margin-top:10px"><img src="${IMG.logo}" alt="Excellence"><div><b>Gulyás Szabolcs</b><span>értékesítési partner · Excellence Training Kft.</span><span><a href="mailto:gulyas.szabolcs@excellence.hu">gulyas.szabolcs@excellence.hu</a> · <a href="tel:+36706910920">+36 70 691 0920</a></span></div></div>`;
     let st='';
     if(hasE&&hasL)st=`<h3>Komplex oktatási struktúra</h3><p class="small">Az e-learning és az élő képzés kombinációja lehetővé teszi, hogy a résztvevők saját tempóban, előre megszerezzék az egységes alaptudást, így az élő képzés már a valóban értéket teremtő gyakorlati kérdésekre és a munkájuk során felmerülő konkrét feladatokra épülhet. Az eltérő előképzettséggel érkező munkatársak közelebb kerülnek egy közös tudásszinthez, az oktató pedig az élő alkalmon arra fordíthatja az időt, ahol a személyes támogatás a legtöbbet adja. Az e-learninghez biztosított 1 éves hozzáférés a képzés után is lehetőséget ad a tudás felfrissítésére.</p>`;
     else if(hasL)st=`<h3>Élő képzés</h3><p class="small">Élő képzéseinken a kollégák gyakorlati tudást szereznek tapasztalt oktatóinktól, akik munkahelyi környezetben is ismerik az irodai munka leggyakoribb problémáit és megoldásait. A személyes interakció, az oktatói támogatás és a résztvevők saját kérdéseinek azonnali megválaszolása mélyebb, intenzívebb tanulási élményt ad.</p>`;
@@ -852,7 +854,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
   // ---- navigation ----
   const RAIL=['what','summary','form','quote'];let cur='start';
   const VIEWS=['start','pkg','single','summary','form','quote','thanks','pdf','fwd','busy'];
-  const BUSY_GIF={quote:'/img/busy-quote.gif',order:''}; // ide kerülnek a kész animációk (data URI vagy /img/...gif)
+  const BUSY_GIF={quote:'/img/busy-quote.gif',order:'/img/busy-quote.gif'}; // ide kerülnek a kész animációk (data URI vagy /img/...gif)
   function showBusy(kind){const q=kind==='quote';$('#busyTitle').textContent=q?'Összeállítjuk az ajánlatodat…':'Rögzítjük a megrendelésed…';
     $('#busySub').textContent=q?'Néhány másodperc: kiszámoljuk az árakat, elkészítjük a PDF-et, és küldjük e-mailben is.':'Elkészítjük a visszaigazolást és a díjbekérőt, és küldjük e-mailben.';
     const g=$('#busyGif');if(BUSY_GIF[kind]){g.src=BUSY_GIF[kind];g.hidden=false;$('#busyAnim .spin').hidden=true;}else{g.hidden=true;$('#busyAnim .spin').hidden=false;}
@@ -1010,7 +1012,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
   window.addEventListener('popstate',e=>{const v=(e.state&&e.state.v)||'start';if(VIEWS.includes(v))go(v,true);});
   window.addEventListener('beforeunload',e=>{if(cur!=='start'&&cur!=='quote'&&selected().length){e.preventDefault();e.returnValue='Az összeállításod még nincs elküldve. Biztosan kilépsz?';return e.returnValue;}});
   try{history.replaceState({v:'start'},'','#start');}catch(e){}
-  $('#topLogo').src=IMG.logoW;$('#footLogo').src=IMG.logoW;$('#footYear').textContent=new Date().getFullYear();
+  $('#topLogo').src=IMG.logoW;$('#footLogo').src=IMG.logoW;$('#sigLogo').src=IMG.logoW;$('#footYear').textContent=new Date().getFullYear();
   go('start',true);
 })();
 </script>
