@@ -385,6 +385,13 @@ body:not(.print) .main>.rail{display:none}
 .pg.order .opay{display:grid;grid-template-columns:1fr 1fr;gap:24px;line-height:1.5} .pg.order .oterms{padding-left:16px;margin:0;line-height:1.5;font-size:10.5px} .pg.order .oterms li{margin-bottom:3px}
 .pg.order .osig{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:36px;font-size:11px;align-items:end} .pg.order .osig>div{display:flex;flex-direction:column;justify-content:flex-end;min-height:90px} .pg.order .osig .line{border-top:1px solid #0f1b2d;margin-bottom:6px} .pg.order .osig .hand{height:52px;width:auto;display:block;margin:0 0 -10px 14px;mix-blend-mode:multiply;align-self:flex-start} .pg.order .muted{color:#5b6b7b}
 .pg.order .ofoot{position:absolute;left:48px;right:48px;bottom:18px;border-top:1px solid #e3e8ef;padding-top:8px;font-size:9px;color:#5b6b7b;text-align:center}
+#hc{display:none!important}
+.stp{display:flex;align-items:center;gap:6px;justify-content:center;margin-top:4px} .stp button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line-2);background:var(--surface);color:var(--fg);cursor:pointer;font-size:1.05rem;line-height:1} .stp button:hover{background:var(--surface-2)}
+.stp input{width:58px;text-align:center;font:inherit;font-weight:700;font-size:1rem;font-variant-numeric:tabular-nums;padding:5px 4px;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);color:var(--fg)} .stp em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.stp .bhint{font-size:.74rem;color:var(--good);font-weight:700;white-space:nowrap} .stp input::-webkit-outer-spin-button,.stp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} .stp input[type=number]{-moz-appearance:textfield}
+#pkgGrid .pkg .stp{margin-inline:16px} #pkgGrid .pkg{grid-row:span 9}
+.item .side{display:flex;flex-direction:column;align-items:flex-end;gap:8px} .item .side .stp{margin:0;justify-content:flex-end}
+.btn.add .off{display:none} .btn.add.added:hover .on{display:none} .btn.add.added:hover .off{display:inline}
 /* ---- Prototípus csík ---- */
 .demobar{background:var(--accent);color:var(--accent-fg);font-size:.78rem;font-weight:600;text-align:center;padding:5px 12px;position:sticky;top:0;z-index:7}
 body.print .demobar{display:none!important}
@@ -426,7 +433,7 @@ body.print .demobar{display:none!important}
 
   <!-- what: packages -->
   <section class="view" id="v-pkg" hidden>
-    <div class="lead"><h2>1. Melyik csomag illik a csapatra?</h2><p class="muted">Fent add meg, hány fő tanulna. A csomagár fix, főre vetítve – a csomagkedvezmény már benne van. A táblázat mutatja, melyik csomag mit fed le: teli pont = teljes terület, fél pont = egy része. Egyszerre egy csomagot választhatsz; élő képzést mellé tehetsz.</p></div>
+    <div class="lead"><h2>1. Melyik csomag illik a csapatra?</h2><p class="muted">A kártyán add meg, hány fő tanulna. A csomagár fix, főre vetítve – a csomagkedvezmény már benne van. A táblázat mutatja, melyik csomag mit fed le: teli pont = teljes terület, fél pont = egy része. Több csomag is választható, akár más-más létszámmal; élő képzést mellé tehetsz.</p></div>
     <details class="card" id="matrixBox" open><summary><div><h3>Összehasonlító táblázat</h3><p class="muted small">Melyik csomag mit fed le</p></div><span class="chev">▶</span></summary><div class="matrix" id="matrix" style="margin-top:10px"></div></details>
     <div class="grid" id="pkgGrid"></div>
     <div class="card group"><h3>Élő képzés a csomag mellé</h3><p class="muted small" style="margin:-6px 0 10px">Opcionális, tájékoztató árral. Max. 15 fő/csoport; kiszállás Budapesten díjmentes, vidéken km-alapú; több nap esetén 5–12% napszám-kedvezmény. A végleges díjat az Excellence egyezteti.</p><div class="list" id="liveListPkg"></div></div>
@@ -655,8 +662,8 @@ window.EXC_API = (() => {
   const VAT=0.27, MIN_ORDER=500000, MAX_SEATS=199;
   const NAV_DEMO={'12345678241':{name:'Mintacég Kereskedelmi Kft.',addr:'1138 Budapest, Váci út 100.'},'23456789213':{name:'Példa Logisztika Zrt.',addr:'2040 Budaörs, Raktár u. 7.'},'34567890241':{name:'Demo Pénzügyi Tanácsadó Bt.',addr:'1051 Budapest, Nádor u. 12.'}};
 
-  const state={path:'pkg',defN:18,sel:{},qty:{},company:{},status:'Kiküldve',log:[],version:1};
-  try{const d=JSON.parse(localStorage.getItem('exc-draft4')||'null');if(d&&d.sel){Object.assign(state,{sel:d.sel,qty:d.qty||{},path:d.path||'pkg',defN:d.defN||18});}}catch(e){}
+  const state={path:'pkg',defN:10,sel:{},qty:{},company:{},status:'Kiküldve',log:[],version:1};
+  try{const d=JSON.parse(localStorage.getItem('exc-draft4')||'null');if(d&&d.sel){Object.assign(state,{sel:d.sel,qty:d.qty||{},path:d.path||'pkg',defN:d.defN||10});}}catch(e){}
   const save=()=>{try{localStorage.setItem('exc-draft4',JSON.stringify({sel:state.sel,qty:state.qty,path:state.path,defN:state.defN}))}catch(e){}};
   const ft=n=>Math.round(n).toLocaleString('hu-HU')+' Ft';
   const $=s=>document.querySelector(s);
@@ -697,7 +704,9 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
   function totals(){const L=lines();const G=giftLines();const list=L.reduce((a,l)=>a+l.list,0),net=L.reduce((a,l)=>a+l.net,0);const fast=net*FAST_PCT/100;const full=L.reduce((a,l)=>a+(l.type==='pkg'?COURSES.filter(c=>l.items.includes(c.id)).reduce((x,c)=>x+c.price,0)*l.n:l.unit*l.n),0);const giftVal=G.reduce((a,g)=>a+g.unit*g.n,0);return{L,G,giftVal,list,net,disc:list-net,full,saveAll:full-net,vat:net*VAT,gross:net*(1+VAT),fast,netFast:net-fast,grossFast:(net-fast)*(1+VAT)};}
 
   // ---- selection screens ----
-  const pkgUnit=p=>{if(p.type==='pkg')return{pct:0,unit:p.price,n:state.defN};const n=state.defN;const r=bestForPackage(p.price,n);const use=r.alt?r.alt:r;return{pct:use.pct,unit:p.price*(1-use.pct/100),n:use.n};};
+  const stepper=(id,n,hint)=>`<div class="stp" data-stp="${id}"><button type="button" data-cdec="${id}" aria-label="kevesebb">−</button><input type="number" min="1" max="${MAX_SEATS}" value="${n}" data-cval="${id}" aria-label="létszám"><em>fő</em><button type="button" data-cinc="${id}" aria-label="több">+</button>${hint?`<span class="bhint">${hint}</span>`:''}</div>`;
+  const bandHint=n=>{const nb=BANDS.find(b=>b.min>n);return nb&&nb.min-n<=3?`+${nb.min-n} fő → −${nb.pct}%`:'';};
+  const pkgUnit=(p,n=qtyOf(p))=>{if(p.type==='pkg')return{pct:0,unit:p.price,n};const r=bestForPackage(p.price,n);const use=r.alt?r.alt:r;return{pct:use.pct,unit:p.price*(1-use.pct/100),n:use.n};};
   function liveRow(x){return`<div class="item"><div><div class="nm">${x.name}</div><div class="in">${x.desc}</div><div style="margin-top:6px"><button class="tlink" data-live="${x.id}">Részletek →</button></div></div><div class="side"><span class="pr">${ft(x.price)} <span class="muted small">/ alkalom · tájékoztató ár</span></span><button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;}
   function renderPkg(){
     const dot=v=>v===1?'<span class="dot" title="teljes terület"></span>':v===0.5?'<span class="dot half" title="részben"></span>':'<span class="muted">–</span>';
@@ -711,20 +720,21 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
       <p class="sub">${p.sub}</p><div class="whos"><p class="who"><b>Kinek:</b> ${p.who}</p><p class="who"><b>Eredmény:</b> ${p.promise}</p></div>
       <ul class="il">${items.map(id=>`<li class="${ICONS[id]?'':'noico'}">${ico(id,16)}<span>${cname(id)}</span></li>`).join('')}</ul><div class="morerow">${more>0?`<button class="tlink more" data-more="${p.id}">${open?'Kevesebb ▲':'+'+more+' további képzés ▼'}</button>`:''}</div>
       <button class="tlink pk-syl" data-pksyl="${p.id}">Csomag tartalma és tematikája →</button>
-      <div class="ladder"><div><span>Külön-külön</span><span>${ft(p.list)}</span></div><div class="hi"><span>Csomagban −${Math.round((1-p.price/p.list)*100)}%</span><span>− ${ft(p.list-p.price)}</span></div><div class="tot"><span>${state.defN} fő / év</span><span><b>${ft(p.price*state.defN)}</b></span></div></div>
-      <button class="btn sm add ${state.sel[p.id]?'added':''}" data-toggle="${p.id}">${state.sel[p.id]?'✓ Kiválasztva · levétel':'+ Ezt választom'}</button></div>`;}).join('');
+      <div class="ladder"><div><span>Külön-külön</span><span>${ft(p.list)}</span></div><div class="hi"><span>Csomagban −${Math.round((1-p.price/p.list)*100)}%</span><span>− ${ft(p.list-p.price)}</span></div><div class="tot"><span>${qtyOf(p)} fő / év</span><span><b>${ft(p.price*qtyOf(p))}</b></span></div></div>
+      ${stepper(p.id,qtyOf(p))}
+      <button class="btn sm add ${state.sel[p.id]?'added':''}" data-toggle="${p.id}">${state.sel[p.id]?'<span class="on">✓ Kiválasztva</span><span class="off">× Levétel</span>':'+ Ezt választom'}</button></div>`;}).join('');
     $('#liveListPkg').innerHTML=LIVE.map(liveRow).join('');
     $('#toCountPkg').disabled=!selected().length;$('#hintPkg').textContent=selected().length?'':'Válassz legalább egy csomagot (vagy élő tréninget).';
   }
   function renderSingle(){
     const row=x=>{const inpk=PACKAGES.filter(p=>p.items.includes(x.id)).map(p=>p.name).join(', ');
-      const u=pkgUnit(x);return`<div class="item ${state.sel[x.id]?'sel':''}"><div><div class="ihead">${ICONS[x.id]?`<img class="pic" src="${ICONS[x.id]}" alt="">`:''}<div><div class="nm">${x.name}</div><div class="pills"><span class="pill">▶ ${x.videos} videó</span><span class="pill">⏱ ${x.length}</span>${inpk?`<span class="pill soft">csomagban: ${inpk}</span>`:''}</div></div></div><div class="in desc">${x.desc.split('. ')[0]}.</div><div style="margin-top:6px"><button class="tlink" data-syl="${x.id}">Tematika →</button></div></div><div class="side"><span class="pr">${ft(u.unit)} <span class="muted small">/fő${u.pct?' · −'+u.pct+'%':''}</span></span><button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;};
+      const u=pkgUnit(x);return`<div class="item ${state.sel[x.id]?'sel':''}"><div><div class="ihead">${ICONS[x.id]?`<img class="pic" src="${ICONS[x.id]}" alt="">`:''}<div><div class="nm">${x.name}</div><div class="pills"><span class="pill">▶ ${x.videos} videó</span><span class="pill">⏱ ${x.length}</span>${inpk?`<span class="pill soft">csomagban: ${inpk}</span>`:''}</div></div></div><div class="in desc">${x.desc.split('. ')[0]}.</div><div style="margin-top:6px"><button class="tlink" data-syl="${x.id}">Tematika →</button></div></div><div class="side"><span class="pr">${ft(u.unit)} <span class="muted small">/fő${u.pct?' · −'+u.pct+'%':''}</span><span class="muted small" style="display:block;text-align:right">${qtyOf(x)} főre: <b>${ft(u.unit*qtyOf(x))}</b>/év</span></span>${stepper(x.id,qtyOf(x),bandHint(qtyOf(x)))}<button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;};
     ['A','B','C'].forEach(g=>{$('#courseList'+g).innerHTML=COURSES.filter(c=>c.grp===g).map(row).join('');});
     $('#liveListSingle').innerHTML=LIVE.map(liveRow).join('');
     const selC=COURSES.filter(c=>state.sel[c.id]);let html='';
     if(selC.length){const sum=selC.reduce((a,c)=>a+c.price,0);
       const best=PACKAGES.map(p=>({p,covered:selC.filter(c=>p.items.includes(c.id)).length})).filter(o=>o.covered===selC.length).sort((a,b)=>a.p.price-b.p.price)[0];
-      if(best&&pkgUnit(best.p).unit<sum)html=`<div class="tip good"><span><b>Tipp:</b> a kijelölt ${selC.length} képzés egyenként ${ft(sum)}/fő. Az <b>${best.p.name}</b> csomag mindet tartalmazza, ${state.defN} főre ${ft(pkgUnit(best.p).unit)}/fő.</span><button class="btn sm sec" data-switch="${best.p.id}">Váltok a csomagra</button></div>`;
+      const nn=Math.max(...selC.map(c=>qtyOf(c)));if(best&&best.p.price<sum)html=`<div class="tip good"><span><b>Tipp:</b> a kijelölt ${selC.length} képzés egyenként ${ft(sum)}/fő. Az <b>${best.p.name}</b> csomag mindet tartalmazza, ${ft(best.p.price)}/fő (${nn} főre ${ft(best.p.price*nn)}).</span><button class="btn sm sec" data-switch="${best.p.id}">Váltok a csomagra</button></div>`;
       else html=`<div class="tip"><span>Kijelölve ${selC.length} képzés, összesen ${ft(sum)}/fő, kedvezmény nélkül.</span></div>`;}
     $('#pkgSuggest').innerHTML=html;$('#toCountSingle').disabled=!selected().length;$('#hintSingle').textContent=selected().length?'':'Jelölj be legalább egy képzést.';
   }
@@ -905,7 +915,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     if(v==='pkg')renderPkg();if(v==='single')renderSingle();if(v==='summary')renderSummary();if(v==='quote')renderQuote();if(v==='thanks')renderThanks();if(v==='pdf')renderPdf();if(v==='fwd')renderFwd();
     renderAside();window.scrollTo({top:0,behavior:'smooth'});
   }
-  function toggle(id){const x=byId(id);if(state.sel[id]){delete state.sel[id];toast(x.name+' levéve');}else{if(x.type==='pkg')PACKAGES.forEach(p=>{delete state.sel[p.id];});state.sel[id]=true;state.qty[id]=x.type==='live'?1:state.defN;toast(x.name+(x.type==='live'?' hozzáadva, 1 alkalom':' hozzáadva, '+state.qty[id]+' fő'));}save();}
+  function toggle(id){const x=byId(id);if(state.sel[id]){delete state.sel[id];toast(x.name+' levéve');}else{state.sel[id]=true;state.qty[id]=state.qty[id]||(x.type==='live'?1:state.defN);toast(x.name+(x.type==='live'?' hozzáadva, 1 alkalom':' hozzáadva, '+state.qty[id]+' fő'));}save();}
   function rerenderCur(){if(cur==='pkg')renderPkg();if(cur==='single')renderSingle();if(cur==='summary')renderSummary();renderAside();}
   function setPath(p){
     const drop=selected().filter(x=>p==='pkg'?x.type==='course':x.type==='pkg');
@@ -914,6 +924,8 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     if(drop.length)toast(p==='single'?'Csomag levéve, válogass egyesével':'Egyedi képzések levéve, válassz csomagot');
   }
   function setQty(id,n){const x=byId(id);state.qty[id]=Math.min(x.type==='live'?20:MAX_SEATS,Math.max(1,n));save();}
+  function setCardQty(id,n){n=Math.min(MAX_SEATS,Math.max(1,parseInt(n,10)||1));state.qty[id]=n;save();rerenderCur();const i=document.querySelector(`[data-cval="${id}"]`);if(i)i.focus();}
+  document.addEventListener('change',e=>{const i=e.target.closest('[data-cval]');if(i){setCardQty(i.dataset.cval,i.value);}});
   function setDefN(n){state.defN=Math.min(MAX_SEATS,Math.max(1,n));selected().filter(x=>x.type!=='live').forEach(x=>state.qty[x.id]=state.defN);save();rerenderCur();}
   function openSyl(id){$('#mNote').textContent='Minden lecke videós, saját tempóban nézhető.';const c=COURSES.find(x=>x.id===id);const m=SYLLABUS[id];$('#mTitle').textContent=c.name;$('#mSub').textContent=`${c.videos} videó · ${c.length} · e-learning, 1 év hozzáférés`;
     $('#mBody').innerHTML=m&&m.length?m.map(mod=>`${mod.t?`<h4>${mod.t}</h4>`:''}<ol>${mod.i.map(x=>{const mm=x.match(/^([\d.]+\.?)\s+(.+)$/);return mm?`<li><span>${mm[1].replace(/\.$/,'')}</span><span>${mm[2]}</span></li>`:`<li><span></span><span>${x}</span></li>`;}).join('')}</ol>`).join(''):'<p class="muted">A részletes tematikát az Excellence-től kérjük; a képzés leírása: '+c.desc+'</p>';
@@ -956,6 +968,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     const pth=e.target.closest('[data-path]');if(pth){setPath(pth.dataset.path);return;}
     const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return;}
     const dn=e.target.closest('[data-dn]');if(dn){setDefN(state.defN+parseInt(dn.dataset.dn,10));return;}
+    const cd=e.target.closest('[data-cdec],[data-cinc]');if(cd){const id=cd.dataset.cdec||cd.dataset.cinc;const n=qtyOf(byId(id))+(cd.dataset.cinc?1:-1);setCardQty(id,n);return;}
     const sw=e.target.closest('[data-switch]');if(sw){COURSES.forEach(c=>delete state.sel[c.id]);state.sel[sw.dataset.switch]=true;state.qty[sw.dataset.switch]=state.defN;state.path='pkg';save();toast('Átváltva csomagra');go('pkg');return;}
     const t=e.target.closest('[data-toggle]');if(t){toggle(t.dataset.toggle);rerenderCur();return;}
     const pk=e.target.closest('[data-pk]');if(pk){toggle(pk.dataset.pk);rerenderCur();return;}
