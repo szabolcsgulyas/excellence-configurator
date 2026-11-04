@@ -143,7 +143,7 @@ app.post('/api/fb/webhook', wrap(async (req, res) => {
 
 /** Publikus ajánlatoldal: a konfigurátor HTML-t szolgálja ki, ?q=<no> paraméterrel betölti az ajánlatot */
 const PUB = path.join(cfg.root, 'public');
-app.use(express.static(PUB));
-app.get('/a/:no', (req, res) => res.sendFile(path.join(PUB, 'index.html')));
+app.use(express.static(PUB, { etag: false, setHeaders: (res, p) => { if (p.endsWith('.html')) res.set('Cache-Control', 'no-store'); } }));
+app.get('/a/:no', (req, res) => { res.set('Cache-Control', 'no-store'); res.sendFile(path.join(PUB, 'index.html')); });
 
 app.listen(cfg.port, () => console.log(`Ajánlat-szerver fut: http://localhost:${cfg.port}  (DRY_RUN=${cfg.dryRun})`));
