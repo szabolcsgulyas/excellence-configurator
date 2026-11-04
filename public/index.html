@@ -354,7 +354,8 @@ body.print .pg:last-child{break-after:auto;page-break-after:auto}
 .top .bar2 .hintrow{padding-block:0 6px;justify-content:flex-start} .top .bar2 .hintrow:has(.hint:empty){display:none}
 .wiz{display:flex;gap:8px;align-items:center;margin-left:auto;flex:1 1 auto;justify-content:flex-end}
 .wiz .btn{padding:10px 14px;font-size:.92rem;white-space:nowrap;gap:7px}
-.wiz .btn{flex-direction:column;align-items:flex-start;gap:0;padding:7px 14px;line-height:1.2} .wiz .btn.acc{align-items:flex-start}
+.wiz .btn{flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding:0 14px;height:48px;line-height:1.2;box-sizing:border-box} .wiz .btn.acc{align-items:flex-start}
+.wiz .btn .l.one{display:inline-flex;align-items:center;gap:6px}
 .wiz .btn .k{font-weight:500;font-size:.72rem;opacity:.8;font-family:var(--body);letter-spacing:.02em} .wiz .btn .l{font-weight:800;font-size:.95rem}
 .btn svg.dl{vertical-align:-3px}
 .wiz .hint,.hintrow .hint{font-size:.82rem;color:rgba(255,255,255,.75)}
@@ -366,7 +367,7 @@ body.has-sticky{padding-bottom:84px} .sticky .in{max-width:1160px;margin:0 auto}
 .rail div{color:var(--muted)}
 @media (max-width:1100px){.top .bar2 .rail div{padding-inline:8px;font-size:.74rem}}
 @media (max-width:900px){.top .bar2 .rail{flex-basis:100%;max-width:none;display:grid}.wiz{margin-left:0;width:100%;justify-content:flex-end}}
-@media (max-width:520px){.top .bar2 .in{padding-block:6px;gap:6px}.wiz{gap:6px}.wiz .btn{padding:9px 11px;font-size:.88rem}.wiz .btn.acc{flex:1 1 auto}}
+@media (max-width:520px){.top .bar2 .in{padding-block:6px;gap:6px}.wiz{gap:6px}.wiz .btn{padding:0 11px;height:44px;font-size:.88rem}.wiz .btn .l{font-size:.88rem}.wiz .btn.acc{flex:1 1 auto}}
 body:not(.print) .main>.rail{display:none}
 /* ---- Várakozó oldal ---- */
 .busy{max-width:560px;margin:40px auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:32px 28px;box-shadow:var(--shadow);color-scheme:light}
@@ -964,7 +965,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     single:{back:['← Inkább csomagot',()=>setPath('pkg')],next:['Tovább: mennyibe kerül? →',()=>go('summary')],need:true,hint:'Jelölj be legalább egy képzést.'},
     summary:{back:['← Vissza: képzések szerkesztése',()=>go('what'),'← Képzések'],next:['Hivatalos ajánlatot kérek →',()=>go('form')],need:true,hint:'Nem kötelez semmire. 14 napig érvényes, bármikor módosítható.'},
     form:{back:['← Vissza az árakhoz',()=>go('summary'),'← Árak'],next:['Ajánlat elkészítése →',()=>$('#reqForm').requestSubmit()]},
-    quote:{back:['← Vissza',()=>go('what')],sec:['⬇ PDF',()=>openPdf()],next:['Megrendelem az ajánlatot',()=>{const b=$('#v-quote button[data-act="Elfogadva"]');if(b)b.click();},'Megrendelem']},
+    quote:{back:['← Vissza',()=>go('what')],sec:['⬇ Ajánlat letöltése PDF-ben',()=>openPdf(),'⬇ PDF'],next:['Megrendelem az ajánlatot',()=>{const b=$('#v-quote button[data-act="Elfogadva"]');if(b)b.click();},'Megrendelem']},
     thanks:{sec:['⬇ Megrendelés letöltése PDF-ben',()=>window.open('/api/quote/'+EXC_API.no+'/pdf?doc=order','_blank'),'⬇ PDF']},
     pdf:{back:['← Vissza az ajánlathoz',()=>go('quote'),'← Ajánlat'],next:['⬇ Letöltés',()=>openPdf()]},
     fwd:{back:['← Vissza az ajánlathoz',()=>go('quote'),'← Ajánlat'],next:['Küldés innen (PDF csatolva)',()=>$('#fwdSend').click(),'Küldés (PDF-fel)']}
@@ -974,7 +975,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
   function measureTop(){document.documentElement.style.setProperty('--toph',document.querySelector('.top').offsetHeight+'px');}
   window.addEventListener('resize',measureTop);
   function renderWiz(){const w=WIZ[cur];const el=$('#wiz');el.hidden=!w;requestAnimationFrame(measureTop);if(!w){$('#wizHint').textContent='';return;}
-    const mob=window.innerWidth<=600;const lab=t=>{const m=t.match(/^(←\s*)?(Vissza|Tovább)(:?)\s*(.*)$/);if(!m)return t.replace(/^⬇\s*/,'<svg class="dl" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg> ');return m[4]?`<span class="k">${m[1]||''}${m[2]}${m[3]}</span><span class="l">${m[4]}</span>`:`<span class="l">${m[1]||''}${m[2]}</span>`;};
+    const mob=window.innerWidth<=600;const lab=t=>{const m=t.match(/^(←\s*)?(Vissza|Tovább)(:?)\s*(.*)$/);if(!m)return '<span class="l one">'+t.replace(/^⬇\s*/,'<svg class="dl" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>')+'</span>';return m[4]?`<span class="k">${m[1]||''}${m[2]}${m[3]}</span><span class="l">${m[4]}</span>`:`<span class="l">${m[1]||''}${m[2]}</span>`;};
     const set=(id,c)=>{const b=$('#'+id);b.hidden=!c;if(c){b.innerHTML=lab((mob&&c[2])||c[0]);b.onclick=c[1];}};
     set('wizBack',w.back);set('wizSec',w.sec);set('wizNext',w.next);
     const ok=!w.need||selected().length>0;$('#wizNext').disabled=!ok;$('#wizHint').textContent=w.need&&!ok?w.hint:(cur==='summary'?w.hint:'');
