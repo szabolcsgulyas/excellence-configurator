@@ -383,6 +383,9 @@ body:not(.print) .main>.rail{display:none}
 .pg.order .opay{display:grid;grid-template-columns:1fr 1fr;gap:24px;line-height:1.5} .pg.order .oterms{padding-left:16px;margin:0;line-height:1.5;font-size:10.5px} .pg.order .oterms li{margin-bottom:3px}
 .pg.order .osig{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:36px;font-size:11px} .pg.order .osig .line{border-top:1px solid #0f1b2d;margin-bottom:6px} .pg.order .osig .hand{height:48px;width:auto;display:block;margin:0 0 -6px 10px} .pg.order .muted{color:#5b6b7b}
 .pg.order .ofoot{position:absolute;left:48px;right:48px;bottom:18px;border-top:1px solid #e3e8ef;padding-top:8px;font-size:9px;color:#5b6b7b;text-align:center}
+/* ---- Prototípus csík ---- */
+.demobar{background:var(--accent);color:var(--accent-fg);font-size:.78rem;font-weight:600;text-align:center;padding:5px 12px;position:sticky;top:0;z-index:7}
+body.print .demobar{display:none!important}
 /* ---- Aláírás ---- */
 .sig{display:flex;gap:14px;align-items:center} .sig img{height:30px;width:auto;padding-right:14px;border-right:2px solid #1aa3a3} .sig div{display:flex;flex-direction:column;gap:2px;font-size:.9rem} .sig b{font-family:var(--display);font-size:1rem} .sig a{color:var(--brand-ink);text-decoration:none;font-weight:600} .sig a:hover{text-decoration:underline}
 /* ---- Lábléc ---- */
@@ -396,6 +399,7 @@ body:not(.print) .main>.rail{display:none}
 @media (max-width:900px){.site-foot .in{grid-template-columns:1fr 1fr}} @media (max-width:520px){.site-foot .in{grid-template-columns:1fr}}
 </style>
 
+<div class="demobar" id="demobar" hidden>Prototípus · száraz mód: a gombok nem küldenek levelet, és nem írnak a CRM-be. A cégadatok mintaadatok. Végleges cím: ajanlat.excellence.hu</div>
 <div class="top"><div class="in"><span class="brand" style="display:flex;align-items:center;gap:10px"><img id="topLogo" alt="Excellence" style="height:26px;width:auto"><small>Céges képzési ajánlat</small></span><div class="hc" id="hc" hidden><label for="defN">Létszám</label><button data-dn="-1" aria-label="kevesebb">−</button><input type="number" id="defN" min="1" max="199" value="18"><button data-dn="1" aria-label="több">+</button><span class="muted small">fő</span><span class="pct" id="hcPct"></span></div><span class="muted small" id="stepLabel"></span></div>
 <div class="bar2" id="bar2"><div class="in"><div class="rail" id="rail">
     <div data-step="what">Képzések<span></span></div><div data-step="summary">Ár<span></span></div><div data-step="form">Cégadatok<span></span></div><div data-step="quote">Ajánlat<span></span></div>
@@ -966,6 +970,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     fwd:{back:['← Vissza az ajánlathoz',()=>go('quote'),'← Ajánlat'],next:['Küldés innen (PDF csatolva)',()=>$('#fwdSend').click(),'Küldés (PDF-fel)']}
   };
   function openPdf(){if(EXC_API.no)window.open('/api/quote/'+EXC_API.no+'/pdf','_blank');else if(cur!=='pdf')go('pdf');else toast('A PDF az ajánlat elküldése után tölthető le.');}
+  if(/railway\.app$|^localhost$|^127\./.test(location.hostname)&&!new URLSearchParams(location.search).get('print')){$('#demobar').hidden=false;document.querySelector('.top').style.top='calc(28px + env(safe-area-inset-top,0px))';}
   function measureTop(){document.documentElement.style.setProperty('--toph',document.querySelector('.top').offsetHeight+'px');}
   window.addEventListener('resize',measureTop);
   function renderWiz(){const w=WIZ[cur];const el=$('#wiz');el.hidden=!w;requestAnimationFrame(measureTop);if(!w){$('#wizHint').textContent='';return;}
