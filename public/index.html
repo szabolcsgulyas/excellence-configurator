@@ -656,7 +656,7 @@ window.EXC_API = (() => {
 
 (function(){
   const AREAS=['Excel alapok','Excel haladó (kimutatás, Power Query, Power Pivot)','Power BI','Automatizálás (VBA)','Word, PowerPoint','Ajándék: ChatGPT Mesterfokon'];
-  // Nem megújuló B2B csomagok (B2B árlista EB01–EB03, tartalom: excelneked.hu csomagoldalak). items = fizetős tartalom, gifts = ajándék tananyag.
+  // Nem megújuló B2B csomagok (B2B árlista EB01–EB03, tartalom: excelneked.hu csomagoldalak). items = tartalom; az ajándékot a GIFT_RULES adja.
   const PACKAGES=[
     {id:'office-start',code:'EB01',name:'Office Start',sub:'Biztos alapok minden munkatársnak',who:'Adminisztráció, back office, új belépők, nem irodai felhasználók',promise:'Stabil, széles körű Office-tudás, gyorsabb mindennapi munka',price:43700,cover:[1,0,0,0,1,0],items:['excel-alap','word','ppt'],gifts:['canva','outlook']},
     {id:'office-pro',code:'EB02',name:'Office Pro',sub:'Ha az Excelben nem állnátok meg az alapoknál',who:'Kontrolling, pénzügy, értékesítés, vezetői asszisztensek, elemzők',promise:'Haladó Excel: kimutatások, Power Query, Power Pivot – magabiztos adatelemzés',price:72900,tag:'Legnépszerűbb',cover:[1,1,0,0,1,1],items:['excel-alap','word','ppt','kimut','pquery','ppivot'],gifts:['diagram','fuggv','outlook','canva','chatgpt']},
@@ -738,17 +738,19 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
 
   function bestForPackage(price,n){const b=band(n);let base={n,pct:b.pct,total:price*n*(1-b.pct/100)};const next=BANDS.find(x=>x.min>n);
     if(next){const t=price*next.min*(1-next.pct/100);if(t<base.total)return{...base,alt:{n:next.min,pct:next.pct,total:t}};}return base;}
-  const HOOK=['fuggv','diagram'];const GIFTS=['ppt','word','outlook'];
+  // Ajándékszabály (az egyetlen): 10 fő felett Outlook; nettó 500 000 Ft felett Canva; 1/2/3 millió felett Függvények, Diagramok, ChatGPT
+  const GIFT_RULES=[{id:'outlook',kind:'seats',min:10,label:'Létszám-ajándék (10 fő felett)'},{id:'canva',kind:'net',min:500000,label:'Rendelési ajándék (500 000 Ft felett)'},{id:'fuggv',kind:'net',min:1000000,label:'Rendelési ajándék (1 millió Ft felett)'},{id:'diagram',kind:'net',min:2000000,label:'Rendelési ajándék (2 millió Ft felett)'},{id:'chatgpt',kind:'net',min:3000000,label:'Rendelési ajándék (3 millió Ft felett)'}];
   // Létszámsáv: az összes e-learning hozzáférés (csomagok + egyedi képzések) adja; a csomag ára fix, a sáv az egyedi képzésekre jár
   const seatsTotal=(extra=0)=>selected().filter(x=>x.type==='pkg'||x.type==='course').reduce((a,x)=>a+qtyOf(x),0)+extra;
   const liveDays=()=>selected().filter(x=>x.type==='live').reduce((a,x)=>a+x.days*qtyOf(x),0);
   function extraQty(x){const sel=selected();if(x.per==='flat')return 1;if(x.per==='seat')return seatsTotal();
     return sel.filter(y=>(y.type==='course'&&EXAM_IDS.includes(y.id))||(y.type==='pkg'&&y.items.some(i=>EXAM_IDS.includes(i)))).reduce((a,y)=>Math.max(a,qtyOf(y)),0);}
-  function giftLines(){const L=[];const sel=selected();const has=id=>sel.some(x=>x.id===id||(x.type==='pkg'&&x.items.includes(id)));const given=new Set();
-    sel.filter(x=>x.type==='pkg').forEach(p=>p.gifts.filter(id=>!has(id)&&!given.has(id)).forEach(id=>{given.add(id);const c=COURSES.find(x=>x.id===id);L.push({...c,n:qtyOf(p),pct:0,unit:c.price,list:0,net:0,gift:'pkg',giftFor:p.name+' csomag ajándéka'});}));
-    const ex=sel.find(x=>x.id==='excel-alap');
-    if(ex){HOOK.filter(id=>!has(id)&&!given.has(id)).forEach(id=>{given.add(id);const c=COURSES.find(x=>x.id===id);L.push({...c,n:qtyOf(ex),pct:0,unit:c.price,list:0,net:0,gift:'hook',giftFor:'az Excel kezdőtől haladóig mellé'});});}
+  function giftLines(netOverride){const L=[];const sel=selected();const has=id=>sel.some(x=>x.id===id||(x.type==='pkg'&&x.items.includes(id)));
+    const seats=seatsTotal();if(!seats)return L;const net=netOverride??lines().reduce((a,l)=>a+l.net,0);
+    GIFT_RULES.forEach(r=>{const ok=r.kind==='seats'?seats>r.min:net>r.min;if(ok&&!has(r.id)){const c=COURSES.find(x=>x.id===r.id);L.push({...c,n:seats,pct:0,unit:c.price,list:0,net:0,gift:r.kind,giftFor:r.label});}});
     return L;}
+  function nextGift(net){const sel=selected();const has=id=>sel.some(x=>x.id===id||(x.type==='pkg'&&x.items.includes(id)));if(!seatsTotal())return null;
+    const r=GIFT_RULES.find(r=>r.kind==='net'&&net<=r.min&&!has(r.id));return r?{name:cname(r.id),need:r.min-net,min:r.min}:null;}
   function lines(){const tot=seatsTotal(),bp=band(tot).pct,dd=liveDays(),dp=dayPct(dd);const sel=selected();
     const L=sel.filter(x=>x.type!=='extra').map(x=>{const n=qtyOf(x);
       if(x.type==='course')return{...x,n,pct:bp,unit:x.price,list:x.price*n,net:x.price*n*(1-bp/100)};
@@ -785,7 +787,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     $('#toCountPkg').disabled=!selected().length;$('#hintPkg').textContent=selected().length?'':'Válassz legalább egy csomagot (vagy élő tréninget).';
   }
   function renderSingle(){
-    const row=x=>{const inpk=PACKAGES.filter(p=>p.items.includes(x.id)).map(p=>p.name).join(', ');const ingift=PACKAGES.filter(p=>p.gifts.includes(x.id)).map(p=>p.name).join(', ');
+    const row=x=>{const inpk=PACKAGES.filter(p=>p.items.includes(x.id)).map(p=>p.name).join(', ');const ingift='';
       const u=pkgUnit(x);return`<div class="item ${state.sel[x.id]?'sel':''}"><div><div class="ihead">${ICONS[x.id]?`<img class="pic" src="${ICONS[x.id]}" alt="">`:''}<div><div class="nm">${x.name}</div><div class="pills"><span class="pill">▶ ${x.videos} videó</span><span class="pill">⏱ ${x.length}</span>${inpk?`<span class="pill soft">csomagban: ${inpk}</span>`:ingift?`<span class="pill soft">ajándék: ${ingift}</span>`:''}</div></div></div><div class="in desc">${x.desc.split('. ')[0]}.</div><div style="margin-top:6px"><button class="tlink" data-syl="${x.id}">Tematika →</button></div></div><div class="side"><span class="pr">${ft(u.unit)} <span class="muted small">/fő${u.pct?' · −'+u.pct+'%':''}</span><span class="muted small" style="display:block;text-align:right">${u.n} főre: <b>${ft(u.unit*u.n)}</b>/év</span><span class="muted small" style="display:block;text-align:right">sáv: összesen ${u.total} hozzáférés</span></span>${bandHint(u.total)?`<span class="bhint">${bandHint(u.total)}</span>`:''}<div class="actrow">${stepper(x.id,qtyOf(x))}<button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div></div>`;};
     ['A','B','C'].forEach(g=>{$('#courseList'+g).innerHTML=COURSES.filter(c=>c.grp===g).map(row).join('');});
     $('#liveListSingle').innerHTML=liveListHTML();
@@ -828,7 +830,8 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
   function renderSummary(){const T=totals();$('#sumTable').innerHTML=tableHTML(T);const bd=T.saveAll>0?`Összes kedvezmény − ${ft(T.saveAll)} <small>(${Math.round(T.saveAll/T.full*100)}%)</small>`:'';$('#saveBadge').innerHTML=bd;$('#saveBadge').hidden=!bd;const notes=[];
     if(T.net<MIN_ORDER)notes.push(`<div class="tip"><span>A céges árak 500 000 Ft nettó megrendelés felett érvényesek. Ez alatt a webáruházban tudsz vásárolni, vagy növeld a létszámot a jobb oldali összeállításban.</span></div>`);
         if(T.net>=MIN_ORDER){const d7=new Date(Date.now()+7*864e5).toLocaleDateString('hu-HU');notes.push(`<div class="tip" style="display:block;background:var(--accent);color:var(--accent-fg);border-color:transparent">Gyors döntés: további <b style="font-family:var(--display);font-size:1.15rem">− ${ft(T.fast)}</b> a nettóból<br>Így csak <b>${ft(T.netFast)}</b> nettó ${d7.replace(/\. $/,'')}-ig</div>`);}
-    if(T.G.length)notes.unshift(`<div class="tip good gift"><span>🎁 <b>Ajándék:</b> ${T.G.map(g=>g.name).join(', ')} – ${ft(T.giftVal)} értékben, díjmentesen.</span></div>`);
+    if(T.G.length)notes.unshift(`<div class="tip good gift"><span>🎁 <b>Ajándék:</b> ${T.G.map(g=>`${g.name} <span class="small">(${g.giftFor.split(' (')[0].toLowerCase()})</span>`).join(', ')} – ${ft(T.giftVal)} értékben, díjmentesen.</span></div>`);
+    const ng=nextGift(T.net);if(ng&&ng.need<=600000)notes.splice(T.G.length?1:0,0,`<div class="tip"><span>🎁 Ha a nettó végösszeg ${ft(ng.min)} fölé emelkedik (most még <b>${ft(ng.need)}</b> hiányzik), ajándékba jár a <b>${ng.name}</b> képzés is.</span></div>`);
     $('#sumNotes').innerHTML=notes.join('');$('#extras').innerHTML=EXTRAS.map(x=>{const q=extraQty(x);const dis=!q;return`<label class="xopt ${dis?'dis':''}"><input type="checkbox" data-extra="${x.id}" ${state.sel[x.id]?'checked':''} ${dis?'disabled':''}><span><b>${x.name}</b><small>${x.desc}</small></span><em>${ft(x.price)} / ${x.unit}${x.per!=='flat'&&q?` · ${q} fő: ${ft(x.price*q)}`:''}</em></label>`;}).join('');$('#sumTips').innerHTML=bandTipsHTML();$('#toForm').disabled=T.L.length===0;}
   // ---- quote ----
   function renderQuote(){
@@ -838,7 +841,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     $('#qCompany').innerHTML=`<span class="nm">${state.company.name||'–'}</span>`;$('#qAddr').textContent=state.company.addr?' · '+state.company.addr:'';
     $('#qContact').innerHTML=`<span class="nm">${state.company.contact||'–'}</span>${state.company.role?`<span class="muted small" style="display:block">${state.company.role}</span>`:''}${state.company.email?`<span class="muted small" style="display:block">${state.company.email}</span>`:''}`;
     $('#qItems').innerHTML=T.L.map(l=>{
-      if(l.type==='pkg')return`<div class="sel-item"><div class="h"><b>${l.name}</b> <span class="muted small">· e-learning csomag</span></div><div class="b"><div class="who">${l.sub}. Kinek: ${l.who}.</div><ul>${l.items.map(id=>COURSES.find(c=>c.id===id)).map(c=>`<li>${ico(c.id,16)} <b>${c.name}</b> <span class="muted">(${c.videos} videó)</span> – ${c.desc.split('. ')[0]}.<br><button class="tlink" data-syl="${c.id}">Tematika megnyitása</button></li>`).join('')}</ul><p class="small" style="margin-top:6px">🎁 <b>Ajándék tananyag:</b> ${l.gifts.map(cname).join(', ')}</p></div><div class="n"><b>${l.n} fő</b><br><span class="muted">1 év hozzáférés</span></div></div>`;
+      if(l.type==='pkg')return`<div class="sel-item"><div class="h"><b>${l.name}</b> <span class="muted small">· e-learning csomag</span></div><div class="b"><div class="who">${l.sub}. Kinek: ${l.who}.</div><ul>${l.items.map(id=>COURSES.find(c=>c.id===id)).map(c=>`<li>${ico(c.id,16)} <b>${c.name}</b> <span class="muted">(${c.videos} videó)</span> – ${c.desc.split('. ')[0]}.<br><button class="tlink" data-syl="${c.id}">Tematika megnyitása</button></li>`).join('')}</ul></div><div class="n"><b>${l.n} fő</b><br><span class="muted">1 év hozzáférés</span></div></div>`;
       if(l.type==='live')return`<div class="sel-item"><div class="h"><b>${l.name}</b><span class="muted small" style="display:block">élő képzés · tájékoztató ár</span></div><div class="b"><div class="who">${l.code} · ${l.desc}. A végleges időpontot és helyszínt az Excellence egyezteti; kiszállás Budapesten ingyenes, 100 km-en belül 200 Ft/km, azon túl 25 000 Ft/nap + 200 Ft/km.</div></div><div class="n"><b>${l.n} csoport</b><br><span class="muted">helyszíni / online</span></div></div>`;
       if(l.type==='extra')return`<div class="sel-item"><div class="h"><b>${l.name}</b><span class="muted small" style="display:block">kiegészítő · ${l.code}</span></div><div class="b"><div class="who">${l.desc}</div></div><div class="n"><b>${l.per==='flat'?'1 év':l.n+' fő'}</b></div></div>`;
       return`<div class="sel-item"><div class="h">${ico(l.id,20)} <b>${l.name}</b> <span class="muted small">· e-learning</span></div><div class="b"><div class="who">${l.videos} videó, ${l.length}. ${l.desc}<br><button class="tlink" data-syl="${l.id}">Tematika megnyitása</button></div></div><div class="n"><b>${l.n} fő</b><br><span class="muted">1 év hozzáférés</span></div></div>`;}).join('');
@@ -997,7 +1000,6 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     $('#modal').hidden=false;}
   function openPkgSyl(pid){$('#mNote').textContent='Minden lecke videós, saját tempóban nézhető.';const p=PACKAGES.find(x=>x.id===pid);$('#mTitle').textContent=p.name+' csomag';$('#mSub').textContent=p.sub+' · '+p.items.length+' képzés, 1 év hozzáférés';
     $('#mBody').innerHTML=p.items.map(id=>{const c=COURSES.find(x=>x.id===id);return`<details class="msyl"><summary><b>${c.name}</b> <span class="muted small">· ${c.videos} videó, ${c.length}</span></summary><div class="msylb">${(SYLLABUS[id]||[]).map(mod=>`${mod.t?`<h4>${mod.t}</h4>`:''}<ol>${mod.i.map(x=>{const mm=x.match(/^([\d.]+\.?)\s+(.+)$/);return mm?`<li><span>${mm[1].replace(/\.$/,'')}</span><span>${mm[2]}</span></li>`:`<li><span></span><span>${x}</span></li>`;}).join('')}</ol>`).join('')||'<p class="muted small">Tematika egyeztetés alatt.</p>'}</div></details>`;}).join('');
-    $('#mBody').insertAdjacentHTML('beforeend',`<h4 style="margin-top:14px">🎁 Ajándék tananyagok a csomag mellé</h4>`+p.gifts.map(id=>{const c=COURSES.find(x=>x.id===id);return`<details class="msyl"><summary><b>${c.name}</b> <span class="muted small">· ${c.videos} videó, ${c.length}</span></summary><div class="msylb">${(SYLLABUS[id]||[]).map(mod=>`${mod.t?`<h4>${mod.t}</h4>`:''}<ol>${mod.i.map(x=>`<li><span></span><span>${x}</span></li>`).join('')}</ol>`).join('')}</div></details>`;}).join(''));
     const b=$('#mAdd');b.textContent=state.sel[pid]?'✓ Kiválasztva':'+ Ezt választom';b.dataset.id=pid;b.hidden=cur!=='pkg';$('#modal').hidden=false;}
   function cpHint(){const n=parseInt($('#cpN').value||0,10);const y=parseInt($('#cpY').value||1,10);const h=$('#cpHint');if(!n){h.hidden=true;return;}
     const T=totals();const pk=T.L.filter(l=>l.type!=='live');if(!pk.length){h.hidden=true;return;}

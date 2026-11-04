@@ -1,5 +1,5 @@
 // Ugyanaz a logika, mint a konfigurátorban – a szerver nem bízik a böngésző által küldött összegekben.
-import { COURSES, BANDS, DAY_TIERS, FAST_PCT, VAT, MAX_SEATS, HOOK, EXAM_IDS, byId } from './catalog.js';
+import { COURSES, BANDS, DAY_TIERS, FAST_PCT, VAT, MAX_SEATS, GIFT_RULES, EXAM_IDS, byId } from './catalog.js';
 
 const band = n => BANDS.find(b => n >= b.min && n <= b.max) || BANDS.at(-1);
 const dayPct = d => [...DAY_TIERS].reverse().find(t => d >= t.min)?.pct || 0;
@@ -24,12 +24,10 @@ export function calculate(selection) {
     const n = x.per === 'flat' ? 1 : x.per === 'seat' ? seats : sel.filter(y => (y.type === 'course' && EXAM_IDS.includes(y.id)) || (y.type === 'pkg' && y.items.some(i => EXAM_IDS.includes(i)))).reduce((a, y) => Math.max(a, y.qty), 0);
     if (n > 0) lines.push({ id: x.id, code: x.code, name: x.name, type: 'extra', n, pct: 0, unit: x.price, list: x.price * n, net: x.price * n, full: x.price * n });
   }
-  // Ajándékok: csomagajándékok + Excel alap mellé Függvények és Diagramok
+  // Ajándékok a GIFT_RULES szerint (a kedvezmények utáni nettó és az összes hozzáférés alapján)
   const has = id => sel.some(x => x.id === id || (x.type === 'pkg' && x.items.includes(id)));
-  const given = new Set(), gifts = [];
-  sel.filter(x => x.type === 'pkg').forEach(p => p.gifts.filter(id => !has(id) && !given.has(id)).forEach(id => { given.add(id); const c = byId(id); gifts.push({ id, name: c.name, n: p.qty, value: c.price * p.qty, kind: 'pkg' }); }));
-  const ex = sel.find(x => x.id === 'excel-alap');
-  if (ex) HOOK.filter(id => !has(id) && !given.has(id)).forEach(id => { given.add(id); const c = byId(id); gifts.push({ id, name: c.name, n: ex.qty, value: c.price * ex.qty, kind: 'hook' }); });
+  const netAll = lines.reduce((a, l) => a + l.net, 0);
+  const gifts = seats ? GIFT_RULES.filter(g => (g.kind === 'seats' ? seats > g.min : netAll > g.min) && !has(g.id)).map(g => { const c = byId(g.id); return { id: g.id, name: c.name, n: seats, value: c.price * seats, kind: g.kind, label: g.label }; }) : [];
   const list = lines.reduce((a, l) => a + l.list, 0), net = lines.reduce((a, l) => a + l.net, 0), full = lines.reduce((a, l) => a + l.full, 0);
   const fast = r(net * FAST_PCT / 100);
   return {

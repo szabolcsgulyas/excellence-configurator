@@ -8,7 +8,7 @@ const c = await j('POST', '/api/calc', { selection: [{ id: 'office-pro', qty: 30
 console.assert(c.calc.lines[0].pct === 0, 'csomag: nincs létszámkedvezmény');
 console.assert(c.calc.seats === 60 && c.calc.lines[1].pct === 36, 'összesített sáv: 30+25+5 = 60 -> 36%');
 console.assert(c.calc.liveDays === 6 && c.calc.dayPct === 8, 'élő: 2x2 + 1x2 = 6 nap -> 8%');
-console.assert(c.calc.gifts.some(g => g.id === 'chatgpt') && c.calc.lines.some(l => l.id === 'x-track' && l.net === 30000), 'csomagajándék + kiegészítő');
+console.assert(['outlook','canva','fuggv','diagram','chatgpt'].every(id => c.calc.gifts.some(g => g.id === id)) && c.calc.lines.some(l => l.id === 'x-track' && l.net === 30000), 'ajándékszabály + kiegészítő');
 const q = await j('POST', '/api/quote', { company, selection: [{ id: 'office-pro', qty: 18 }], utm: { source: 'facebook', campaign: 'szintfelmero' } });
 await j('POST', `/api/quote/${q.no}/question`, { text: 'Lehet részletfizetés?' });
 await j('POST', `/api/quote/${q.no}/custom-price`, { why: 'Nagyobb létszám van tervben', headcount: 120, years: 3, note: 'két telephely' });

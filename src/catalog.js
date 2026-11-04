@@ -38,6 +38,13 @@ export const BANDS = [{ min: 1, max: 10, pct: 0 }, { min: 11, max: 50, pct: 20 }
 // Napszám-kedvezmény az összes élő oktatási napra
 export const DAY_TIERS = [{ min: 1, pct: 0 }, { min: 3, pct: 5 }, { min: 6, pct: 8 }, { min: 10, pct: 10 }, { min: 15, pct: 12 }];
 export const FAST_PCT = 5, LOYAL_PCT = 30, VAT = 27, MIN_ORDER = 500000, MAX_SEATS = 199, VALID_DAYS = 14, FAST_DAYS = 7;
-export const HOOK = ['fuggv', 'diagram'];
+// Ajándékszabály (az egyetlen): összes hozzáférés > 10 fő → Outlook; nettó > 500 000 → Canva; > 1/2/3 millió → Függvények, Diagramok, ChatGPT
+export const GIFT_RULES = [
+  { id: 'outlook', kind: 'seats', min: 10, label: 'Létszám-ajándék (10 fő felett)' },
+  { id: 'canva', kind: 'net', min: 500000, label: 'Rendelési ajándék (500 000 Ft felett)' },
+  { id: 'fuggv', kind: 'net', min: 1000000, label: 'Rendelési ajándék (1 millió Ft felett)' },
+  { id: 'diagram', kind: 'net', min: 2000000, label: 'Rendelési ajándék (2 millió Ft felett)' },
+  { id: 'chatgpt', kind: 'net', min: 3000000, label: 'Rendelési ajándék (3 millió Ft felett)' }
+];
 export const ALL = [...PACKAGES, ...COURSES, ...LIVE, ...EXTRAS];
 export const byId = id => ALL.find(x => x.id === id);
