@@ -69,7 +69,8 @@ app.post('/api/quote/:no/accept', wrap(async (req, res) => {
   if (q.status === 'accepted') return res.json({ ok: true, already: true, proforma: q.accept.proformaNo });
   const fast = new Date() <= new Date(q.fastUntil);
   const net = fast ? q.calc.netFast : q.calc.net;
-  q.accept = { at: new Date().toISOString(), fast, net, gross: Math.round(net * 1.27), gift: req.body.gift || null, dueDate: addDays(8).slice(0, 10) };
+  const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString().split(',')[0].trim();
+  q.accept = { at: new Date().toISOString(), fast, net, gross: Math.round(net * 1.27), gift: req.body.gift || null, dueDate: addDays(8).slice(0, 10), ip, userAgent: (req.headers['user-agent'] || '').slice(0, 200) };
   const pf = await szamlazz.createProforma(q);
   q.accept.proformaNo = pf.number; saveQuote(q);
   logEvent(q.no, 'accepted', { proforma: pf.number, fast });
