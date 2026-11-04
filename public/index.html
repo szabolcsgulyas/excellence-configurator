@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b2a4a">
 <title>Excellence ajánlat-konfigurátor</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -394,7 +400,8 @@ body:not(.print) .main>.rail{display:none}
 .item .actrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end} .item .actrow .btn{height:36px}
 .btn.add .off{display:none} .btn.add.added:hover .on{display:none} .btn.add.added:hover .off{display:inline}
 /* ---- Prototípus csík ---- */
-.demobar{background:var(--accent);color:var(--accent-fg);font-size:.78rem;font-weight:600;text-align:center;padding:5px 12px;position:sticky;top:0;z-index:7}
+.demobar .sm{display:none} @media (max-width:600px){.demobar .lg{display:none}.demobar .sm{display:inline}}
+.demobar{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:28px;box-sizing:border-box;background:var(--accent);color:var(--accent-fg);font-size:.78rem;font-weight:600;text-align:center;padding:5px 12px;position:sticky;top:0;z-index:7}
 body.print .demobar{display:none!important}
 /* ---- Aláírás ---- */
 .sig{display:flex;gap:14px;align-items:center} .sig img{height:30px;width:auto;padding-right:14px;border-right:2px solid #1aa3a3} .sig div{display:flex;flex-direction:column;gap:2px;font-size:.9rem} .sig b{font-family:var(--display);font-size:1rem} .sig a{color:var(--brand-ink);text-decoration:none;font-weight:600} .sig a:hover{text-decoration:underline}
@@ -409,7 +416,9 @@ body.print .demobar{display:none!important}
 @media (max-width:900px){.site-foot .in{grid-template-columns:1fr 1fr}} @media (max-width:520px){.site-foot .in{grid-template-columns:1fr}}
 </style>
 
-<div class="demobar" id="demobar" hidden>Prototípus · száraz mód: a gombok nem küldenek levelet, és nem írnak a CRM-be. A cégadatok mintaadatok. Végleges cím: ajanlat.excellence.hu</div>
+</head>
+<body>
+<div class="demobar" id="demobar" hidden><span class="lg">Prototípus · száraz mód: a gombok nem küldenek levelet, és nem írnak a CRM-be. A cégadatok mintaadatok. Végleges cím: ajanlat.excellence.hu</span><span class="sm">Prototípus · száraz mód, semmi nem megy ki</span></div>
 <div class="top"><div class="in"><span class="brand" style="display:flex;align-items:center;gap:10px"><img id="topLogo" alt="Excellence" style="height:26px;width:auto"><small>Céges képzési ajánlat</small></span><div class="hc" id="hc" hidden><label for="defN">Létszám</label><button data-dn="-1" aria-label="kevesebb">−</button><input type="number" id="defN" min="1" max="199" value="18"><button data-dn="1" aria-label="több">+</button><span class="muted small">fő</span><span class="pct" id="hcPct"></span></div><span class="muted small" id="stepLabel"></span></div>
 <div class="bar2" id="bar2"><div class="in"><div class="rail" id="rail">
     <div data-step="what">Képzések<span></span></div><div data-step="summary">Ár<span></span></div><div data-step="form">Cégadatok<span></span></div><div data-step="quote">Ajánlat<span></span></div>
@@ -1068,3 +1077,5 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
   go('start',true);
 })();
 </script>
+</body>
+</html>
