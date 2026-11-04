@@ -38,7 +38,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .wrap{max-width:1160px;margin:0 auto;padding-block:26px 140px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
 .wrap.single{grid-template-columns:minmax(0,1fr)} .wrap.single .main{max-width:900px;margin:0 auto;width:100%}
 .main{min-width:0;display:flex;flex-direction:column;gap:22px}
-.aside{position:sticky;top:calc(72px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:12px;min-width:0}
+.aside{position:sticky;top:calc(var(--toph,120px) + 12px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:12px;min-width:0}
 h1,h2,h3,h4{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0;letter-spacing:-.015em}
 h1{font-size:clamp(1.7rem,2.6vw,2.4rem);font-weight:800} h2{font-size:1.5rem;font-weight:700} h3{font-size:1.08rem;font-weight:700} h4{font-size:.95rem;font-weight:700}
 p{margin:0} .muted{color:var(--muted)} .small{font-size:.9rem}
@@ -322,23 +322,39 @@ body.print .pg:last-child{break-after:auto;page-break-after:auto}
 .pg.confirm .kv b{color:#0a5ea8}
 .pg.confirm .sig{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px}
 .pg.confirm .sig div{border-top:1px solid #0f1b2d;padding-top:6px;font-size:11px}
-/* ---- Varázsló-sáv: a továbblépés mindig felül, az elsődleges gomb sárga ---- */
-.wiz{position:sticky;top:calc(58px + env(safe-area-inset-top,0px));z-index:5;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow);margin-bottom:14px}
-.wiz .sp{flex:1 1 auto} .wiz .hint{font-size:.84rem;color:var(--muted)} .wiz .hint:empty{display:none}
+/* ---- Fejléc 2. sora: progressz + varázsló-gombok, rögzítve ---- */
+.top .bar2{background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.1)}
+.top .bar2 .in{padding-block:8px;gap:12px;flex-wrap:wrap}
+.top .bar2 .rail{flex:1 1 380px;max-width:560px;box-shadow:none;border-color:transparent}
+.top .bar2 .hintrow{padding-block:0 6px;justify-content:flex-start} .top .bar2 .hintrow:has(.hint:empty){display:none}
+.wiz{display:flex;gap:8px;align-items:center;margin-left:auto}
+.wiz .hint,.hintrow .hint{font-size:.82rem;color:rgba(255,255,255,.75)}
+.wiz .btn.ghost{color:#fff;border-color:rgba(255,255,255,.35)} .wiz .btn.ghost:hover{background:rgba(255,255,255,.1)}
 .wiz .btn.acc:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
 .actions{display:none!important}
-@media (max-width:520px){.wiz{top:calc(50px + env(safe-area-inset-top,0px));padding:8px;gap:6px;border-radius:10px}.wiz .btn{padding:10px 12px;font-size:.9rem}.wiz .hint{flex:1 1 100%}}
 #stickyNext{display:none!important}
+.rail div{color:var(--ink)}
+@media (max-width:900px){.top .bar2 .rail{flex-basis:100%;max-width:none}.wiz{margin-left:0;width:100%;justify-content:flex-end}}
+@media (max-width:520px){.top .bar2 .in{padding-block:6px;gap:6px}.wiz{gap:6px}.wiz .btn{padding:9px 11px;font-size:.88rem}.wiz .btn.acc{flex:1 1 auto}}
+body:not(.print) .main>.rail{display:none}
+/* ---- Lábléc ---- */
+.site-foot{background:var(--navy);color:rgba(255,255,255,.8);margin-top:48px;padding:40px 0 28px;font-size:.9rem}
+.site-foot .in{max-width:1160px;margin:0 auto;padding-inline:16px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+.site-foot h5{font-family:var(--display);color:#fff;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px}
+.site-foot p{margin:0 0 6px} .site-foot a{color:#fff;text-decoration:none} .site-foot a:hover{text-decoration:underline}
+.site-foot .brandline{display:flex;align-items:center;gap:10px;margin-bottom:10px} .site-foot .brandline img{height:26px}
+.site-foot .soc{display:flex;gap:10px;margin-top:12px} .site-foot .soc a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.1);display:inline-flex;align-items:center;justify-content:center;transition:background .15s} .site-foot .soc a:hover{background:var(--accent);color:var(--accent-fg)} .site-foot .soc svg{width:18px;height:18px;fill:currentColor}
+.site-foot .legal{max-width:1160px;margin:28px auto 0;padding:18px 16px 0;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.78rem;color:rgba(255,255,255,.55)}
+@media (max-width:900px){.site-foot .in{grid-template-columns:1fr 1fr}} @media (max-width:520px){.site-foot .in{grid-template-columns:1fr}}
 </style>
 
-<div class="top"><div class="in"><span class="brand" style="display:flex;align-items:center;gap:10px"><img id="topLogo" alt="Excellence" style="height:26px;width:auto"><small>Céges képzési ajánlat</small></span><div class="hc" id="hc" hidden><label for="defN">Létszám</label><button data-dn="-1" aria-label="kevesebb">−</button><input type="number" id="defN" min="1" max="199" value="18"><button data-dn="1" aria-label="több">+</button><span class="muted small">fő</span><span class="pct" id="hcPct"></span></div><span class="muted small" id="stepLabel"></span></div></div>
+<div class="top"><div class="in"><span class="brand" style="display:flex;align-items:center;gap:10px"><img id="topLogo" alt="Excellence" style="height:26px;width:auto"><small>Céges képzési ajánlat</small></span><div class="hc" id="hc" hidden><label for="defN">Létszám</label><button data-dn="-1" aria-label="kevesebb">−</button><input type="number" id="defN" min="1" max="199" value="18"><button data-dn="1" aria-label="több">+</button><span class="muted small">fő</span><span class="pct" id="hcPct"></span></div><span class="muted small" id="stepLabel"></span></div>
+<div class="bar2" id="bar2"><div class="in"><div class="rail" id="rail">
+    <div data-step="what">Képzések<span></span></div><div data-step="summary">Ár<span></span></div><div data-step="form">Cégadatok<span></span></div><div data-step="quote">Ajánlat<span></span></div>
+  </div><div class="wiz" id="wiz" hidden><button class="btn ghost" id="wizBack"></button><button class="btn ghost" id="wizSec"></button><button class="btn acc" id="wizNext"></button></div></div><div class="in hintrow"><span class="hint" id="wizHint"></span></div></div></div>
 
 <div class="wrap single" id="wrap">
 <div class="main">
-  <div class="rail" id="rail">
-    <div data-step="what">Képzések<span></span></div><div data-step="summary">Ár<span></span></div><div data-step="form">Cégadatok<span></span></div><div data-step="quote">Ajánlat<span></span></div>
-  </div>
-  <div class="wiz" id="wiz" hidden><button class="btn ghost" id="wizBack"></button><span class="hint" id="wizHint"></span><span class="sp"></span><button class="btn ghost" id="wizSec"></button><button class="btn acc" id="wizNext"></button></div>
 
   <!-- start -->
   <section class="view" id="v-start">
@@ -493,6 +509,13 @@ body.print .pg:last-child{break-after:auto;page-break-after:auto}
 </aside>
 </div>
 
+<footer class="site-foot" id="siteFoot"><div class="in">
+  <div><div class="brandline"><img id="footLogo" alt="Excellence"></div><p>Excel, Office, Power BI és mesterséges intelligencia képzések vállalatoknak – e-learning és élő tréning formában. Több mint 100 vállalati partner, 3000+ tanuló.</p>
+    <div class="soc" id="socials"><a href="#" data-social="facebook" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.3c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.3v2.3H7.4V14h2.8v8h3.3z"/></svg></a><a href="#" data-social="linkedin" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M6.9 8.5H3.6V21h3.3V8.5zM5.3 3C4.1 3 3.3 3.8 3.3 4.8s.8 1.9 1.9 1.9c1.2 0 2-.8 2-1.9S6.4 3 5.3 3zM21 13.3c0-3.6-1.9-5.2-4.5-5.2-2.1 0-3 1.1-3.5 1.9V8.5H9.7V21H13v-6.9c0-1.8.3-3.6 2.6-3.6 2.2 0 2.2 2.1 2.2 3.7V21H21v-7.7z"/></svg></a><a href="#" data-social="instagram" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 7.3a4.7 4.7 0 100 9.4 4.7 4.7 0 000-9.4zm0 7.7a3 3 0 110-6 3 3 0 010 6zm6-7.9a1.1 1.1 0 11-2.2 0 1.1 1.1 0 012.2 0zM21 7.1c-.1-1.5-.4-2.8-1.5-3.9S17 1.8 15.6 1.7C14.1 1.6 9.9 1.6 8.4 1.7 7 1.8 5.7 2.1 4.6 3.2S3.2 5.6 3.1 7.1c-.1 1.5-.1 5.7 0 7.2.1 1.5.4 2.8 1.5 3.9s2.4 1.4 3.9 1.5c1.5.1 5.7.1 7.2 0 1.5-.1 2.8-.4 3.9-1.5s1.4-2.4 1.5-3.9c.1-1.5.1-5.7 0-7.2zm-2 8.7c-.3.8-.9 1.4-1.7 1.7-1.2.5-4 .4-5.3.4s-4.1.1-5.3-.4c-.8-.3-1.4-.9-1.7-1.7-.5-1.2-.4-4-.4-5.3s-.1-4.1.4-5.3c.3-.8.9-1.4 1.7-1.7 1.2-.5 4-.4 5.3-.4s4.1-.1 5.3.4c.8.3 1.4.9 1.7 1.7.5 1.2.4 4 .4 5.3s.1 4.1-.4 5.3z"/></svg></a><a href="#" data-social="youtube" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24"><path d="M22.5 7.2c-.3-1-1-1.7-2-2C18.8 4.7 12 4.7 12 4.7s-6.8 0-8.5.5c-1 .3-1.7 1-2 2C1 9 1 12 1 12s0 3 .5 4.8c.3 1 1 1.7 2 2 1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5c1-.3 1.7-1 2-2 .5-1.8.5-4.8.5-4.8s0-3-.5-4.8zM9.8 15.1V8.9L15.5 12l-5.7 3.1z"/></svg></a></div></div>
+  <div><h5>Elérhetőség</h5><p>Excellence Training Kft.</p><p>8000 Székesfehérvár, Határ utca 16.</p><p><a href="tel:+36707768888">+36 70 776 8888</a></p><p><a href="mailto:info@excellence.hu">info@excellence.hu</a></p></div>
+  <div><h5>Az ajánlatról</h5><p>Kapcsolattartó: <b style="color:#fff">Gulyás Szabolcs</b></p><p><a href="mailto:szabolcs@excellence.hu">szabolcs@excellence.hu</a></p><p>Kérdésed van? Válaszolj az ajánlat e-mailre, vagy kérj visszahívást az ajánlatoldalon.</p></div>
+  <div><h5>Jogi információk</h5><p><a href="https://excellence.hu/adatvedelem/" target="_blank" rel="noopener">Adatkezelési tájékoztató</a></p><p>Adószám: 27036666-2-07</p><p>Felnőttképzési nyilvántartási szám: B/2020/000094</p></div>
+</div><div class="legal"><span>© <span id="footYear"></span> Excellence Training Kft. Minden jog fenntartva.</span><span>Az árak nettó árak, az ÁFA 27%. Az ajánlat 14 napig érvényes.</span></div></footer>
 <div class="sticky" id="sticky"><div class="in"><span class="muted small" id="stickyText"></span><span class="s" id="stickySum"></span><button class="btn sm sec" id="openKosar">Összeállítás</button><button class="btn sm acc" id="stickyNext">Tovább →</button></div></div>
 <div class="overlay" id="overlay" hidden><div class="panel"><div class="row"><h4>Összeállítás</h4><button class="btn sm ghost" id="closeKosar">Bezár</button></div><div id="ovChips"></div><div class="lines" id="ovLines" style="margin-top:10px"></div></div></div>
 <div class="toast" id="toast"></div>
@@ -503,8 +526,8 @@ body.print .pg:last-child{break-after:auto;page-break-after:auto}
           <label class="cf"><span>Megjegyzés <i>(opcionális)</i></span><textarea id="cpNote" rows="2" placeholder="Bármi, ami segít az ajánlathoz"></textarea></label>
           <div class="tip good" id="cpHint" style="display:block" hidden></div>
           <div class="row" style="gap:8px;margin-top:4px"><button class="btn" id="cpSend" style="flex:1">Egyedi ajánlat kérése</button><button class="btn ghost" id="cpCancel">Mégse</button></div>
-        </div></div></div>
-<div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="mhead"><div><h3 id="mTitle"></h3><p class="muted small" id="mSub"></p></div><button class="btn sm ghost" id="mClose" aria-label="Bezár">✕</button></div><div class="mbody" id="mBody"></div><div class="mfoot"><span class="muted small">Minden lecke videós, saját tempóban nézhető.</span><button class="btn sm" id="mAdd"></button></div></div></div>
+        </div></div></div></div>
+<div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="mhead"><div><h3 id="mTitle"></h3><p class="muted small" id="mSub"></p></div><button class="btn sm ghost" id="mClose" aria-label="Bezár">✕</button></div><div class="mbody" id="mBody"></div><div class="mfoot"><span class="muted small" id="mNote">Minden lecke videós, saját tempóban nézhető.</span><button class="btn sm" id="mAdd"></button></div></div></div>
 
 <script>
 /* Konfigurátor -> szerver csatoló. A konfigurator.html <script> elejére illesztendő.
@@ -579,6 +602,18 @@ window.EXC_API = (() => {
   const ft=n=>Math.round(n).toLocaleString('hu-HU')+' Ft';
   const $=s=>document.querySelector(s);
   const all=()=>[...PACKAGES.map(p=>({...p,type:'pkg'})),...COURSES,...LIVE];
+  // Élő képzések részletei a vállalati katalógusból (igényre szabott, 8 órás, max. 10–15 fő)
+  const LIVE_DETAIL={
+    'live-excel':{who:'Adminisztráció, kontrolling, értékesítés, elemzők – kezdőtől haladóig, szintenként külön csoportban.',topics:['Adminisztratív hatékonyság: adatbevitel, formázás, rendezés, szűrés','Képletek és függvények a napi feladatokra (FKERES/XKERES, HA, SZUMHA)','Kimutatások és diagramok riportokhoz','Haladó: Power Query, Power Pivot, automatizálás','A csapat saját fájljain, valós példákon']},
+    'live-pbi':{who:'Vezetők, elemzők, BI irányba nyitó csapatok.',topics:['Adatok betöltése és tisztítása (Power Query)','Adatmodell és kapcsolatok','DAX alapok és üzleti mértékek','Interaktív dashboardok, szűrők, részletezés','Megosztás és frissítés a szervezetben']},
+    'live-ai':{who:'Minden irodai munkatárs, aki ChatGPT-t, Copilotot vagy Claude-ot használna a napi munkában.',topics:['Nagy nyelvi modellek működése – mire jó, mire nem','Az AI gyakorlati alkalmazása a mindennapi munkafolyamatokban','Alkalmazási határok, nem javasolt felhasználási területek','Hatékony és biztonságos integrálás módszertana','Céges adatok védelme, promptolás a gyakorlatban']},
+    'live-soft':{who:'Csapatok és egyéni munkatársak – kommunikáció, együttműködés, önálló munkavégzés.',topics:['Kommunikáció és csapatmunka: resilience, konfliktus- és stresszkezelés, diverzitás','Motiváció és proaktivitás','Felelősségtudat és önálló munkavégzés: priorizálás, time management','Ügyfélkezelés, döntéshozatal, hatékony képviselet']},
+    'live-coach':{who:'Vezetők és leendő vezetők; 10 órás coaching keret is kérhető.',topics:['GROW modell, visszajelzési technikák','Szerepkonfliktusok és delegálási nehézségek','Önazonos vezetői stílus megtalálása','Csapaton belüli konfliktusok kezelése','Priorizálás, időgazdálkodás, felsővezetői nyomás kezelése']},
+    'live-opex':{who:'Termelő és szolgáltató szervezetek, folyamatfejlesztésért felelős csapatok.',topics:['Versenyképesség javítása, termelési hatékonyság növelése','Lean 5S – hatékony munkakörnyezet','Strukturált problémamegoldás: PDCA, A3, 8D','Standard Work – KPI stratégia lépésről lépésre','VSM értékáram-térképezés az alapoktól a fejlesztésig']}
+  };
+  function openLive(id){$('#mNote').textContent='Oktató vezette, a csapat saját feladataira szabva.';const x=LIVE.find(l=>l.id===id);const d=LIVE_DETAIL[id];$('#mTitle').textContent=x.name;$('#mSub').textContent='Élő, oktató vezette képzés · a szervezet igényeire szabva · '+ft(x.price)+' / alkalom (tájékoztató ár)';
+    $('#mBody').innerHTML=`<p>${x.desc}</p><h4>Kinek ajánljuk</h4><p>${d.who}</p><h4>Főbb témák</h4><ol>${d.topics.map(t=>`<li><span>•</span><span>${t}</span></li>`).join('')}</ol><h4>Így zajlik</h4><ol><li><span>1</span><span>Igényfelmérés: rövid egyeztetés a célokról és a résztvevők szintjéről</span></li><li><span>2</span><span>Testreszabás: a tematikát és a példákat a csapat saját feladataira igazítjuk</span></li><li><span>3</span><span>Képzés: 8 órás nap, legfeljebb 10–15 fő, gyakorlatorientáltan</span></li><li><span>4</span><span>Utánkövetés: anyagok, kérdések, igény szerint e-learning hozzáférés a mélyítéshez</span></li></ol><p class="muted small">Az ár 8 órás képzésre vonatkozik; a végleges időtartamra és díjra a szervezet céljai alapján teszünk javaslatot.</p>`;
+    const b=$('#mAdd');b.textContent=state.sel[id]?'✓ Kiválasztva':'+ Hozzáadom';b.dataset.id=id;b.hidden=false;$('#modal').hidden=false;}
   const byId=id=>all().find(x=>x.id===id);
   const cname=id=>COURSES.find(c=>c.id===id).name;
   const band=n=>BANDS.find(b=>n>=b.min&&n<=b.max)||BANDS[BANDS.length-1];
@@ -602,7 +637,7 @@ window.EXC_API = (() => {
 
   // ---- selection screens ----
   const pkgUnit=p=>{const n=state.defN;const r=bestForPackage(p.price,n);const use=r.alt?r.alt:r;return{pct:use.pct,unit:p.price*(1-use.pct/100),n:use.n};};
-  function liveRow(x){return`<div class="item"><div><div class="nm">${x.name}</div><div class="in">${x.desc}</div></div><div class="side"><span class="pr">${ft(x.price)}</span><button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;}
+  function liveRow(x){return`<div class="item"><div><div class="nm">${x.name}</div><div class="in">${x.desc} <button class="tlink" data-live="${x.id}">Részletek →</button></div></div><div class="side"><span class="pr">${ft(x.price)}</span><button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;}
   function renderPkg(){
     const dot=v=>v===1?'<span class="dot" title="teljes terület"></span>':v===0.5?'<span class="dot half" title="részben"></span>':'<span class="muted">–</span>';
     $('#matrix').innerHTML=`<table><thead><tr><th>Terület</th>${PACKAGES.map(p=>{const u=pkgUnit(p);return`<th class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" role="button" tabindex="0" style="cursor:pointer">${p.name}<span class="pp">${ft(u.unit)}/fő${u.pct?' (−'+u.pct+'%)':''}</span></th>`;}).join('')}</tr></thead>
@@ -774,7 +809,7 @@ window.EXC_API = (() => {
     if(!fromPop&&v!==cur){try{history.pushState({v},'','#'+v);}catch(e){}}
     cur=v;VIEWS.forEach(k=>{$('#v-'+k).hidden=k!==v;});
     const i=railIdx(v);document.querySelectorAll('#rail div').forEach((s,j)=>{s.classList.toggle('on',j===i);s.classList.toggle('done',j<i);});
-    $('#stepLabel').textContent=i>=0?`${i+1}. lépés / 4`:'';$('#rail').style.display=v==='start'?'none':'';
+    $('#stepLabel').textContent=i>=0?`${i+1}. lépés / 4`:'';$('#bar2').style.display=v==='start'?'none':'';
     if(v==='pkg')renderPkg();if(v==='single')renderSingle();if(v==='summary')renderSummary();if(v==='quote')renderQuote();if(v==='thanks')renderThanks();if(v==='pdf')renderPdf();if(v==='fwd')renderFwd();
     renderAside();window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -788,11 +823,11 @@ window.EXC_API = (() => {
   }
   function setQty(id,n){const x=byId(id);state.qty[id]=Math.min(x.type==='live'?20:MAX_SEATS,Math.max(1,n));save();}
   function setDefN(n){state.defN=Math.min(MAX_SEATS,Math.max(1,n));selected().filter(x=>x.type!=='live').forEach(x=>state.qty[x.id]=state.defN);save();rerenderCur();}
-  function openSyl(id){const c=COURSES.find(x=>x.id===id);const m=SYLLABUS[id];$('#mTitle').textContent=c.name;$('#mSub').textContent=`${c.videos} videó · ${c.length} · e-learning, 1 év hozzáférés`;
+  function openSyl(id){$('#mNote').textContent='Minden lecke videós, saját tempóban nézhető.';const c=COURSES.find(x=>x.id===id);const m=SYLLABUS[id];$('#mTitle').textContent=c.name;$('#mSub').textContent=`${c.videos} videó · ${c.length} · e-learning, 1 év hozzáférés`;
     $('#mBody').innerHTML=m&&m.length?m.map(mod=>`${mod.t?`<h4>${mod.t}</h4>`:''}<ol>${mod.i.map(x=>{const mm=x.match(/^([\d.]+\.?)\s+(.+)$/);return mm?`<li><span>${mm[1].replace(/\.$/,'')}</span><span>${mm[2]}</span></li>`:`<li><span></span><span>${x}</span></li>`;}).join('')}</ol>`).join(''):'<p class="muted">A részletes tematikát az Excellence-től kérjük; a képzés leírása: '+c.desc+'</p>';
     const b=$('#mAdd');b.textContent=state.sel[id]?'✓ Kiválasztva':'+ Hozzáadom';b.dataset.id=id;b.hidden=state.path!=='single'||cur!=='single';
     $('#modal').hidden=false;}
-  function openPkgSyl(pid){const p=PACKAGES.find(x=>x.id===pid);$('#mTitle').textContent=p.name+' csomag';$('#mSub').textContent=p.sub+' · '+p.items.length+' képzés, 1 év hozzáférés';
+  function openPkgSyl(pid){$('#mNote').textContent='Minden lecke videós, saját tempóban nézhető.';const p=PACKAGES.find(x=>x.id===pid);$('#mTitle').textContent=p.name+' csomag';$('#mSub').textContent=p.sub+' · '+p.items.length+' képzés, 1 év hozzáférés';
     $('#mBody').innerHTML=p.items.map(id=>{const c=COURSES.find(x=>x.id===id);return`<details class="msyl"><summary><b>${c.name}</b> <span class="muted small">· ${c.videos} videó, ${c.length}</span></summary><div class="msylb">${(SYLLABUS[id]||[]).map(mod=>`${mod.t?`<h4>${mod.t}</h4>`:''}<ol>${mod.i.map(x=>{const mm=x.match(/^([\d.]+\.?)\s+(.+)$/);return mm?`<li><span>${mm[1].replace(/\.$/,'')}</span><span>${mm[2]}</span></li>`:`<li><span></span><span>${x}</span></li>`;}).join('')}</ol>`).join('')||'<p class="muted small">Tematika egyeztetés alatt.</p>'}</div></details>`;}).join('');
     const b=$('#mAdd');b.textContent=state.sel[pid]?'✓ Kiválasztva':'+ Ezt választom';b.dataset.id=pid;b.hidden=cur!=='pkg';$('#modal').hidden=false;}
   function cpHint(){const n=parseInt($('#cpN').value||0,10);const y=parseInt($('#cpY').value||1,10);const h=$('#cpHint');if(!n){h.hidden=true;return;}
@@ -820,6 +855,7 @@ window.EXC_API = (() => {
   $('#mAdd').addEventListener('click',e=>{const id=e.target.dataset.id;if(!state.sel[id]){toggle(id);rerenderCur();}$('#modal').hidden=true;});
   document.addEventListener('click',e=>{
     const sy=e.target.closest('[data-syl]');if(sy){e.stopPropagation();openSyl(sy.dataset.syl);return;}
+    const lv=e.target.closest('[data-live]');if(lv){e.stopPropagation();openLive(lv.dataset.live);return;}
     const ps=e.target.closest('[data-pksyl]');if(ps){e.stopPropagation();openPkgSyl(ps.dataset.pksyl);return;}
     const pth=e.target.closest('[data-path]');if(pth){setPath(pth.dataset.path);return;}
     const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return;}
@@ -856,7 +892,9 @@ window.EXC_API = (() => {
     fwd:{back:['← Vissza az ajánlathoz',()=>go('quote')]}
   };
   function openPdf(){if(EXC_API.no)window.open('/api/quote/'+EXC_API.no+'/pdf','_blank');else if(cur!=='pdf')go('pdf');else toast('A PDF az ajánlat elküldése után tölthető le.');}
-  function renderWiz(){const w=WIZ[cur];const el=$('#wiz');el.hidden=!w;if(!w)return;
+  function measureTop(){document.documentElement.style.setProperty('--toph',document.querySelector('.top').offsetHeight+'px');}
+  window.addEventListener('resize',measureTop);
+  function renderWiz(){const w=WIZ[cur];const el=$('#wiz');el.hidden=!w;requestAnimationFrame(measureTop);if(!w){$('#wizHint').textContent='';return;}
     const set=(id,c)=>{const b=$('#'+id);b.hidden=!c;if(c){b.textContent=c[0];b.onclick=c[1];}};
     set('wizBack',w.back);set('wizSec',w.sec);set('wizNext',w.next);
     const ok=!w.need||selected().length>0;$('#wizNext').disabled=!ok;$('#wizHint').textContent=w.need&&!ok?w.hint:(cur==='summary'?w.hint:'');
@@ -901,7 +939,7 @@ window.EXC_API = (() => {
   window.addEventListener('popstate',e=>{const v=(e.state&&e.state.v)||'start';if(VIEWS.includes(v))go(v,true);});
   window.addEventListener('beforeunload',e=>{if(cur!=='start'&&cur!=='quote'&&selected().length){e.preventDefault();e.returnValue='Az összeállításod még nincs elküldve. Biztosan kilépsz?';return e.returnValue;}});
   try{history.replaceState({v:'start'},'','#start');}catch(e){}
-  $('#topLogo').src=IMG.logoW;
+  $('#topLogo').src=IMG.logoW;$('#footLogo').src=IMG.logoW;$('#footYear').textContent=new Date().getFullYear();
   go('start',true);
 })();
 </script>
