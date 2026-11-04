@@ -486,6 +486,31 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 <div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="mhead"><div><h3 id="mTitle"></h3><p class="muted small" id="mSub"></p></div><button class="btn sm ghost" id="mClose" aria-label="Bezár">✕</button></div><div class="mbody" id="mBody"></div><div class="mfoot"><span class="muted small">Minden lecke videós, saját tempóban nézhető.</span><button class="btn sm" id="mAdd"></button></div></div></div>
 
 <script>
+/* Konfigurátor -> szerver csatoló. A konfigurator.html <script> elejére illesztendő.
+   Használat: a meglévő eseménykezelőkbe egy-egy hívás (lásd README "Bekötés a konfigurátorba"). */
+window.EXC_API = (() => {
+  const BASE = ''; // a konfigurátort ugyanaz a szerver szolgálja ki, így azonos origin
+  const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => k.startsWith('utm_')).map(([k, v]) => [k.slice(4), v]));
+  let no = (location.pathname.match(/^\/a\/([\w-]+)/) || [])[1] || null;
+  const post = (p, body) => fetch(BASE + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) })
+    .then(r => r.json()).then(j => { if (!j.ok) throw new Error(j.error || 'Hiba'); return j; });
+  return {
+    get no() { return no; },
+    utm,
+    nav: taxid => fetch(`${BASE}/api/nav/${taxid}`).then(r => r.json()),
+    calc: selection => post('/api/calc', { selection }),
+    /** state.sel/state.qty -> [{id,qty}] */
+    selectionFrom: (state, selected, qtyOf) => selected().map(x => ({ id: x.id, qty: qtyOf(x) })),
+    quote: (company, selection, customReq) => post('/api/quote', { company, selection, utm, customReq }).then(j => { no = j.no; history.replaceState(history.state, '', `/a/${no}`); return j; }),
+    accept: gift => post(`/api/quote/${no}/accept`, { gift }),
+    callback: (phone, startTime, slot) => post(`/api/quote/${no}/callback`, { phone, startTime, slot }),
+    customPrice: d => post(`/api/quote/${no}/custom-price`, d),
+    question: text => post(`/api/quote/${no}/question`, { text }),
+    forward: to => post(`/api/quote/${no}/forward`, { to }),
+    load: () => no ? fetch(`${BASE}/api/quote/${no}`).then(r => r.json()) : Promise.resolve(null)
+  };
+})();
+
 (function(){
   const AREAS=['Excel alapok','Excel haladó','Power BI','Mesterséges intelligencia','Irodai alapok, vizualizáció'];
   const PACKAGES=[
@@ -648,7 +673,7 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
     setStatus('Kiküldve',true);$('#cmodal').hidden=true;$('#cdone').hidden=true;$('#customBtn').hidden=false;
   }
   function fmtDate(x){return x.toLocaleDateString('hu-HU');}
-  function renderThanks(){const T=totals();$('#tName').textContent=(state.company.contact||'').split(' ').slice(-1)[0]||'';$('#tNo').textContent=$('#qNo').textContent;$('#tGross').textContent=ft(T.gross);}
+  function renderThanks(){const T=totals();$('#tName').textContent=(state.company.contact||'').split(' ').slice(-1)[0]||'';$('#tNo').textContent=$('#qNo').textContent;$('#tGross').textContent=ft(state.accept&&state.accept.gross?state.accept.gross:T.gross);}
   function renderPdf(){const T=totals();const d=new Date(),v=new Date(d.getTime()+14*864e5),d7=new Date(d.getTime()+7*864e5);
     const hasE=T.L.some(l=>l.type!=='live'),hasL=T.L.some(l=>l.type==='live');const kind=hasE&&hasL?'Komplex':hasL?'Élő':'E-learning';
     const no=$('#qNo').textContent,first=(state.company.contact||'Ajánlatkérő').split(' ').slice(-1)[0];
@@ -760,10 +785,12 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
   $('#cpCancel').addEventListener('click',()=>{$('#cmodal').hidden=true;});$('#cmClose').addEventListener('click',()=>{$('#cmodal').hidden=true;});$('#cmodal').addEventListener('click',e=>{if(e.target.id==='cmodal')$('#cmodal').hidden=true;});
   ['cpN','cpY'].forEach(id=>$('#'+id).addEventListener('input',cpHint));
   $('#cpSend').addEventListener('click',()=>{const d=`${$('#cpWhy').value} · ${$('#cpN').value||'?'} fő · ${$('#cpY').value} év${$('#cpBudget').value?' · keret '+ft(+$('#cpBudget').value):''}${$('#cpNote').value?' · „'+$('#cpNote').value+'”':''}`;
-    state.customReq=d;setStatus('Egyedi ár kérése folyamatban · '+d);$('#cmodal').hidden=true;$('#cdone').hidden=false;$('#customBtn').hidden=true;});
+    state.customReq=d;setStatus('Egyedi ár kérése folyamatban · '+d);$('#cmodal').hidden=true;$('#cdone').hidden=false;$('#customBtn').hidden=true;
+    if(EXC_API.no)EXC_API.customPrice({why:$('#cpWhy').value,headcount:$('#cpN').value,years:$('#cpY').value,budget:$('#cpBudget').value,note:$('#cpNote').value}).catch(err=>toast('Nem sikerült elküldeni: '+err.message));});
   $('#pdfBtn').addEventListener('click',()=>go('pdf'));$('#tPdf').addEventListener('click',()=>go('pdf'));
   $('#pdfDl').addEventListener('click',()=>toast('Élesben itt indul a PDF letöltése (szerver oldalon generálva).'));
-  ['tContract','tInvoice'].forEach(id=>$('#'+id).addEventListener('click',()=>toast('Élesben a Számlázz.hu / szerződéssablon PDF-je nyílik meg.')));
+  $('#tContract').addEventListener('click',()=>{if(state.accept&&state.accept.contractUrl)window.open(state.accept.contractUrl,'_blank');else toast('A szerződés az elfogadás után érhető el.');});
+  $('#tInvoice').addEventListener('click',()=>toast(state.accept&&state.accept.proforma?('Díjbekérő: '+state.accept.proforma+' – a PDF-et e-mailben küldtük.'):'A díjbekérő az elfogadás után érhető el.'));
   $('#paper').addEventListener('click',e=>{const a=e.target.closest('a[href^="#tematika-"]');if(a){e.preventDefault();openSyl(a.getAttribute('href').replace('#tematika-',''));}const b=e.target.closest('a.pbtn');if(b){e.preventDefault();go('quote');}});
   $('#mail').addEventListener('click',e=>{const a=e.target.closest('a.cta');if(a){e.preventDefault();go('quote');}});
   $('#mClose').addEventListener('click',()=>{$('#modal').hidden=true;});
@@ -782,7 +809,12 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
     const rm=e.target.closest('[data-rm]');if(rm){toggle(rm.dataset.rm);rerenderCur();return;}
     const q=e.target.closest('[data-inc],[data-dec],[data-set]');if(q){const id=q.dataset.inc||q.dataset.dec||q.dataset.set;let n=qtyOf(byId(id));
       if(q.dataset.set)n=parseInt(q.dataset.val,10);else n+=q.dataset.inc?1:-1;setQty(id,n);rerenderCur();return;}
-    const a=e.target.closest('[data-act]');if(a){setStatus(a.dataset.act);if(a.dataset.act==='Elfogadva')go('thanks');if(a.dataset.act==='Továbbküldve')go('fwd');}
+    const a=e.target.closest('[data-act]');if(a){const act=a.dataset.act;const fail=err=>toast('Nem sikerült: '+err.message);
+      if(act==='Elfogadva'){a.disabled=true;EXC_API.accept(state.giftChoice||null).then(j=>{state.accept=j;setStatus(act);go('thanks');}).catch(fail).finally(()=>a.disabled=false);}
+      else if(act==='Visszahívást kér'){EXC_API.callback(state.company.phone,null,$('#cbTime').value).then(()=>{setStatus(act);toast('Visszahívás rögzítve.');}).catch(fail);}
+      else if(act==='Kérdés'){const t=$('#qQuestion').value.trim();if(!t){toast('Írd be a kérdésed.');return;}EXC_API.question(t).then(()=>{setStatus(act);toast('Kérdés elküldve.');}).catch(fail);}
+      else if(act==='Továbbküldve'){const to=$('#fwdMail').value.trim();if(!to){toast('Add meg a döntéshozó e-mail-címét.');return;}EXC_API.forward(to).then(()=>{setStatus(act);go('fwd');}).catch(fail);}
+      else setStatus(act);}
   });
   document.addEventListener('keydown',e=>{const el=e.target.closest&&e.target.closest('[data-pk]');if(el&&(e.key==='Enter'||e.key===' ')&&!e.target.closest('button')){e.preventDefault();toggle(el.dataset.pk);rerenderCur();}});
   document.addEventListener('change',e=>{
@@ -800,10 +832,13 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
   $('#navBtn').addEventListener('click',()=>{const raw=$('#taxid').value.replace(/\D/g,'');const h=$('#taxHelp');
     if(raw.length!==11){h.textContent='Az adószám 11 számjegy (8-1-2).';h.className='help err';return;}
     h.textContent='Lekérdezés a NAV adatbázisából…';h.className='help';
-    setTimeout(()=>{const r=NAV_DEMO[raw];if(r){$('#company').value=r.name;$('#addr').value=r.addr;h.textContent='Megtaláltuk, ellenőrizd az adatokat.';h.className='help ok';}
-      else{h.textContent='Nem találtuk a NAV-nál (demó). Töltsd ki kézzel a cégnevet és a székhelyet.';h.className='help err';$('#company').focus();}},600);});
+    EXC_API.nav(raw).catch(()=>({})).then(j=>{const r=(j&&j.found)?{name:j.name,addr:j.addr}:NAV_DEMO[raw];if(r){$('#company').value=r.name;$('#addr').value=r.addr;h.textContent='Megtaláltuk, ellenőrizd az adatokat.';h.className='help ok';}
+      else{h.textContent='Nem találtuk a NAV-nál (demó). Töltsd ki kézzel a cégnevet és a székhelyet.';h.className='help err';$('#company').focus();}});});
   $('#reqForm').addEventListener('submit',e=>{e.preventDefault();const f=e.target;if(!f.checkValidity()){f.reportValidity();return;}
-    state.company={name:$('#company').value,addr:$('#addr').value,contact:$('#name').value,role:$('#role').value,email:$('#email').value,taxid:$('#taxid').value};go('quote');});
+    state.company={name:$('#company').value,addr:$('#addr').value,contact:$('#name').value,role:$('#role').value,email:$('#email').value,phone:$('#phone').value,taxid:$('#taxid').value};
+    const sb=f.querySelector('button[type=submit]');if(sb){sb.disabled=true;sb.textContent='Ajánlat készül…';}
+    EXC_API.quote(state.company,EXC_API.selectionFrom(state,selected,qtyOf),state.customReq).then(j=>{state.qno=j.no;state.version=1;save();go('quote');})
+      .catch(err=>{toast('Nem sikerült elküldeni: '+err.message);go('quote');}).finally(()=>{if(sb){sb.disabled=false;sb.textContent='Ajánlat megtekintése →';}});});
   if(!selected().length){state.path='pkg';state.sel['excel-pro']=true;state.qty['excel-pro']=18;}
   window.addEventListener('popstate',e=>{const v=(e.state&&e.state.v)||'start';if(VIEWS.includes(v))go(v,true);});
   window.addEventListener('beforeunload',e=>{if(cur!=='start'&&cur!=='quote'&&selected().length){e.preventDefault();e.returnValue='Az összeállításod még nincs elküldve. Biztosan kilépsz?';return e.returnValue;}});

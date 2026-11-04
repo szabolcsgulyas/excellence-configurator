@@ -1,7 +1,7 @@
 /* Konfigurátor -> szerver csatoló. A konfigurator.html <script> elejére illesztendő.
    Használat: a meglévő eseménykezelőkbe egy-egy hívás (lásd README "Bekötés a konfigurátorba"). */
 window.EXC_API = (() => {
-  const BASE = (location.hostname === 'localhost' ? '' : 'https://ajanlat.excellence.hu'); // azonos origin esetén üres
+  $('#tGross').textContent=ft(state.accept&&state.accept.gross?state.accept.gross:T.gross);}
   const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => k.startsWith('utm_')).map(([k, v]) => [k.slice(4), v]));
   let no = (location.pathname.match(/^\/a\/([\w-]+)/) || [])[1] || null;
   const post = (p, body) => fetch(BASE + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) })
