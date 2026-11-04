@@ -309,6 +309,19 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 }
 .savebadge{display:inline-flex;align-items:center;gap:8px;background:var(--good-soft);color:var(--good);border:1px solid color-mix(in srgb,var(--good) 35%,transparent);border-radius:999px;padding:6px 14px;font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums}.savebadge small{font-family:var(--body);font-weight:600;font-size:.78rem;opacity:.85}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.pkg:hover{transform:none}}
+/* ---- Szerveroldali PDF (nyomtatási mód) ---- */
+@page{size:A4;margin:0}
+body.print>*:not(#wrap),body.print #wrap>*:not(.main),body.print .main>*:not(#v-pdf),body.print #v-pdf>*:not(#paper){display:none!important}
+body.print{background:#fff;margin:0;padding:0}
+body.print #wrap,body.print .main{display:block;max-width:none;width:auto;padding:0;margin:0;grid-template-columns:none;gap:0;border:0;background:none}
+body.print #v-pdf{display:block!important;padding:0;margin:0;max-width:none}
+body.print .paper{max-width:none;gap:0;margin:0}
+body.print .pg{aspect-ratio:auto;width:210mm;height:297mm;box-shadow:none;border:0;border-radius:0;break-after:page;page-break-after:always;margin:0}
+body.print .pg:last-child{break-after:auto;page-break-after:auto}
+.pg.confirm .kv{display:grid;grid-template-columns:160px 1fr;gap:6px 14px;margin:10px 0 16px}
+.pg.confirm .kv b{color:#0a5ea8}
+.pg.confirm .sig{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px}
+.pg.confirm .sig div{border-top:1px solid #0f1b2d;padding-top:6px;font-size:11px}
 </style>
 
 <div class="top"><div class="in"><span class="brand" style="display:flex;align-items:center;gap:10px"><img id="topLogo" alt="Excellence" style="height:26px;width:auto"><small>Céges képzési ajánlat</small></span><div class="hc" id="hc" hidden><label for="defN">Létszám</label><button data-dn="-1" aria-label="kevesebb">−</button><input type="number" id="defN" min="1" max="199" value="18"><button data-dn="1" aria-label="több">+</button><span class="muted small">fő</span><span class="pct" id="hcPct"></span></div><span class="muted small" id="stepLabel"></span></div></div>
@@ -440,7 +453,7 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
       <h2>Köszönjük, <span id="tName"></span>!</h2>
       <p>Az ajánlatot elfogadtátok, a megrendelést rögzítettük <b id="tNo"></b> számon. Így folytatódik:</p>
       <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">
-        <li><b>Szerződés:</b> a megrendelés alapján elkészült, e-mailben is elküldtük. Itt is letölthető: <button class="tlink" id="tContract">Szerződés (PDF)</button></li>
+        <li><b>Megrendelés:</b> az elfogadott ajánlat a visszaigazolással együtt, e-mailben is elküldtük. Itt is letölthető: <button class="tlink" id="tContract">Megrendelés visszaigazolása (PDF)</button></li>
         <li><b>Díjbekérő:</b> <b id="tGross"></b> bruttó, átutalással, 8 napos fizetési határidővel. Letöltés: <button class="tlink" id="tInvoice">Díjbekérő (PDF)</button></li>
         <li><b>Résztvevők:</b> kérjük, küldd el a résztvevők nevét és e-mail-címét (válasz e-mailben vagy táblázatban). Ha nincs még meg a lista, ráér a fizetésig.</li>
         <li><b>Indulás:</b> az összeg beérkezését követő munkanapon aktiváljuk a hozzáféréseket, és minden résztvevő belépőt kap.</li>
@@ -788,9 +801,9 @@ window.EXC_API = (() => {
     state.customReq=d;setStatus('Egyedi ár kérése folyamatban · '+d);$('#cmodal').hidden=true;$('#cdone').hidden=false;$('#customBtn').hidden=true;
     if(EXC_API.no)EXC_API.customPrice({why:$('#cpWhy').value,headcount:$('#cpN').value,years:$('#cpY').value,budget:$('#cpBudget').value,note:$('#cpNote').value}).catch(err=>toast('Nem sikerült elküldeni: '+err.message));});
   $('#pdfBtn').addEventListener('click',()=>go('pdf'));$('#tPdf').addEventListener('click',()=>go('pdf'));
-  $('#pdfDl').addEventListener('click',()=>toast('Élesben itt indul a PDF letöltése (szerver oldalon generálva).'));
+  $('#pdfDl').addEventListener('click',()=>{if(EXC_API.no)window.open('/api/quote/'+EXC_API.no+'/pdf','_blank');else toast('A PDF az ajánlat elküldése után tölthető le.');});
   $('#tContract').addEventListener('click',()=>{if(state.accept&&state.accept.contractUrl)window.open(state.accept.contractUrl,'_blank');else toast('A szerződés az elfogadás után érhető el.');});
-  $('#tInvoice').addEventListener('click',()=>toast(state.accept&&state.accept.proforma?('Díjbekérő: '+state.accept.proforma+' – a PDF-et e-mailben küldtük.'):'A díjbekérő az elfogadás után érhető el.'));
+  $('#tInvoice').addEventListener('click',()=>toast(state.accept&&state.accept.proforma?('Díjbekérő: '+state.accept.proforma+' – a Számlázz.hu PDF-jét e-mailben küldtük.'):'A díjbekérő az elfogadás után érhető el.'));
   $('#paper').addEventListener('click',e=>{const a=e.target.closest('a[href^="#tematika-"]');if(a){e.preventDefault();openSyl(a.getAttribute('href').replace('#tematika-',''));}const b=e.target.closest('a.pbtn');if(b){e.preventDefault();go('quote');}});
   $('#mail').addEventListener('click',e=>{const a=e.target.closest('a.cta');if(a){e.preventDefault();go('quote');}});
   $('#mClose').addEventListener('click',()=>{$('#modal').hidden=true;});
@@ -840,6 +853,26 @@ window.EXC_API = (() => {
     EXC_API.quote(state.company,EXC_API.selectionFrom(state,selected,qtyOf),state.customReq).then(j=>{state.qno=j.no;state.version=1;save();go('quote');})
       .catch(err=>{toast('Nem sikerült elküldeni: '+err.message);go('quote');}).finally(()=>{if(sb){sb.disabled=false;sb.textContent='Ajánlat megtekintése →';}});});
   if(!selected().length){state.path='pkg';state.sel['excel-pro']=true;state.qty['excel-pro']=18;}
+  // Nyomtatási mód: ?print=<ajánlatszám> -> a szerver innen készíti a PDF-et
+  const printNo=new URLSearchParams(location.search).get('print');
+  if(printNo){document.body.classList.add('print');
+    fetch('/api/quote/'+encodeURIComponent(printNo)).then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);const q=j.quote;
+      state.sel={};state.qty={};(q.selection||[]).forEach(x=>{state.sel[x.id]=true;state.qty[x.id]=x.qty;});
+      const anyPkg=(q.selection||[]).some(x=>byId(x.id)&&byId(x.id).type==='pkg');state.path=anyPkg?'pkg':'single';
+      const firstE=(q.selection||[]).find(x=>byId(x.id)&&byId(x.id).type!=='live');if(firstE)state.defN=firstE.qty;
+      state.company=q.company||{};state.qno=q.no;state.version=1;state.customReq=q.customReq?[q.customReq.why,q.customReq.headcount+' fő',q.customReq.years+' év'].join(' · '):null;
+      go('quote',true);go('pdf',true);
+      if(q.accept){const T=totals();const a=q.accept;const f=x=>new Date(x).toLocaleDateString('hu-HU');
+        const items=T.L.map(l=>`<tr><td>${l.name}${l.type==='pkg'?' csomag':''}</td><td style="text-align:center">${l.n} ${l.type==='live'?'alkalom':'fő'}</td><td style="text-align:right">${ft(l.net)}</td></tr>`).join('');
+        $('#paper').insertAdjacentHTML('beforeend',`<div class="pg confirm"><div class="grid"></div><div class="num">✓</div><h1>Megrendelés visszaigazolása</h1><p class="muted">Ajánlat ${q.no} · elfogadva ${f(a.at)}</p>
+          <div class="kv"><b>Megrendelő</b><span>${q.company.name}</span><b>Székhely</b><span>${q.company.addr||''}</span><b>Adószám</b><span>${q.company.taxid||''}</span><b>Elfogadta</b><span>${q.company.contact}${q.company.role?' · '+q.company.role:''} (${q.company.email})</span><b>Díjbekérő</b><span>${a.proformaNo||'—'} · fizetési határidő ${a.dueDate||''}</span></div>
+          <h3>Megrendelt tételek</h3><table style="width:100%;border-collapse:collapse;font-size:11.5px"><thead><tr style="border-bottom:1px solid #0a5ea8"><th style="text-align:left;padding:4px 0">Képzés</th><th style="padding:4px 0">Mennyiség</th><th style="text-align:right;padding:4px 0">Nettó</th></tr></thead><tbody>${items}</tbody>
+          <tfoot><tr style="border-top:1px solid #0a5ea8"><td style="padding:6px 0"><b>Fizetendő nettó${a.fast?' (gyors döntési '+FAST_PCT+'% levonva)':''}</b></td><td></td><td style="text-align:right;padding:6px 0"><b>${ft(a.net)}</b></td></tr><tr><td>ÁFA 27%</td><td></td><td style="text-align:right">${ft(a.gross-a.net)}</td></tr><tr><td><b>Fizetendő bruttó</b></td><td></td><td style="text-align:right"><b>${ft(a.gross)}</b></td></tr></tfoot></table>
+          ${a.gift?`<p class="muted" style="margin-top:8px">Választott ajándék képzés: ${cname(a.gift)}</p>`:''}
+          <h3>Feltételek</h3><p>Az e-learning hozzáférések a díjbekérő kiegyenlítése után 1 munkanapon belül aktiválódnak, és az aktiválástól számított 1 évig érvényesek; nem hosszabbodnak meg automatikusan. Az e-learning tételekre 30 napos pénzvisszafizetési garancia vonatkozik. Az élő képzések időpontját a felek külön egyeztetik. Fizetés: átutalással, a díjbekérő alapján, 8 napon belül. Az ajánlat elfogadásával a megrendelés a jelen visszaigazolás és a díjbekérő szerinti tartalommal létrejött.</p>
+          <div class="sig"><div>Excellence Training Kft.<br>Gulyás Szabolcs, értékesítési partner</div><div>${q.company.name}<br>${q.company.contact} · elektronikusan elfogadva ${f(a.at)}</div></div>
+          <div class="foot"><span>Excellence Training Kft. · ${q.no}</span><span>Megrendelés visszaigazolása</span></div></div>`);}
+      window.__pdfReady=true;}).catch(e=>{document.body.innerHTML='<pre>PDF hiba: '+e.message+'</pre>';window.__pdfError=e.message;});}
   window.addEventListener('popstate',e=>{const v=(e.state&&e.state.v)||'start';if(VIEWS.includes(v))go(v,true);});
   window.addEventListener('beforeunload',e=>{if(cur!=='start'&&cur!=='quote'&&selected().length){e.preventDefault();e.returnValue='Az összeállításod még nincs elküldve. Biztosan kilépsz?';return e.returnValue;}});
   try{history.replaceState({v:'start'},'','#start');}catch(e){}

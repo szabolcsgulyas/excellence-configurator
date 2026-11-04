@@ -9,8 +9,11 @@
     "dev": "node --watch src/server.js",
     "test": "node test/smoke.js"
   },
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "playwright": "^1.63.0"
   }
 }
