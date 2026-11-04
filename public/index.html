@@ -45,7 +45,7 @@ p{margin:0} .muted{color:var(--muted)} .small{font-size:.9rem}
 .brand{color:var(--brand-ink);font-family:var(--display);font-weight:800;letter-spacing:-.01em}
 /* step rail */
 .rail{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:var(--shadow)}
-.rail div{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.8rem;font-weight:600;color:var(--muted);padding:8px 10px;border-radius:999px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rail div{display:flex;align-items:center;justify-content:center;gap:7px;font-size:.78rem;font-weight:600;color:var(--muted);padding:7px 9px;border-radius:999px;min-width:0;white-space:nowrap}
 .rail div span{display:none}
 .rail div::before{content:counter(step);counter-increment:step;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--surface-2);color:var(--muted);font-size:.72rem;font-weight:700;flex:none}
 .rail{counter-reset:step}
@@ -68,6 +68,9 @@ p{margin:0} .muted{color:var(--muted)} .small{font-size:.9rem}
 .matrix th[data-pk]:hover,.matrix td[data-pk]:hover{background:var(--surface-2)}
 /* package cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+#pkgGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;align-items:stretch}
+#pkgGrid .pkg{height:100%;padding:16px 14px} #pkgGrid .pkg .tag{position:static;align-self:flex-start;order:-1} body.pkgwide .wrap,body.pkgwide .top .in,body.pkgwide .sticky .in{max-width:1400px} #pkgGrid .pkg h3{font-size:1rem} #pkgGrid .pkg ul{flex:1;margin:0;padding-left:18px;font-size:.8rem} #pkgGrid .pkg .who{font-size:.78rem}
+@media (max-width:1150px){#pkgGrid{grid-template-columns:repeat(3,minmax(0,1fr))}} @media (max-width:760px){#pkgGrid{grid-template-columns:1fr}}
 .pkg{display:flex;flex-direction:column;gap:10px;position:relative;transition:transform .15s,box-shadow .15s,border-color .15s}
 .pkg:hover{transform:translateY(-2px);box-shadow:0 12px 30px -14px rgba(15,27,45,.35)}
 .pkg.sel{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft),var(--shadow)}
@@ -91,7 +94,8 @@ p{margin:0} .muted{color:var(--muted)} .small{font-size:.9rem}
 .list{display:flex;flex-direction:column;gap:8px}
 .item{display:grid;grid-template-columns:1fr;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
 .item:hover{border-color:var(--line-2)}.item.sel{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-soft)}
-.item .nm{font-weight:600;font-family:var(--display)} .item .in{font-size:.82rem;color:var(--muted);line-height:1.4} .item .pr{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--fg);font-weight:600;font-size:.9rem}
+.item .nm{font-weight:600;font-family:var(--display)} .item .ihead{display:flex;gap:10px;align-items:flex-start} .item .pic{width:34px;height:34px;object-fit:contain;flex:none;margin-top:2px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px} .pill{display:inline-flex;align-items:center;gap:4px;background:var(--brand-soft);color:var(--brand-ink);border-radius:999px;padding:2px 9px;font-size:.74rem;font-weight:700;white-space:nowrap} .pill.soft{background:var(--surface-2);color:var(--muted);font-weight:600} .item .in{font-size:.82rem;color:var(--muted);line-height:1.4} .item .pr{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--fg);font-weight:600;font-size:.9rem}
 .item .side{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:8px;border-top:1px dashed var(--line)} .item .pr{font-family:var(--display);font-size:1rem}
 .group h3{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -144,7 +148,7 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 /* aside */
 .aside .card{padding:16px} .aside .sum{font-family:var(--display);font-variant-numeric:tabular-nums} .aside .big{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--brand-ink)}
 .aside .lines{display:flex;flex-direction:column;gap:6px;font-size:.88rem} .aside .lines div{display:flex;justify-content:space-between;gap:8px} .aside .lines div span:last-child,.aside .lines div b:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
-.krow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"nm rm" "q q" "pr pr";gap:4px 8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)} .krow:last-child{border-bottom:0}
+.krow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"nm rm" "q q" "pr pr";gap:4px 8px;align-items:center;padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;margin-bottom:8px} .krow:last-child{margin-bottom:0}
 .krow .nm{grid-area:nm;font-size:.9rem;font-weight:600;line-height:1.25;font-family:var(--display);min-width:0} .krow .nm small{display:block;font-family:var(--body);font-weight:500;color:var(--muted)}
 .krow .rm{grid-area:rm;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:0 4px;align-self:start}
 .krow .q{grid-area:q;display:flex;align-items:center;gap:4px} .krow .q button{width:28px;height:28px;border-radius:6px;border:1px solid var(--line-2);background:var(--surface);color:var(--fg);cursor:pointer}
@@ -175,8 +179,11 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 .sel-item a{color:var(--brand);font-weight:600;text-decoration:none} .sel-item a:hover{text-decoration:underline}
 .urg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
 .urg div{border:1px solid var(--line);border-radius:12px;padding:14px;font-size:.88rem;background:var(--surface-2);color:var(--muted)} .urg b{display:block;font-family:var(--display);color:var(--fg);font-size:.98rem;margin-bottom:4px} .urg .cd{font-size:1.4rem;color:var(--brand-ink);font-weight:800;margin-right:4px}
-.decide{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-.decide .card{display:flex;flex-direction:column;gap:10px} .decide .card.primary{border-color:var(--brand);background:linear-gradient(180deg,var(--brand-soft),var(--surface))}
+.decide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.decide .card{display:flex;flex-direction:column;gap:10px} .decide .card.primary{grid-column:1/-1;flex-direction:row;align-items:center;gap:24px;border-color:var(--accent);background:linear-gradient(135deg,var(--warn-soft),var(--surface))}
+.decide .card.primary>div{flex:1} .decide .card.primary .btn{width:auto;min-width:260px;padding:18px 28px;font-size:1.1rem}
+.howto{margin:6px 0 0;padding-left:0;list-style:none;counter-reset:h;display:flex;flex-direction:column;gap:6px} .howto li{counter-increment:h;display:grid;grid-template-columns:24px 1fr;gap:8px;font-size:.88rem;color:var(--muted)} .howto li::before{content:counter(h);display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-weight:800;font-size:.72rem}
+@media (max-width:900px){.decide{grid-template-columns:1fr}.decide .card.primary{flex-direction:column;align-items:stretch}.decide .card.primary .btn{width:100%}}
 .decide .card h4{font-size:1.02rem} .decide .card p{font-size:.88rem;color:var(--muted)}
 .cpanel{display:flex;flex-direction:column;gap:12px;margin-top:6px;padding-top:10px;border-top:1px dashed var(--line)}.cf{display:flex;flex-direction:column;gap:5px;min-width:0}.cf>span{font-size:.85rem;font-weight:600;color:var(--fg)}.cf i{font-style:normal;font-weight:400;color:var(--muted)}.cf select,.cf input,.cf textarea{font:inherit;padding:10px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);color:var(--fg);width:100%;height:42px;box-sizing:border-box}.cf textarea{height:auto;resize:vertical}.iu{display:flex;align-items:center;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);overflow:hidden}.iu input,.iu select{border:0;flex:1;min-width:0}.iu em{font-style:normal;font-size:.85rem;color:var(--muted);padding:0 12px;white-space:nowrap;border-left:1px solid var(--line)}#cpHint[hidden]{display:none!important}.cp2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cdone{margin-top:6px;padding:10px 12px;border-radius:8px;background:var(--good-soft);color:var(--good);font-size:.9rem}
 .decide select,.decide input{font:inherit;padding:9px 11px;border:1px solid var(--line-2);border-radius:10px;background:var(--surface);color:var(--fg);width:100%}
@@ -196,20 +203,20 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 .mbody h4{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--brand-ink);margin:12px 0 6px}
 .mbody h4:first-child{margin-top:0}
 .mbody ol{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:3px}
-.mbody li{display:grid;grid-template-columns:3.2em 1fr;gap:8px;color:var(--fg)} .mbody li span:first-child{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.82rem}
+.mbody ol{gap:4px} .mbody li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;color:var(--fg);padding:6px 8px;border-radius:8px;background:var(--surface-2)} .mbody li span:first-child{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 7px;border-radius:13px;background:var(--brand-soft);color:var(--brand-ink);font-variant-numeric:tabular-nums;font-size:.72rem;font-weight:700} .mbody li span:first-child:empty::before{content:"•"} .mbody li span:last-child{padding-top:4px}
 .mfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line)}
 .mfoot a{text-decoration:none} .mfoot a:hover{text-decoration:underline}
 .msyl{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px}.msyl summary{cursor:pointer;list-style:none}.msyl summary::-webkit-details-marker{display:none}.msyl summary::before{content:'▸ ';color:var(--muted)}.msyl[open] summary::before{content:'▾ '}.msylb{padding:6px 0 2px}
 .pk-syl{margin-top:2px;align-self:flex-start}
 .tlink{font:inherit;font-size:.82rem;font-weight:600;color:var(--brand);background:transparent;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
-@media (max-width:520px){.modal{padding:0;align-items:flex-end}.mbox{border-radius:14px 14px 0 0;max-height:88vh}.mbody li{grid-template-columns:2.6em 1fr}}
+@media (max-width:520px){.modal{padding:0;align-items:flex-end}.mbox{border-radius:14px 14px 0 0;max-height:88vh}}
 /* ---- PDF brochure: A4 pages, navy/white alternating, grid texture, big numerals ---- */
 .paper{max-width:794px;margin:0 auto;display:flex;flex-direction:column;gap:14px;font-family:var(--body);color-scheme:light}
-.pg{background:#fff;color:#0f1b2d;aspect-ratio:210/297;position:relative;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line-2);font-size:12px;line-height:1.45;padding:40px 44px 46px;display:flex;flex-direction:column;min-width:0}
+.pg{background:#fff;color:#0f1b2d;aspect-ratio:210/297;position:relative;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line-2);font-size:12px;line-height:1.45;padding:40px 44px 64px;display:flex;flex-direction:column;min-width:0}
 .pg *{color:inherit;font-size:inherit;min-width:0}
 .pg.navy{background:#0b2a4a;color:#fff}
-.pg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(11,42,74,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(11,42,74,.07) 1px,transparent 1px);background-size:28px 28px;pointer-events:none}
-.pg.navy .grid{background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px)}
+.pg .grid{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 12% 18%,rgba(26,163,163,.16),transparent 38%),radial-gradient(circle at 88% 72%,rgba(10,94,168,.14),transparent 42%),radial-gradient(circle at 70% 8%,rgba(245,197,66,.12),transparent 30%)}
+.pg.navy .grid{background:radial-gradient(circle at 15% 20%,rgba(95,211,211,.22),transparent 40%),radial-gradient(circle at 85% 75%,rgba(245,197,66,.14),transparent 38%),radial-gradient(circle at 60% 100%,rgba(255,255,255,.08),transparent 40%)}
 .pg>*{position:relative}
 .pg .num{font-family:var(--display);font-weight:800;font-size:64px;line-height:1;letter-spacing:-.03em;color:#1aa3a3;opacity:.9}
 .pg.navy .num{color:#5fd3d3}
@@ -218,7 +225,8 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 .pg h3{font-family:var(--display);font-weight:800;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:16px 0 6px;color:#0a5ea8}
 .pg.navy h3{color:#5fd3d3}
 .pg p{margin:0 0 7px} .pg .muted{opacity:.7;font-size:11px} .pg .big{font-size:13.5px}
-.pg .foot{position:absolute;left:44px;right:44px;bottom:16px;display:flex;justify-content:space-between;font-size:9px;opacity:.6;letter-spacing:.06em;text-transform:uppercase}
+.pg .foot{position:absolute;left:44px;right:44px;bottom:16px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;border-top:2px solid #1aa3a3;padding-top:9px;font-size:9.5px;color:inherit}
+.pg .foot img{height:18px;width:auto} .pg .foot .c{line-height:1.35} .pg .foot .c b{font-size:10px} .pg .foot .r{opacity:.65;letter-spacing:.06em;text-transform:uppercase;text-align:right}
 .pg img.full{width:100%;object-fit:cover;display:block}
 /* cover */
 .pg.cover{padding:0}
@@ -254,7 +262,7 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 .why{display:grid;grid-template-columns:1fr 1fr;gap:10px}.why div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:11px 13px;font-size:11px}.why b{display:block;font-family:var(--display);font-size:12.5px;margin-bottom:3px;color:#fff}.why.light div{background:#eef7f7;border-color:#bfe3e3;color:#0f1b2d}.why.light b{color:#0b2a4a}
 .tl5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px;position:relative}.tl5::before{content:"";position:absolute;left:8%;right:8%;top:14px;height:2px;background:rgba(255,255,255,.35)}.tl5 div{text-align:center;font-size:10px;position:relative}.tl5 i{display:block;width:28px;height:28px;border-radius:50%;background:#5fd3d3;color:#0b2a4a;font-style:normal;font-weight:800;font-family:var(--display);line-height:28px;margin:0 auto 6px;font-size:12px}
 .logogrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.logogrid div{height:52px;border:1px solid #e1e7ef;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:8px 10px;background:#fff}.logogrid img{max-height:100%;max-width:100%;object-fit:contain}.logogrid .more{font-size:9.5px;color:#666;text-align:center;border-style:dashed}
-.testi{display:grid;grid-template-columns:1fr;gap:10px}.tc{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:start;border:1px solid #dfe5ec;border-radius:10px;padding:12px}.tc .ph{width:56px;height:56px;border-radius:50%;background:#e4eefb;border:1px dashed #9db4d1}.tc .q{font-size:11.5px;font-style:italic;margin:0 0 6px;color:#0f1b2d}.tc b{display:block;font-family:var(--display);font-size:11.5px}.tc span{font-size:10px;color:#666}
+.testi{display:grid;grid-template-columns:1fr;gap:10px}.tc{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:start;border:1px solid #dfe5ec;border-radius:10px;padding:12px;background:#fff}.tc .ph{width:56px;height:56px;border-radius:50%;background:#dfe8f4;border:3px solid #fff;box-shadow:0 0 0 1px #c9d6e6}.tc .q{font-size:11.5px;font-style:italic;margin:0 0 6px;color:#0f1b2d}.tc b{display:block;font-family:var(--display);font-size:11.5px}.tc span{font-size:10px;color:#666}
 .pg ul{padding-left:16px;margin:4px 0}.pg li{margin-bottom:2px}
 .pg .pbtn{display:inline-block;padding:8px 13px;border-radius:7px;font-weight:700;font-size:11px;text-decoration:none;margin:0 6px 6px 0;font-family:var(--display)}.pg .pbtn.p{background:#5fd3d3;color:#0b2a4a}.pg .pbtn.s{border:1px solid rgba(255,255,255,.6);color:#fff}
 .pg .contact{margin-top:auto;border-top:1px solid rgba(255,255,255,.25);padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:11px}.pg .contact img{height:22px;width:auto}
@@ -325,16 +333,20 @@ body.print .pg:last-child{break-after:auto;page-break-after:auto}
 /* ---- Fejléc 2. sora: progressz + varázsló-gombok, rögzítve ---- */
 .top .bar2{background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.1)}
 .top .bar2 .in{padding-block:8px;gap:12px;flex-wrap:wrap}
-.top .bar2 .rail{flex:1 1 380px;max-width:560px;box-shadow:none;border-color:transparent}
+.top .bar2 .rail{flex:0 1 auto;box-shadow:none;border-color:transparent}
+.top .bar2 .rail div{padding-inline:12px}
 .top .bar2 .hintrow{padding-block:0 6px;justify-content:flex-start} .top .bar2 .hintrow:has(.hint:empty){display:none}
-.wiz{display:flex;gap:8px;align-items:center;margin-left:auto}
+.wiz{display:flex;gap:8px;align-items:center;margin-left:auto;flex:1 1 auto;justify-content:flex-end}
+.wiz .btn{padding:10px 14px;font-size:.92rem;white-space:nowrap}
 .wiz .hint,.hintrow .hint{font-size:.82rem;color:rgba(255,255,255,.75)}
 .wiz .btn.ghost{color:#fff;border-color:rgba(255,255,255,.35)} .wiz .btn.ghost:hover{background:rgba(255,255,255,.1)}
 .wiz .btn.acc:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
 .actions{display:none!important}
 #stickyNext{display:none!important}
+body.has-sticky{padding-bottom:84px} .sticky .in{max-width:1160px;margin:0 auto}
 .rail div{color:var(--ink)}
-@media (max-width:900px){.top .bar2 .rail{flex-basis:100%;max-width:none}.wiz{margin-left:0;width:100%;justify-content:flex-end}}
+@media (max-width:1100px){.top .bar2 .rail div span{display:none}.top .bar2 .rail div{font-size:0;gap:0}.top .bar2 .rail div::before{font-size:.72rem}}
+@media (max-width:900px){.top .bar2 .rail{flex-basis:100%;max-width:none;display:grid}.wiz{margin-left:0;width:100%;justify-content:flex-end}}
 @media (max-width:520px){.top .bar2 .in{padding-block:6px;gap:6px}.wiz{gap:6px}.wiz .btn{padding:9px 11px;font-size:.88rem}.wiz .btn.acc{flex:1 1 auto}}
 body:not(.print) .main>.rail{display:none}
 /* ---- Lábléc ---- */
@@ -372,11 +384,11 @@ body:not(.print) .main>.rail{display:none}
 
   <!-- what: packages -->
   <section class="view" id="v-pkg" hidden>
-    <div class="lead"><h2>1. Melyik csomag illik a csapatra?</h2><p class="muted">Fent add meg, hány fő tanulna: az árak ehhez igazodnak, és 11 főtől kedvezmény jár. A táblázat mutatja, melyik csomag mit fed le: teli pont = teljes terület, fél pont = egy része. Oszlopra kattintva választasz; több is lehet, akár más-más létszámmal.</p></div>
+    <div class="lead"><h2>1. Melyik csomag illik a csapatra?</h2><p class="muted">Fent add meg, hány fő tanulna. A csomagár fix, főre vetítve – a csomagkedvezmény már benne van. A táblázat mutatja, melyik csomag mit fed le: teli pont = teljes terület, fél pont = egy része. Egyszerre egy csomagot választhatsz; élő képzést mellé tehetsz.</p></div>
     <details class="card" id="matrixBox" open><summary><div><h3>Összehasonlító táblázat</h3><p class="muted small">Melyik csomag mit fed le</p></div><span class="chev">▶</span></summary><div class="matrix" id="matrix" style="margin-top:10px"></div></details>
     <div class="grid" id="pkgGrid"></div>
     <div class="card group"><h3>Élő képzés a csomag mellé</h3><p class="muted small" style="margin:-6px 0 10px">Opcionális, tájékoztató árral. Max. 15 fő/csoport; kiszállás Budapesten díjmentes, vidéken km-alapú; több nap esetén 5–12% napszám-kedvezmény. A végleges díjat az Excellence egyezteti.</p><div class="list" id="liveListPkg"></div></div>
-    <div class="card" style="display:flex;flex-direction:column;gap:8px"><h3>Nem kell egész csomag?</h3><p class="muted small">Az egyedi összeállításnál ugyanezekből a képzésekből válogatsz darabonként; a létszámkedvezmény itt is jár. Akkor éri meg, ha csak egy-két téma kell, például csak Power BI vagy csak ChatGPT.</p><div><button class="btn sec" data-path="single">Egyedi képzéseket válogatok össze →</button></div></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:8px"><h3>Nem kell egész csomag?</h3><p class="muted small">Az egyedi összeállításnál ugyanezekből a képzésekből válogatsz darabonként; itt 11 főtől létszámkedvezmény jár (20 / 36 / 49%). Akkor éri meg, ha csak egy-két téma kell, például csak Power BI vagy csak ChatGPT.</p><div><button class="btn sec" data-path="single">Egyedi képzéseket válogatok össze →</button></div></div>
     <div class="actions"><button class="btn ghost" data-go="start">← Vissza</button><button class="btn" id="toCountPkg" data-go="summary">Tovább: mennyibe kerül? →</button><span class="hint" id="hintPkg"></span></div>
   </section>
 
@@ -445,7 +457,7 @@ body:not(.print) .main>.rail{display:none}
 
       <div class="qsec"><h3>Feltételek</h3>
         <ul class="small muted" style="margin:0;padding-left:18px">
-          <li>Az e-learning képzések a vásárlástól számított 1 évig érhetők el minden résztvevőnek. A hozzáférés nem hosszabbodik automatikusan; lejárat előtt jelzünk, és kedvezményes áron hosszabbítható.</li>
+          <li>Az e-learning képzések a vásárlástól számított 1 évig érhetők el minden résztvevőnek. A hozzáférés nem hosszabbodik automatikusan; lejárat előtt jelzünk, és a rögzített áron hosszabbítható.</li>
           <li>Fluktuációs csere: a hozzáférések 10%-át díjmentesen cseréljük másik munkatársra; extra felhasználók a létszám 20%-áig díjmentesen adhatók hozzá.</li>
           <li>Fizetés átutalással, díjbekérő alapján. A díjbekérőt az elfogadás után azonnal küldjük; a hozzáféréseket az összeg beérkezését követő munkanapon aktiváljuk, és a csapat kezdhet.</li>
           <li>3 éves szerződés mellett árgaranciát vállalunk; 3 év egy összegű fizetése esetén 30% kedvezményt adunk.</li>
@@ -457,17 +469,17 @@ body:not(.print) .main>.rail{display:none}
 
     <div class="row"><h3>Mit szeretnél tenni?</h3><button class="btn sm ghost" id="pdfBtn">⬇ Ajánlat letöltése PDF-ben</button></div>
     <div class="decide">
-      <div class="card primary"><h4>Elfogadom az ajánlatot</h4><p>Küldjük a szerződést és a díjbekérőt, a csapat 1 munkanapon belül indulhat. 7 napon belül a gyors döntési 5% is jár.</p><button class="btn big acc" data-act="Elfogadva">Elfogadom</button></div>
+      <div class="card primary"><div><h4>Megrendelem az ajánlatot</h4><ol class="howto"><li><span><b>Azonnal</b> e-mailben küldjük a megrendelés visszaigazolását és a díjbekérőt (8 napos fizetési határidő).</span></li><li><span><b>Utalás után 1 munkanapon belül</b> létrehozzuk a hozzáféréseket; a résztvevők e-mailben kapják a belépőt.</span></li><li><span><b>7 napon belüli megrendelésnél</b> a gyors döntési 5% automatikusan levonódik.</span></li></ol></div><button class="btn big acc" data-act="Elfogadva">Megrendelem</button></div>
       <div class="card"><h4>Beszélnék valakivel</h4><p>Válassz időpontot, és az Excellence értékesítője hív.</p>
         <select id="cbTime"><option>Holnap délelőtt (9–12)</option><option>Holnap délután (13–17)</option><option>2 munkanapon belül, bármikor</option></select>
         <button class="btn sec" data-act="Visszahívást kér">Hívjatok vissza</button>
         <input id="qQuestion" placeholder="Vagy írd meg a kérdésed…"><button class="btn ghost sm" data-act="Kérdés">Kérdés elküldése</button></div>
       <div class="card"><h4>Változtatnék</h4><p>Más létszám vagy képzés: új verziót készítünk ugyanezen a linken. Nagyobb keretnél egyedi árat kérhetsz.</p><button class="btn ghost" id="modify">Módosítom az összeállítást</button><button class="btn ghost" id="customBtn">Egyedi árat kérek</button>
         <div class="cdone" id="cdone" hidden><span class="status" style="background:var(--warn-soft);color:var(--warn)">Egyedi ár kérése folyamatban</span><div class="small" style="margin-top:6px">1 munkanapon belül jelentkezünk az egyedi ajánlattal; addig ez az ajánlat érvényben marad, és ugyanezen a linken jelenik meg az új verzió.</div></div></div>
-      <div class="card"><h4>Nem én döntök</h4><p>Elküldjük a döntéshozónak az ajánlatot és egy kész belső indoklást.</p><input id="fwdMail" type="email" placeholder="döntéshozó e-mail-címe"><button class="btn ghost" data-act="Továbbküldve">Továbbküldöm</button></div>
+      <div class="card"><h4>Nem én döntök</h4><p>Kész levelet írunk a döntéshozónak az ajánlattal és egy rövid indoklással – elküldés előtt átnézheted és szerkesztheted.</p><input id="fwdMail" type="email" placeholder="döntéshozó e-mail-címe"><button class="btn ghost" id="fwdOpen">Levél megírása →</button></div>
     </div>
     <div class="card"><h4>Eseménynapló</h4><div class="log" id="qLog" style="margin-top:8px"></div></div>
-    <p class="proto">Prototípus: a gombok itt csak státuszt váltanak; élesben e-mailt küldenek és a bevetel.hu CRM-be írnak. Árak és feltételek: Excellence B2B árlista 2026 és az e-learning ajánlatsablon alapján.</p>
+
   </section>
 
   <!-- thanks -->
@@ -482,7 +494,7 @@ body:not(.print) .main>.rail{display:none}
         <li><b>Résztvevők:</b> kérjük, küldd el a résztvevők nevét és e-mail-címét (válasz e-mailben vagy táblázatban). Ha nincs még meg a lista, ráér a fizetésig.</li>
         <li><b>Indulás:</b> az összeg beérkezését követő munkanapon aktiváljuk a hozzáféréseket, és minden résztvevő belépőt kap.</li>
       </ol>
-      <div class="card" style="background:var(--surface-2);box-shadow:none"><b>Kérdés esetén:</b> Gulyás Szabolcs · +36 70 691 0920 · <span id="tMail">szabolcs@excellence.hu</span><div class="muted small">Munkanapokon 9–17 között, e-mailre 1 munkanapon belül válaszolok.</div></div>
+      <div class="card" style="background:var(--surface-2);box-shadow:none"><b>Kérdés esetén:</b> Gulyás Szabolcs · +36 70 691 0920 · <span id="tMail">gulyas.szabolcs@excellence.hu</span><div class="muted small">Munkanapokon 9–17 között, e-mailre 1 munkanapon belül válaszolok.</div></div>
       <div class="row"><button class="btn ghost" data-go="quote">← Vissza az ajánlathoz</button><button class="btn sec" id="tPdf">Ajánlat PDF megtekintése</button></div>
     </div>
     <p class="proto">Prototípus: élesben a szerződés és a díjbekérő a Számlázz.hu-ból és a szerződéssablonból automatikusan készül, a linkek a valódi PDF-ekre mutatnak.</p>
@@ -497,14 +509,16 @@ body:not(.print) .main>.rail{display:none}
 
   <!-- forward mail preview -->
   <section class="view" id="v-fwd" hidden>
-    <div class="row"><h2>Továbbküldött levél</h2><button class="btn sm ghost" data-go="quote">← Vissza</button></div>
-    <p class="muted small">Ezt a levelet kapja a döntéshozó. Az ajánlatkérő nevében megy, a te kapcsolattartói adataiddal.</p>
+    <div class="row"><h2>Levél a döntéshozónak</h2></div>
+    <p class="muted small">Nézd át, írd át, ahogy szeretnéd. Innen elküldve az ajánlat PDF-jét csatoljuk; a saját leveleződben megnyitva a szöveg kerül át, a PDF linkjével.</p>
     <div class="card mail" id="mail"></div>
+    <div class="row" style="gap:10px;justify-content:flex-end"><button class="btn ghost" id="fwdMailto">Megnyitom a levelezőmben</button><button class="btn acc" id="fwdSend">Küldés innen (PDF csatolva)</button></div>
+    <div class="tip good" id="fwdDone" hidden><span>Elküldtük a döntéshozónak. Ha válaszol, az ajánlatkérő és Gulyás Szabolcs is megkapja.</span></div>
   </section>
 </div>
 
 <aside class="aside" id="aside">
-  <div class="card"><div class="row"><h4>Összeállítás</h4><span class="muted small" id="asideCount"></span></div><div id="asideChips" style="margin-top:8px"></div><p class="muted small" style="margin-top:6px">A fő érték képzésenként átírható.</p></div>
+  <div class="card"><div class="row"><h4>Összeállítás</h4><span class="muted small" id="asideCount"></span></div><div id="asideChips" style="margin-top:8px"></div><p class="muted small" style="margin-top:6px">A létszámot tételenként is módosíthatod.</p></div>
   <div class="card"><div class="lines" id="asideLines"></div><div class="row" style="margin-top:8px"><span class="muted small">Bruttó</span><span class="sum big" id="asideGross">0 Ft</span></div><p class="muted small" id="asideNote" style="margin-top:4px"></p></div>
 </aside>
 </div>
@@ -513,7 +527,7 @@ body:not(.print) .main>.rail{display:none}
   <div><div class="brandline"><img id="footLogo" alt="Excellence"></div><p>Excel, Office, Power BI és mesterséges intelligencia képzések vállalatoknak – e-learning és élő tréning formában. Több mint 100 vállalati partner, 3000+ tanuló.</p>
     <div class="soc" id="socials"><a href="#" data-social="facebook" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.3c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.3v2.3H7.4V14h2.8v8h3.3z"/></svg></a><a href="#" data-social="linkedin" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M6.9 8.5H3.6V21h3.3V8.5zM5.3 3C4.1 3 3.3 3.8 3.3 4.8s.8 1.9 1.9 1.9c1.2 0 2-.8 2-1.9S6.4 3 5.3 3zM21 13.3c0-3.6-1.9-5.2-4.5-5.2-2.1 0-3 1.1-3.5 1.9V8.5H9.7V21H13v-6.9c0-1.8.3-3.6 2.6-3.6 2.2 0 2.2 2.1 2.2 3.7V21H21v-7.7z"/></svg></a><a href="#" data-social="instagram" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 7.3a4.7 4.7 0 100 9.4 4.7 4.7 0 000-9.4zm0 7.7a3 3 0 110-6 3 3 0 010 6zm6-7.9a1.1 1.1 0 11-2.2 0 1.1 1.1 0 012.2 0zM21 7.1c-.1-1.5-.4-2.8-1.5-3.9S17 1.8 15.6 1.7C14.1 1.6 9.9 1.6 8.4 1.7 7 1.8 5.7 2.1 4.6 3.2S3.2 5.6 3.1 7.1c-.1 1.5-.1 5.7 0 7.2.1 1.5.4 2.8 1.5 3.9s2.4 1.4 3.9 1.5c1.5.1 5.7.1 7.2 0 1.5-.1 2.8-.4 3.9-1.5s1.4-2.4 1.5-3.9c.1-1.5.1-5.7 0-7.2zm-2 8.7c-.3.8-.9 1.4-1.7 1.7-1.2.5-4 .4-5.3.4s-4.1.1-5.3-.4c-.8-.3-1.4-.9-1.7-1.7-.5-1.2-.4-4-.4-5.3s-.1-4.1.4-5.3c.3-.8.9-1.4 1.7-1.7 1.2-.5 4-.4 5.3-.4s4.1-.1 5.3.4c.8.3 1.4.9 1.7 1.7.5 1.2.4 4 .4 5.3s.1 4.1-.4 5.3z"/></svg></a><a href="#" data-social="youtube" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24"><path d="M22.5 7.2c-.3-1-1-1.7-2-2C18.8 4.7 12 4.7 12 4.7s-6.8 0-8.5.5c-1 .3-1.7 1-2 2C1 9 1 12 1 12s0 3 .5 4.8c.3 1 1 1.7 2 2 1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5c1-.3 1.7-1 2-2 .5-1.8.5-4.8.5-4.8s0-3-.5-4.8zM9.8 15.1V8.9L15.5 12l-5.7 3.1z"/></svg></a></div></div>
   <div><h5>Elérhetőség</h5><p>Excellence Training Kft.</p><p>8000 Székesfehérvár, Határ utca 16.</p><p><a href="tel:+36707768888">+36 70 776 8888</a></p><p><a href="mailto:info@excellence.hu">info@excellence.hu</a></p></div>
-  <div><h5>Az ajánlatról</h5><p>Kapcsolattartó: <b style="color:#fff">Gulyás Szabolcs</b></p><p><a href="mailto:szabolcs@excellence.hu">szabolcs@excellence.hu</a></p><p>Kérdésed van? Válaszolj az ajánlat e-mailre, vagy kérj visszahívást az ajánlatoldalon.</p></div>
+  <div><h5>Az ajánlatról</h5><p>Kapcsolattartó: <b style="color:#fff">Gulyás Szabolcs</b></p><p><a href="mailto:gulyas.szabolcs@excellence.hu">gulyas.szabolcs@excellence.hu</a></p><p>Kérdésed van? Válaszolj az ajánlat e-mailre, vagy kérj visszahívást az ajánlatoldalon.</p></div>
   <div><h5>Jogi információk</h5><p><a href="https://excellence.hu/adatvedelem/" target="_blank" rel="noopener">Adatkezelési tájékoztató</a></p><p>Adószám: 27036666-2-07</p><p>Felnőttképzési nyilvántartási szám: B/2020/000094</p></div>
 </div><div class="legal"><span>© <span id="footYear"></span> Excellence Training Kft. Minden jog fenntartva.</span><span>Az árak nettó árak, az ÁFA 27%. Az ajánlat 14 napig érvényes.</span></div></footer>
 <div class="sticky" id="sticky"><div class="in"><span class="muted small" id="stickyText"></span><span class="s" id="stickySum"></span><button class="btn sm sec" id="openKosar">Összeállítás</button><button class="btn sm acc" id="stickyNext">Tovább →</button></div></div>
@@ -550,7 +564,7 @@ window.EXC_API = (() => {
     callback: (phone, startTime, slot) => post(`/api/quote/${no}/callback`, { phone, startTime, slot }),
     customPrice: d => post(`/api/quote/${no}/custom-price`, d),
     question: text => post(`/api/quote/${no}/question`, { text }),
-    forward: to => post(`/api/quote/${no}/forward`, { to }),
+    forward: (to, subject, body) => post(`/api/quote/${no}/forward`, { to, subject, body }),
     load: () => no ? fetch(`${BASE}/api/quote/${no}`).then(r => r.json()) : Promise.resolve(null)
   };
 })();
@@ -614,6 +628,7 @@ window.EXC_API = (() => {
   function openLive(id){$('#mNote').textContent='Oktató vezette, a csapat saját feladataira szabva.';const x=LIVE.find(l=>l.id===id);const d=LIVE_DETAIL[id];$('#mTitle').textContent=x.name;$('#mSub').textContent='Élő, oktató vezette képzés · a szervezet igényeire szabva · '+ft(x.price)+' / alkalom (tájékoztató ár)';
     $('#mBody').innerHTML=`<p>${x.desc}</p><h4>Kinek ajánljuk</h4><p>${d.who}</p><h4>Főbb témák</h4><ol>${d.topics.map(t=>`<li><span>•</span><span>${t}</span></li>`).join('')}</ol><h4>Így zajlik</h4><ol><li><span>1</span><span>Igényfelmérés: rövid egyeztetés a célokról és a résztvevők szintjéről</span></li><li><span>2</span><span>Testreszabás: a tematikát és a példákat a csapat saját feladataira igazítjuk</span></li><li><span>3</span><span>Képzés: 8 órás nap, legfeljebb 10–15 fő, gyakorlatorientáltan</span></li><li><span>4</span><span>Utánkövetés: anyagok, kérdések, igény szerint e-learning hozzáférés a mélyítéshez</span></li></ol><p class="muted small">Az ár 8 órás képzésre vonatkozik; a végleges időtartamra és díjra a szervezet céljai alapján teszünk javaslatot.</p>`;
     const b=$('#mAdd');b.textContent=state.sel[id]?'✓ Kiválasztva':'+ Hozzáadom';b.dataset.id=id;b.hidden=false;$('#modal').hidden=false;}
+  const ICONS={}; // termékikonok (id -> kép), a hivatalos ikonfájlok feltöltése után töltjük
   const byId=id=>all().find(x=>x.id===id);
   const cname=id=>COURSES.find(c=>c.id===id).name;
   const band=n=>BANDS.find(b=>n>=b.min&&n<=b.max)||BANDS[BANDS.length-1];
@@ -627,31 +642,30 @@ window.EXC_API = (() => {
   function giftLines(){const L=[];const sel=selected();const has=id=>sel.some(x=>x.id===id||(x.type==='pkg'&&x.items.includes(id)));
     const ex=sel.find(x=>x.id==='excel-alap');
     if(ex){HOOK.filter(id=>!has(id)).forEach(id=>{const c=COURSES.find(x=>x.id===id);L.push({...c,n:qtyOf(ex),pct:0,unit:c.price,list:0,net:0,gift:'hook',giftFor:'Excel ismeretek mellé'});});}
-    const pk=sel.find(x=>x.type==='pkg');
-    if(pk){const g=GIFTS.find(id=>!has(id));if(g){const c=COURSES.find(x=>x.id===g);L.push({...c,n:qtyOf(pk),pct:0,unit:c.price,list:0,net:0,gift:'choice',giftFor:pk.name+' csomag mellé, 7 napon belüli elfogadásnál',choices:GIFTS.filter(id=>!has(id))});}}
     return L;}
   function lines(){return selected().map(x=>{const n=qtyOf(x);
-    if(x.type!=='live'){const r=bestForPackage(x.price,n);const use=r.alt?r.alt:r;return{...x,n:use.n,pct:use.pct,unit:x.price,list:x.price*use.n,net:use.total,bumped:!!r.alt,orig:n};}
+    if(x.type==='course'){const r=bestForPackage(x.price,n);const use=r.alt?r.alt:r;return{...x,n:use.n,pct:use.pct,unit:x.price,list:x.price*use.n,net:use.total,bumped:!!r.alt,orig:n};}
+    if(x.type==='pkg')return{...x,n,pct:0,unit:x.price,list:x.price*n,net:x.price*n};
     return{...x,n,pct:0,unit:x.price,list:x.price*n,net:x.price*n};});}
   function totals(){const L=lines();const G=giftLines();const list=L.reduce((a,l)=>a+l.list,0),net=L.reduce((a,l)=>a+l.net,0);const fast=net*FAST_PCT/100;const full=L.reduce((a,l)=>a+(l.type==='pkg'?COURSES.filter(c=>l.items.includes(c.id)).reduce((x,c)=>x+c.price,0)*l.n:l.unit*l.n),0);const giftVal=G.reduce((a,g)=>a+g.unit*g.n,0);return{L,G,giftVal,list,net,disc:list-net,full,saveAll:full-net,vat:net*VAT,gross:net*(1+VAT),fast,netFast:net-fast,grossFast:(net-fast)*(1+VAT)};}
 
   // ---- selection screens ----
-  const pkgUnit=p=>{const n=state.defN;const r=bestForPackage(p.price,n);const use=r.alt?r.alt:r;return{pct:use.pct,unit:p.price*(1-use.pct/100),n:use.n};};
-  function liveRow(x){return`<div class="item"><div><div class="nm">${x.name}</div><div class="in">${x.desc} <button class="tlink" data-live="${x.id}">Részletek →</button></div></div><div class="side"><span class="pr">${ft(x.price)}</span><button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;}
+  const pkgUnit=p=>{if(p.type==='pkg')return{pct:0,unit:p.price,n:state.defN};const n=state.defN;const r=bestForPackage(p.price,n);const use=r.alt?r.alt:r;return{pct:use.pct,unit:p.price*(1-use.pct/100),n:use.n};};
+  function liveRow(x){return`<div class="item"><div><div class="nm">${x.name}</div><div class="in">${x.desc}</div><div style="margin-top:6px"><button class="tlink" data-live="${x.id}">Részletek →</button></div></div><div class="side"><span class="pr">${ft(x.price)} <span class="muted small">/ alkalom · tájékoztató ár</span></span><button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;}
   function renderPkg(){
     const dot=v=>v===1?'<span class="dot" title="teljes terület"></span>':v===0.5?'<span class="dot half" title="részben"></span>':'<span class="muted">–</span>';
-    $('#matrix').innerHTML=`<table><thead><tr><th>Terület</th>${PACKAGES.map(p=>{const u=pkgUnit(p);return`<th class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" role="button" tabindex="0" style="cursor:pointer">${p.name}<span class="pp">${ft(u.unit)}/fő${u.pct?' (−'+u.pct+'%)':''}</span></th>`;}).join('')}</tr></thead>
+    $('#matrix').innerHTML=`<table><thead><tr><th>Terület</th>${PACKAGES.map(p=>{const u=pkgUnit(p);return`<th class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" role="button" tabindex="0" style="cursor:pointer">${p.name}<span class="pp">${ft(p.price)}/fő</span></th>`;}).join('')}</tr></thead>
       <tbody>${AREAS.map((a,i)=>`<tr><td>${a}</td>${PACKAGES.map(p=>`<td class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" style="cursor:pointer">${dot(p.cover[i])}</td>`).join('')}</tr>`).join('')}
       <tr><td class="muted small">Kijelölve</td>${PACKAGES.map(p=>`<td class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" style="cursor:pointer">${state.sel[p.id]?'<b style="color:var(--good)">✓</b>':'<span class="muted small">kattints</span>'}</td>`).join('')}</tr></tbody></table>`;
     $('#pkgGrid').innerHTML=PACKAGES.map(p=>{const u=pkgUnit(p);return`<div class="card pkg ${state.sel[p.id]?'sel':''}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<h3>${p.name}</h3><p class="muted small">${p.sub}</p><p class="who"><b>Kinek:</b> ${p.who}</p><p class="who"><b>Eredmény:</b> ${p.promise}</p>
-      <ul>${p.items.map(id=>`<li>${cname(id)}</li>`).join('')}</ul><button class="tlink pk-syl" data-pksyl="${p.id}">Csomag tartalma és tematikája →</button><div class="ladder"><div><span>Teljes érték</span><span>${ft(p.list)}</span></div><div class="hi"><span>Csomagkedvezmény</span><span>− ${ft(p.list-p.price)}</span></div>${u.pct?`<div class="hi"><span>Létszámkedvezmény ${u.pct}%</span><span>− ${ft(p.price-u.unit)}</span></div>`:`<div class="muted"><span>Létszámkedvezmény 11 főtől</span><span>−20%</span></div>`}</div><div class="price">${ft(u.unit)}<span class="muted small"> /fő/év</span></div>
+      <ul>${p.items.map(id=>`<li>${cname(id)}</li>`).join('')}</ul><button class="tlink pk-syl" data-pksyl="${p.id}">Csomag tartalma és tematikája →</button><div class="ladder"><div><span>A képzések külön-külön</span><span>${ft(p.list)}</span></div><div class="hi"><span>Csomagkedvezmény ${Math.round((1-p.price/p.list)*100)}%</span><span>− ${ft(p.list-p.price)}</span></div></div><div class="price">${ft(p.price)}<span class="muted small"> /fő/év</span></div><div class="muted small" style="margin-top:-6px">${state.defN} főre: <b>${ft(p.price*state.defN)}</b> nettó/év</div>
       <button class="btn sm add ${state.sel[p.id]?'added':''}" data-toggle="${p.id}">${state.sel[p.id]?'✓ Kiválasztva · levétel':'+ Ezt választom'}</button></div>`;}).join('');
     $('#liveListPkg').innerHTML=LIVE.map(liveRow).join('');
     $('#toCountPkg').disabled=!selected().length;$('#hintPkg').textContent=selected().length?'':'Válassz legalább egy csomagot (vagy élő tréninget).';
   }
   function renderSingle(){
     const row=x=>{const inpk=PACKAGES.filter(p=>p.items.includes(x.id)).map(p=>p.name).join(', ');
-      const u=pkgUnit(x);return`<div class="item ${state.sel[x.id]?'sel':''}"><div><div class="nm">${x.name}</div><div class="in">${x.videos} videó · ${x.length}${inpk?` · csomagban: ${inpk}`:''} · <button class="tlink" data-syl="${x.id}">Tematika</button></div><div class="in desc">${x.desc.split('. ')[0]}.</div></div><div class="side"><span class="pr">${ft(u.unit)} <span class="muted small">/fő${u.pct?' · −'+u.pct+'%':''}</span></span><button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;};
+      const u=pkgUnit(x);return`<div class="item ${state.sel[x.id]?'sel':''}"><div><div class="ihead">${ICONS[x.id]?`<img class="pic" src="${ICONS[x.id]}" alt="">`:''}<div><div class="nm">${x.name}</div><div class="pills"><span class="pill">▶ ${x.videos} videó</span><span class="pill">⏱ ${x.length}</span>${inpk?`<span class="pill soft">csomagban: ${inpk}</span>`:''}</div></div></div><div class="in desc">${x.desc.split('. ')[0]}.</div><div style="margin-top:6px"><button class="tlink" data-syl="${x.id}">Tematika →</button></div></div><div class="side"><span class="pr">${ft(u.unit)} <span class="muted small">/fő${u.pct?' · −'+u.pct+'%':''}</span></span><button class="btn sm ${state.sel[x.id]?'added':'sec'}" data-toggle="${x.id}">${state.sel[x.id]?'✓ Levétel':'+ Hozzáadom'}</button></div></div>`;};
     ['A','B','C'].forEach(g=>{$('#courseList'+g).innerHTML=COURSES.filter(c=>c.grp===g).map(row).join('');});
     $('#liveListSingle').innerHTML=LIVE.map(liveRow).join('');
     const selC=COURSES.filter(c=>state.sel[c.id]);let html='';
@@ -685,7 +699,7 @@ window.EXC_API = (() => {
   }
   function bandTipsHTML(){
     const tips=[];
-    selected().filter(x=>x.type!=='live').forEach(x=>{const n=qtyOf(x);const r=bestForPackage(x.price,n);
+    selected().filter(x=>x.type==='course').forEach(x=>{const n=qtyOf(x);const r=bestForPackage(x.price,n);
       if(r.alt)tips.push(`<div class="tip good"><span><b>${x.name}:</b> ${n} fő helyett ${r.alt.n} fővel ${r.alt.pct}% a kedvezmény, és ${ft(r.total-r.alt.total)}-tal olcsóbb. Az ajánlatba ${r.alt.n} fő kerül.</span><button class="btn sm sec" data-set="${x.id}" data-val="${r.alt.n}">Legyen ${r.alt.n} fő</button></div>`);
       else if(n<11)tips.push(`<div class="tip"><span><b>${x.name}:</b> 11 főtől 20% kedvezmény jár. ${n} fő: ${ft(r.total)} · 11 fő: ${ft(x.price*11*0.8)}.</span><button class="btn sm sec" data-set="${x.id}" data-val="11">Legyen 11 fő</button></div>`);
       else{const next=BANDS.find(b=>b.min>n);if(next&&next.min-n<=5)tips.push(`<div class="tip"><span><b>${x.name}:</b> +${next.min-n} fővel már ${next.pct}% a kedvezmény.</span><button class="btn sm sec" data-set="${x.id}" data-val="${next.min}">Legyen ${next.min} fő</button></div>`);}});
@@ -713,7 +727,7 @@ window.EXC_API = (() => {
     if(hasE&&hasL)st=`<h3>Komplex oktatási struktúra</h3><p class="small">Az e-learning és az élő képzés kombinációja lehetővé teszi, hogy a résztvevők saját tempóban, előre megszerezzék az egységes alaptudást, így az élő képzés már a valóban értéket teremtő gyakorlati kérdésekre és a munkájuk során felmerülő konkrét feladatokra épülhet. Az eltérő előképzettséggel érkező munkatársak közelebb kerülnek egy közös tudásszinthez, az oktató pedig az élő alkalmon arra fordíthatja az időt, ahol a személyes támogatás a legtöbbet adja. Az e-learninghez biztosított 1 éves hozzáférés a képzés után is lehetőséget ad a tudás felfrissítésére.</p>`;
     else if(hasL)st=`<h3>Élő képzés</h3><p class="small">Élő képzéseinken a kollégák gyakorlati tudást szereznek tapasztalt oktatóinktól, akik munkahelyi környezetben is ismerik az irodai munka leggyakoribb problémáit és megoldásait. A személyes interakció, az oktatói támogatás és a résztvevők saját kérdéseinek azonnali megválaszolása mélyebb, intenzívebb tanulási élményt ad.</p>`;
     else st=`<h3>Miért e-learning</h3><p class="small">Az e-learning képzések gyorsan és rugalmasan fejlesztik a munkatársak digitális és AI-kompetenciáit, nagyobb létszámnál jelentős költségmegtakarítással. A tananyagok azonnal alkalmazható, gyakorlati tudást adnak, támogatják az egységes tudásszint kialakítását és felgyorsítják az onboardingot. Felépítésüknek köszönhetően könnyen kombinálhatók, így mindenki a saját munkaköréhez szükséges képzéseket kapja; időtől és helytől függetlenül, saját tempóban végezhetők, és vállalati LMS-be is integrálhatók.</p>`;
-    $('#qStruct').innerHTML=st;
+    $('#qStruct').innerHTML=`<img src="${hasL?IMG.live:IMG.elearn}" alt="" style="width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:12px">`+st;
     $('#qLogo').src=IMG.logoW;$('#logoWall').innerHTML=Object.values(LOGOS).map(src=>`<div><img src="${src}" alt=""></div>`).join('');
     $('#qTable').innerHTML=tableHTML(T);const bd=T.saveAll>0?`Összes kedvezmény − ${ft(T.saveAll)} <small>(${Math.round(T.saveAll/T.full*100)}%)</small>`:'';$('#qSaveBadge').innerHTML=bd;$('#qSaveBadge').hidden=!bd;
     const d7=new Date(d.getTime()+7*864e5);const hasExcel=T.L.some(l=>l.id==='excel-alap'||(l.type==='pkg'&&l.items.includes('excel-alap')));
@@ -734,7 +748,7 @@ window.EXC_API = (() => {
     const hasE=T.L.some(l=>l.type!=='live'),hasL=T.L.some(l=>l.type==='live');const kind=hasE&&hasL?'Komplex':hasL?'Élő':'E-learning';
     const no=$('#qNo').textContent,first=(state.company.contact||'Ajánlatkérő').split(' ').slice(-1)[0];
     const structH=$('#qStruct').innerHTML.replace(/<h3>(.*?)<\/h3>/,'<h3>$1</h3>').replace(' class="small"','');
-    const foot=(n)=>`<div class="foot"><span>Excellence Training Kft. · ${no}</span><span>${n} / 5</span></div>`;
+    const PUB=window.__publicUrl||location.origin;const foot=(n,navy)=>`<div class="foot"><img src="${navy?IMG.logoW:IMG.logo}" alt="Excellence"><div class="c"><b>Gulyás Szabolcs</b> · értékesítési partner · gulyas.szabolcs@excellence.hu · +36 70 691 0920<br>Excellence Training Kft. · 8000 Székesfehérvár, Határ utca 16. · info@excellence.hu</div><div class="r">${no}<br>${n} / 5</div></div>`;
     const whatList=T.L.map(l=>l.type==='pkg'?`${l.name} csomag · ${l.n} fő`:l.type==='live'?`${l.name} · ${l.n} alkalom`:`${l.name} · ${l.n} fő`).join(' · ');
     // page 3: courses as cards
     const courseCards=(ids,n)=>`<div class="ccards">${ids.map(id=>{const c=COURSES.find(x=>x.id===id);return`<div class="cc"><b>${c.name}</b><div class="m">${c.videos} VIDEÓ · ${c.length.toUpperCase()}</div><p>${c.desc.split('. ')[0]}.</p><a href="#tematika-${id}">Tematika →</a></div>`;}).join('')}</div>`;
@@ -742,14 +756,14 @@ window.EXC_API = (() => {
       if(l.type==='live')return`<div class="pkgband"><div><b>${l.name}</b><div class="muted" style="color:#fff">${l.desc}</div></div><div class="n">${l.n}<small>alkalom</small></div></div>`;
       return`<div class="pkgband" style="background:#f3f6fa;color:#0b2a4a"><div><b>${l.name}</b></div><div class="n">${l.n}<small>fő</small></div></div>${courseCards([l.id],l.n)}`;}).join('');
     // alternative upsell
-    let alt='';const lp=T.L.find(x=>x.type!=='live'&&!x.bumped);if(lp){const next=BANDS.find(b=>b.min>lp.n);if(next&&next.min-lp.n<=10){const r=bestForPackage(lp.unit,next.min);alt=`<div class="alt"><div class="num">+${next.min-lp.n}</div><div><b>${next.min} fővel ${next.pct}% a kedvezmény</b><span style="font-size:11px">${lp.name}: a fő-ár ${ft(lp.unit*(1-next.pct/100))}-ra csökken (${ft(lp.unit*(1-lp.pct/100))} helyett). ${next.min} főre összesen ${ft(r.total)} nettó.</span></div></div>`;}}
+    let alt='';const lp=T.L.find(x=>x.type==='course'&&!x.bumped);if(lp){const next=BANDS.find(b=>b.min>lp.n);if(next&&next.min-lp.n<=10){const r=bestForPackage(lp.unit,next.min);alt=`<div class="alt"><div class="num">+${next.min-lp.n}</div><div><b>${next.min} fővel ${next.pct}% a kedvezmény</b><span style="font-size:11px">${lp.name}: a fő-ár ${ft(lp.unit*(1-next.pct/100))}-ra csökken (${ft(lp.unit*(1-lp.pct/100))} helyett). ${next.min} főre összesen ${ft(r.total)} nettó.</span></div></div>`;}}
     $('#paper').innerHTML=`
     <div class="pg cover"><img class="ph" src="${IMG.hero}" alt=""><div class="shade"></div><div class="frame"></div><div class="ct"><img class="lg" src="${IMG.logoW}" alt="Excellence"><div><div class="kicker">${kind} képzési ajánlat</div><h1>${state.company.name||'A csapatod'} részére</h1><div class="meta"><div><b>Ajánlat száma</b>${no}</div><div><b>Kiállítva</b>${fmtDate(d)}</div><div><b>Érvényes</b>${fmtDate(v)}</div><div><b>Kapcsolattartó</b>Gulyás Szabolcs</div></div></div><div class="bottom"><div>Excellence Training Kft.<br>8000 Székesfehérvár, Határ utca 16.</div><div style="text-align:right">Felnőttképző nyilvántartási szám<br><b style="font-size:12px">B/2020/000094</b></div></div></div></div>
 
     <div class="pg navy"><div class="grid"></div><div class="num">01</div><h1>Az ajánlat egy percben</h1><p class="big" style="margin-top:10px;max-width:60ch">Kedves ${first}! Köszönöm, hogy érdeklődsz az Excellence képzései iránt. Ez az oldal a lényeg; a részletek a következő oldalakon.</p>
       <div class="sumgrid"><div class="kpi hi"><span>Mit kap a csapat</span><b style="font-size:16px">${whatList}</b></div><div class="kpi"><span>Nettó ár</span><b>${ft(T.net)}</b><span>bruttó ${ft(T.gross)}</span></div><div class="kpi"><span>Megtakarítás a listaárhoz képest</span><b>${ft(T.saveAll)}</b><span>${Math.round(T.saveAll/T.full*100)}% csomag- és létszámkedvezmény</span></div><div class="kpi"><span>Gyors döntéssel ${fmtDate(d7)}-ig</span><b>${ft(T.netFast)}</b><span>további ${ft(T.fast)} kedvezmény</span></div></div>
       <h3>Az Excellence számokban</h3><div class="nums"><div><b>3000+</b><span>tanuló</span></div><div><b>100+</b><span>vállalati partner</span></div><div><b>400+</b><span>oktatóvideó</span></div><div><b>10 év</b><span>vállalati képzésben</span></div><div><b>30 nap</b><span>pénzvisszafizetési garancia</span></div><div><b>1 nap</b><span>indulás fizetés után</span></div></div>
-      <p class="muted" style="margin-top:14px">Partnereink között: ingatlan.com, Egis, MFB, Budapest Airport, Euronics, Pepco, Union Biztosító, Hartmann, Hungaropharma, Extreme Digital, Bárdi Autó, UIP-Duna Film.</p>${foot(1)}</div>
+      <p class="muted" style="margin-top:14px">Partnereink között: ingatlan.com, Egis, MFB, Budapest Airport, Euronics, Pepco, Union Biztosító, Hartmann, Hungaropharma, Extreme Digital, Bárdi Autó, UIP-Duna Film.</p>${foot(1,true)}</div>
 
     <div class="pg"><div class="grid"></div><div class="num">02</div><h1>${hasE&&hasL?'Komplex oktatási struktúra':hasL?'Élő képzés':'Miért e-learning'}</h1>
       <img class="full" src="${hasL?IMG.live:IMG.elearn}" alt="" style="height:170px;border-radius:10px;margin-top:10px"><div style="margin-top:12px;column-count:2;column-gap:20px;font-size:11.5px">${structH.replace(/<h3>.*?<\/h3>/,'')}</div>
@@ -761,30 +775,30 @@ window.EXC_API = (() => {
 
     <div class="pg navy"><div class="grid"></div><div class="num">04</div><h1>Így zajlik, és hogyan dönthetsz</h1>
       <div class="tl5" style="margin-top:18px"><div><i>1</i>Elfogadás az ajánlatoldalon</div><div><i>2</i>Szerződés és díjbekérő azonnal</div><div><i>3</i>Átutalás</div><div><i>4</i>Hozzáférés másnap</div><div><i>5</i>Tanulás 1 évig, tanúsítvánnyal</div></div>
-      <h3>Feltételek</h3><ul style="font-size:11.5px;max-width:70ch"><li>A képzések a vásárlástól számított 1 évig érhetők el minden résztvevőnek; a hozzáférés nem hosszabbodik automatikusan, lejárat előtt jelzünk, és kedvezményes áron hosszabbítható.</li><li>Fluktuációs csere: a hozzáférések 10%-át díjmentesen cseréljük másik munkatársra; extra felhasználók a létszám 20%-áig díjmentesen adhatók hozzá.</li><li>Fizetés átutalással, díjbekérő alapján; a hozzáféréseket az összeg beérkezését követő munkanapon aktiváljuk.</li><li>3 éves szerződés mellett árgarancia; 3 év egy összegű fizetése esetén 30% kedvezmény.</li><li>Minden képzésre 30 napos pénzvisszafizetési garancia.</li><li>Az árak nettó árak, 27% áfa terheli őket; az ajánlat az érvényességi időn belül fix.</li></ul>
-      <h3>Döntés</h3><p style="margin-top:4px"><a class="pbtn p" href="#elfogadom">Elfogadom az ajánlatot</a><a class="pbtn s" href="#hivjatok">Hívjatok vissza</a><a class="pbtn s" href="#modositom">Módosítom</a><a class="pbtn s" href="#tovabb">Továbbküldöm a döntéshozónak</a></p><p class="muted">A gombok az online ajánlatoldalra vezetnek: ajanlat.excellence.hu/${no}</p>
-      <div class="contact"><div><b style="font-size:13px">Kérdésed van? Keress bátran.</b><br>Gulyás Szabolcs · +36 70 691 0920 · info@excellence.hu<br><span class="muted">Munkanapokon 9–17 között, e-mailre 1 munkanapon belül válaszolok.</span></div><img src="${IMG.logoW}" alt="Excellence"></div>${foot(4)}</div>
+      <h3>Feltételek</h3><ul style="font-size:11.5px;max-width:70ch"><li>A képzések a vásárlástól számított 1 évig érhetők el minden résztvevőnek; a hozzáférés nem hosszabbodik automatikusan, lejárat előtt jelzünk, és a rögzített áron hosszabbítható.</li><li>Fluktuációs csere: a hozzáférések 10%-át díjmentesen cseréljük másik munkatársra; extra felhasználók a létszám 20%-áig díjmentesen adhatók hozzá.</li><li>Fizetés átutalással, díjbekérő alapján; a hozzáféréseket az összeg beérkezését követő munkanapon aktiváljuk.</li><li>3 éves szerződés mellett árgarancia; 3 év egy összegű fizetése esetén 30% kedvezmény.</li><li>Minden képzésre 30 napos pénzvisszafizetési garancia.</li><li>Az árak nettó árak, 27% áfa terheli őket; az ajánlat az érvényességi időn belül fix.</li></ul>
+      <h3>Döntés</h3><p style="margin-top:4px"><a class="pbtn p" href="${PUB}/a/${no}#megrendelem">Megrendelem az ajánlatot</a><a class="pbtn s" href="${PUB}/a/${no}#hivjatok">Hívjatok vissza</a><a class="pbtn s" href="${PUB}/a/${no}#modositom">Módosítom</a><a class="pbtn s" href="${PUB}/a/${no}#tovabb">Továbbküldöm a döntéshozónak</a></p><p class="muted">A gombok az online ajánlatoldalra vezetnek: ${PUB.replace(/^https?:\/\//,'')}/a/${no}</p>
+      <div class="contact"><div><b style="font-size:13px">Kérdésed van? Keress bátran.</b><br>Gulyás Szabolcs · +36 70 691 0920 · info@excellence.hu<br><span class="muted">Munkanapokon 9–17 között, e-mailre 1 munkanapon belül válaszolok.</span></div><img src="${IMG.logoW}" alt="Excellence"></div>${foot(4,true)}</div>
 
     <div class="pg"><div class="grid"></div><img class="full" src="${IMG.band}" alt="" style="height:110px;border-radius:10px"><div class="num" style="margin-top:10px">05</div><h1>Referenciák és eredmények</h1><p style="margin-top:6px;max-width:70ch">Az Excellence mára megkerülhetetlen szereplő a digitális kompetenciák piacán. Számos vállalati partnerünk valósított meg sikeres képzést tananyagaink és oktatóink segítségével; sokan visszatérnek újabb képzésekért.</p>
       <h3>Partnereink</h3><div class="logogrid">${Object.values(LOGOS).map(src=>`<div><img src="${src}" alt=""></div>`).join("")}</div><p class="muted" style="margin-top:6px">…és több mint 100 további vállalat.</p>
       <h3>Ügyfélvélemények</h3><div class="testi">${[1,2,3].map(i=>`<div class="tc"><div class="ph"></div><div><p class="q">„Rövid idézet az ügyféltől, 2–3 mondat arról, mit hozott a képzés a csapatnak.”</p><b>Név Példa</b><span>beosztás · Cégnév</span></div></div>`).join('')}</div>
-      <div style="margin-top:auto;border-top:2px solid #1aa3a3;padding-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:10.5px"><span>Excellence Training Kft. · 8000 Székesfehérvár, Határ utca 16. · +36 70 776 8888 · info@excellence.hu</span><img src="${IMG.logo}" alt="Excellence" style="height:22px;width:auto"></div>${foot(5)}</div>`;}
-  function renderFwd(){const T=totals();const to=$('#fwdMail').value||'dontéshozó@'+((state.company.email||'ceg.hu').split('@')[1]||'ceg.hu');const d7=new Date(Date.now()+7*864e5);
-    $('#mail').innerHTML=`<div class="mh"><span>Feladó:</span><b>${state.company.contact||'Ajánlatkérő'} &lt;${state.company.email||''}&gt;</b><span>Címzett:</span><b>${to}</b><span>Másolat:</span><b>Gulyás Szabolcs &lt;szabolcs@excellence.hu&gt;</b><span>Tárgy:</span><b>Képzési ajánlat jóváhagyásra – ${$('#qNo').textContent} · bruttó ${ft(T.gross)}</b></div>
-    <div class="mb"><p>Szia!</p><p>Összeállítottam egy képzési ajánlatot a csapatnak az Excellence Training-től. ${T.L.map(l=>l.type==='pkg'?`${l.name} csomag ${l.n} főre`:l.type==='live'?l.name:`${l.name} ${l.n} főre`).join(', ')}. Nettó <b>${ft(T.net)}</b>, bruttó ${ft(T.gross)}, amiben ${ft(T.disc)} létszámkedvezmény már benne van.</p>
-    <p><b>Miért ez:</b> a résztvevők saját tempóban, 1 évig hozzáférnek a videós képzésekhez, tanúsítvánnyal; 30 napos pénzvisszafizetési garancia van rá. Ha ${fmtDate(d7)}-ig jóváhagyod, további ${ft(T.fast)} kedvezmény jár.</p>
-    <p>Az ajánlatot itt tudod megnézni és egy kattintással jóváhagyni, vagy kérdezni:</p><a class="btn cta" href="#quote">Ajánlat megnyitása</a>
-    <p>Kérdés esetén az Excellence kapcsolattartója: Gulyás Szabolcs, +36 70 691 0920.</p><p>Köszönöm,<br>${state.company.contact||''}</p></div>`;}
-  function setStatus(s,reset){if(reset)state.log=[];state.status=s;const el=$('#qStatus');el.textContent=s.split(' · ')[0];el.classList.toggle('ok',s==='Elfogadva');
+      ${foot(5)}</div>`;}
+  function fwdDraft(){const T=totals();const d7=new Date(Date.now()+7*864e5);const link=(window.__publicUrl||location.origin)+'/a/'+(EXC_API.no||$('#qNo').textContent);
+    return{subject:`Képzési ajánlat jóváhagyásra – ${$('#qNo').textContent} · nettó ${ft(T.net)}`,
+      body:`Szia!\n\nÖsszeállítottam egy képzési ajánlatot a csapatnak az Excellence Training-től: ${T.L.map(l=>l.type==='pkg'?`${l.name} csomag ${l.n} főre`:l.type==='live'?l.name:`${l.name} ${l.n} főre`).join(', ')}.\nNettó ${ft(T.net)} (bruttó ${ft(T.gross)})${T.saveAll>0?`, a listaárhoz képest ${ft(T.saveAll)} kedvezménnyel`:''}.\n\nMiért ez: a résztvevők saját tempóban, 1 évig hozzáférnek a videós képzésekhez, tanúsítvánnyal; 30 napos pénzvisszafizetési garancia van rá. Ha ${fmtDate(d7)}-ig jóváhagyod, további ${ft(T.fast)} gyors döntési kedvezmény jár.\n\nAz ajánlat itt nézhető meg és egy kattintással jóváhagyható, vagy kérdezhetsz rajta:\n${link}\n\nAz ajánlat PDF-ben: ${link.replace('/a/','/api/quote/')}/pdf\n\nKérdés esetén az Excellence kapcsolattartója: Gulyás Szabolcs, gulyas.szabolcs@excellence.hu, +36 70 691 0920.\n\nKöszönöm,\n${state.company.contact||''}`};}
+  function renderFwd(){const to=$('#fwdMail').value||'';const d=fwdDraft();$('#fwdDone').hidden=true;
+    $('#mail').innerHTML=`<div class="mh"><span>Feladó:</span><b>${state.company.contact||'Ajánlatkérő'} &lt;${state.company.email||''}&gt;</b><span>Címzett:</span><input id="fwdTo" type="email" value="${to}" placeholder="döntéshozó e-mail-címe" style="font:inherit;padding:4px 8px;border:1px solid var(--line-2);border-radius:6px;background:var(--surface);color:var(--fg)"><span>Másolat:</span><b>Gulyás Szabolcs &lt;gulyas.szabolcs@excellence.hu&gt;</b><span>Tárgy:</span><input id="fwdSubject" value="${d.subject.replace(/"/g,'&quot;')}" style="font:inherit;padding:4px 8px;border:1px solid var(--line-2);border-radius:6px;background:var(--surface);color:var(--fg)"></div>
+    <textarea id="fwdBody" rows="16" style="width:100%;font:inherit;font-size:.95rem;line-height:1.5;padding:14px 16px;border:0;background:var(--surface);color:var(--fg);resize:vertical">${d.body}</textarea>`;}
+  function setStatus(s,reset){if(reset)state.log=[];state.status=s;const el=$('#qStatus');el.textContent=s.split(' · ')[0].replace('Elfogadva','Megrendelve');el.classList.toggle('ok',s==='Elfogadva');
     let extra='';if(s==='Visszahívást kér')extra=' · '+$('#cbTime').value;if(s==='Kérdés'&&$('#qQuestion').value)extra=' · „'+$('#qQuestion').value+'”';if(s==='Továbbküldve'&&$('#fwdMail').value)extra=' · '+$('#fwdMail').value;
     state.log.unshift(new Date().toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'})+' · '+s+extra);
     $('#qLog').innerHTML=state.log.map(x=>`<span>${x}</span>`).join('');
     if(s!=='Kiküldve')toast(s==='Elfogadva'?'Köszönjük! Küldjük a szerződést.':'Rögzítettük: '+s);}
   // ---- kosár (aside + overlay) ----
   function kosarHTML(){const T=totals();if(!T.L.length)return'<p class="empty">Még nincs semmi kiválasztva.</p>';
-    return T.L.map(l=>`<div class="krow"><div class="nm">${l.name}<small>${l.type==='live'?'élő képzés, tájékoztató ár':(l.type==='pkg'?'csomag':'egyedi képzés')+(l.pct?' · −'+l.pct+'%':' · listaár')}${l.bumped?` · ${l.orig}→${l.n} fő, így olcsóbb`:''}</small></div>
+    return T.L.map(l=>`<div class="krow"><div class="nm">${l.name}<small>${l.type==='live'?'élő képzés, tájékoztató ár':l.type==='pkg'?'csomag, fix ár/fő':'egyedi képzés'+(l.pct?' · −'+l.pct+'%':' · listaár')}${l.bumped?` · ${l.orig}→${l.n} fő, így olcsóbb`:''}</small></div>
       <button class="rm" data-rm="${l.id}" aria-label="eltávolítás">×</button><div class="q"><button data-dec="${l.id}" aria-label="kevesebb">−</button><input type="number" value="${qtyOf(l)}" min="1" max="${l.type==='live'?20:MAX_SEATS}" data-id="${l.id}" aria-label="${l.name} létszám"><em>${l.type==='live'?'alkalom':'fő'}</em><button data-inc="${l.id}" aria-label="több">+</button></div>
-      <div class="pr"><span>${l.pct?`<s>${ft(l.unit)}</s> `:''}${ft(l.unit*(1-l.pct/100))} × ${l.n}</span><span>${ft(l.net)}</span></div></div>`).join('');}
+      <div class="pr"><span>${ft(l.unit*(1-l.pct/100))} × ${l.n}</span><span>${ft(l.net)}</span></div></div>`).join('');}
   function linesHTML(){const T=totals();const pk=T.L.filter(l=>l.type==='pkg');const pkgDisc=pk.reduce((a,l)=>a+(COURSES.filter(c=>l.items.includes(c.id)).reduce((x,c)=>x+c.price,0)-l.unit)*l.n,0);return`<div><span>Teljes érték (listaáron)</span><span>${ft(T.full)}</span></div>${pkgDisc>0?`<div style="color:var(--good)"><span>Csomagkedvezmény</span><span>− ${ft(pkgDisc)}</span></div>`:''}${T.disc>0?`<div style="color:var(--good)"><span>Létszámkedvezmény</span><span>− ${ft(T.disc)}</span></div>`:''}<div><b>Nettó</b><b>${ft(T.net)}</b></div><div><span>ÁFA 27%</span><span>${ft(T.vat)}</span></div>`;}
   function renderAside(){
     const T=totals();const items=selected();
@@ -792,9 +806,10 @@ window.EXC_API = (() => {
     $('#asideNote').textContent=T.net&&T.net<MIN_ORDER?'500 000 Ft nettó alatt webáruházas ár érvényes.':'';
     $('#stickyText').textContent=items.length?`${items.length} tétel · nettó ${ft(T.net)}`:'Még nincs tétel';$('#stickySum').textContent='bruttó '+ft(T.gross);
     if(!$('#overlay').hidden){$('#ovChips').innerHTML=kosarHTML();$('#ovLines').innerHTML=linesHTML()+`<div><b>Bruttó</b><b>${ft(totals().gross)}</b></div>`;}
-    const show=!(cur==='start'||cur==='quote'||cur==='thanks'||cur==='pdf'||cur==='fwd');
-    $('#wrap').classList.toggle('single',!show);$('#aside').style.display=show?'':'none';$('#sticky').style.display=(show&&window.innerWidth<=900)?'block':'none';$('#hc').hidden=!(cur==='pkg'||cur==='single');
-    $('#defN').value=state.defN;const hb=band(state.defN);$('#hcPct').textContent=hb.pct?'−'+hb.pct+'%':'';
+    const show=!(cur==='start'||cur==='quote'||cur==='thanks'||cur==='pdf'||cur==='fwd');const wide=cur==='pkg';
+    $('#wrap').classList.toggle('single',!show||wide);$('#aside').style.display=(show&&!wide)?'':'none';$('#sticky').style.display=(show&&(wide||window.innerWidth<=900))?'block':'none';document.body.classList.toggle('has-sticky',show&&(wide||window.innerWidth<=900));document.body.classList.toggle('pkgwide',wide);$('#hc').hidden=!(cur==='pkg'||cur==='single');
+    $('#defN').value=state.defN;const hb=band(state.defN);const nb=BANDS.find(b=>b.min>state.defN);
+    $('#hcPct').textContent=state.path==='single'?(nb&&nb.min-state.defN<=3?`+${nb.min-state.defN} fő → −${nb.pct}%`:(hb.pct?'−'+hb.pct+'%':'')):'';
     renderWiz();const n=NEXT[cur];$('#stickyNext').hidden=!n;if(n){$('#stickyNext').textContent=n[0];$('#stickyNext').disabled=(cur==='pkg'||cur==='single'||cur==='summary')&&!selected().length;}
     if(!renderAside.mi){$('#matrixBox').open=window.innerWidth>900;renderAside.mi=true;}
   }
@@ -813,7 +828,7 @@ window.EXC_API = (() => {
     if(v==='pkg')renderPkg();if(v==='single')renderSingle();if(v==='summary')renderSummary();if(v==='quote')renderQuote();if(v==='thanks')renderThanks();if(v==='pdf')renderPdf();if(v==='fwd')renderFwd();
     renderAside();window.scrollTo({top:0,behavior:'smooth'});
   }
-  function toggle(id){const x=byId(id);if(state.sel[id]){delete state.sel[id];toast(x.name+' levéve');}else{state.sel[id]=true;state.qty[id]=x.type==='live'?1:state.defN;toast(x.name+(x.type==='live'?' hozzáadva, 1 alkalom':' hozzáadva, '+state.qty[id]+' fő'));}save();}
+  function toggle(id){const x=byId(id);if(state.sel[id]){delete state.sel[id];toast(x.name+' levéve');}else{if(x.type==='pkg')PACKAGES.forEach(p=>{delete state.sel[p.id];});state.sel[id]=true;state.qty[id]=x.type==='live'?1:state.defN;toast(x.name+(x.type==='live'?' hozzáadva, 1 alkalom':' hozzáadva, '+state.qty[id]+' fő'));}save();}
   function rerenderCur(){if(cur==='pkg')renderPkg();if(cur==='single')renderSingle();if(cur==='summary')renderSummary();renderAside();}
   function setPath(p){
     const drop=selected().filter(x=>p==='pkg'?x.type==='course':x.type==='pkg');
@@ -847,8 +862,11 @@ window.EXC_API = (() => {
   $('#pdfDl').addEventListener('click',()=>openPdf());
   $('#tContract').addEventListener('click',()=>{if(state.accept&&state.accept.contractUrl)window.open(state.accept.contractUrl,'_blank');else toast('A szerződés az elfogadás után érhető el.');});
   $('#tInvoice').addEventListener('click',()=>toast(state.accept&&state.accept.proforma?('Díjbekérő: '+state.accept.proforma+' – a Számlázz.hu PDF-jét e-mailben küldtük.'):'A díjbekérő az elfogadás után érhető el.'));
-  $('#paper').addEventListener('click',e=>{const a=e.target.closest('a[href^="#tematika-"]');if(a){e.preventDefault();openSyl(a.getAttribute('href').replace('#tematika-',''));}const b=e.target.closest('a.pbtn');if(b){e.preventDefault();go('quote');}});
-  $('#mail').addEventListener('click',e=>{const a=e.target.closest('a.cta');if(a){e.preventDefault();go('quote');}});
+  $('#paper').addEventListener('click',e=>{const a=e.target.closest('a[href^="#tematika-"]');if(a){e.preventDefault();openSyl(a.getAttribute('href').replace('#tematika-',''));}const b=e.target.closest('a.pbtn');if(b){e.preventDefault();go('quote');const h=(b.getAttribute('href').split('#')[1]||'');handleHash('#'+h);}});
+  $('#fwdOpen').addEventListener('click',()=>go('fwd'));
+  $('#fwdMailto').addEventListener('click',()=>{const to=$('#fwdTo').value.trim();location.href=`mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent('gulyas.szabolcs@excellence.hu')}&subject=${encodeURIComponent($('#fwdSubject').value)}&body=${encodeURIComponent($('#fwdBody').value)}`;});
+  $('#fwdSend').addEventListener('click',()=>{const to=$('#fwdTo').value.trim();if(!to||!/@/.test(to)){toast('Add meg a döntéshozó e-mail-címét.');$('#fwdTo').focus();return;}$('#fwdMail').value=to;
+    const b=$('#fwdSend');b.disabled=true;EXC_API.forward(to,$('#fwdSubject').value,$('#fwdBody').value).then(()=>{setStatus('Továbbküldve');$('#fwdDone').hidden=false;toast('Elküldve.');}).catch(err=>toast('Nem sikerült: '+err.message)).finally(()=>b.disabled=false);});
   $('#mClose').addEventListener('click',()=>{$('#modal').hidden=true;});
   $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')$('#modal').hidden=true;});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#modal').hidden=true;$('#cmodal').hidden=true;}});
@@ -870,7 +888,6 @@ window.EXC_API = (() => {
       if(act==='Elfogadva'){a.disabled=true;EXC_API.accept(state.giftChoice||null).then(j=>{state.accept=j;setStatus(act);go('thanks');}).catch(fail).finally(()=>a.disabled=false);}
       else if(act==='Visszahívást kér'){EXC_API.callback(state.company.phone,null,$('#cbTime').value).then(()=>{setStatus(act);toast('Visszahívás rögzítve.');}).catch(fail);}
       else if(act==='Kérdés'){const t=$('#qQuestion').value.trim();if(!t){toast('Írd be a kérdésed.');return;}EXC_API.question(t).then(()=>{setStatus(act);toast('Kérdés elküldve.');}).catch(fail);}
-      else if(act==='Továbbküldve'){const to=$('#fwdMail').value.trim();if(!to){toast('Add meg a döntéshozó e-mail-címét.');return;}EXC_API.forward(to).then(()=>{setStatus(act);go('fwd');}).catch(fail);}
       else setStatus(act);}
   });
   document.addEventListener('keydown',e=>{const el=e.target.closest&&e.target.closest('[data-pk]');if(el&&(e.key==='Enter'||e.key===' ')&&!e.target.closest('button')){e.preventDefault();toggle(el.dataset.pk);rerenderCur();}});
@@ -882,23 +899,23 @@ window.EXC_API = (() => {
   $('#backToWhat').addEventListener('click',()=>go('what'));
   // ---- Varázsló-sáv ----
   const WIZ={
-    pkg:{back:['← Vissza',()=>go('start')],next:['Tovább: mennyibe kerül? →',()=>go('summary')],need:true,hint:'Válassz legalább egy csomagot (vagy élő tréninget).'},
-    single:{back:['← Inkább csomagot választok',()=>setPath('pkg')],next:['Tovább: mennyibe kerül? →',()=>go('summary')],need:true,hint:'Jelölj be legalább egy képzést.'},
-    summary:{back:['← Képzések',()=>go('what')],next:['Hivatalos ajánlatot kérek →',()=>go('form')],need:true,hint:'Nem kötelez semmire. 14 napig érvényes, bármikor módosítható.'},
-    form:{back:['← Ár',()=>go('summary')],next:['Ajánlat elkészítése →',()=>$('#reqForm').requestSubmit()]},
-    quote:{back:['← Módosítom',()=>go('what')],sec:['⬇ Ajánlat PDF',()=>openPdf()],next:['Elfogadom az ajánlatot',()=>{const b=$('#v-quote button[data-act="Elfogadva"]');if(b)b.click();}]},
+    pkg:{back:['← Vissza',()=>go('start')],next:['Tovább: mennyibe kerül? →',()=>go('summary')],need:true,hint:'Válassz egy csomagot (vagy élő tréninget).'},
+    single:{back:['← Inkább csomagot',()=>setPath('pkg')],next:['Tovább: mennyibe kerül? →',()=>go('summary')],need:true,hint:'Jelölj be legalább egy képzést.'},
+    summary:{back:['← Vissza: képzések szerkesztése',()=>go('what'),'← Képzések'],next:['Hivatalos ajánlatot kérek →',()=>go('form')],need:true,hint:'Nem kötelez semmire. 14 napig érvényes, bármikor módosítható.'},
+    form:{back:['← Vissza az árakhoz',()=>go('summary'),'← Árak'],next:['Ajánlat elkészítése →',()=>$('#reqForm').requestSubmit()]},
+    quote:{back:['← Vissza',()=>go('what')],sec:['⬇ PDF',()=>openPdf()],next:['Megrendelem az ajánlatot',()=>{const b=$('#v-quote button[data-act="Elfogadva"]');if(b)b.click();},'Megrendelem']},
     thanks:{sec:['⬇ Megrendelés PDF',()=>openPdf()]},
-    pdf:{back:['← Vissza az ajánlathoz',()=>go('quote')],next:['⬇ Letöltés',()=>openPdf()]},
-    fwd:{back:['← Vissza az ajánlathoz',()=>go('quote')]}
+    pdf:{back:['← Vissza az ajánlathoz',()=>go('quote'),'← Ajánlat'],next:['⬇ Letöltés',()=>openPdf()]},
+    fwd:{back:['← Vissza az ajánlathoz',()=>go('quote'),'← Ajánlat'],next:['Küldés innen (PDF csatolva)',()=>$('#fwdSend').click(),'Küldés (PDF-fel)']}
   };
   function openPdf(){if(EXC_API.no)window.open('/api/quote/'+EXC_API.no+'/pdf','_blank');else if(cur!=='pdf')go('pdf');else toast('A PDF az ajánlat elküldése után tölthető le.');}
   function measureTop(){document.documentElement.style.setProperty('--toph',document.querySelector('.top').offsetHeight+'px');}
   window.addEventListener('resize',measureTop);
   function renderWiz(){const w=WIZ[cur];const el=$('#wiz');el.hidden=!w;requestAnimationFrame(measureTop);if(!w){$('#wizHint').textContent='';return;}
-    const set=(id,c)=>{const b=$('#'+id);b.hidden=!c;if(c){b.textContent=c[0];b.onclick=c[1];}};
+    const mob=window.innerWidth<=600;const set=(id,c)=>{const b=$('#'+id);b.hidden=!c;if(c){b.textContent=(mob&&c[2])||c[0];b.onclick=c[1];}};
     set('wizBack',w.back);set('wizSec',w.sec);set('wizNext',w.next);
     const ok=!w.need||selected().length>0;$('#wizNext').disabled=!ok;$('#wizHint').textContent=w.need&&!ok?w.hint:(cur==='summary'?w.hint:'');
-    if(cur==='quote'&&state.status==='Elfogadva'){$('#wizNext').textContent='Elfogadva ✓';$('#wizNext').disabled=true;}}
+    if(cur==='quote'&&state.status==='Elfogadva'){$('#wizNext').textContent='Megrendelve ✓';$('#wizNext').disabled=true;}}
   const NEXT={pkg:['Mennyibe kerül? →','summary'],single:['Mennyibe kerül? →','summary'],summary:['Ajánlatot kérek →','form'],form:['Ajánlat elkészítése →','submit']};
   $('#stickyNext').addEventListener('click',()=>{const n=NEXT[cur];if(!n)return;if(n[1]==='submit'){$('#reqForm').requestSubmit();return;}go(n[1]);});
   $('#openKosar').addEventListener('click',()=>{$('#overlay').hidden=false;renderAside();});
@@ -915,15 +932,23 @@ window.EXC_API = (() => {
     const sb=f.querySelector('button[type=submit]');if(sb){sb.disabled=true;sb.textContent='Ajánlat készül…';}
     EXC_API.quote(state.company,EXC_API.selectionFrom(state,selected,qtyOf),state.customReq).then(j=>{state.qno=j.no;state.version=1;save();go('quote');})
       .catch(err=>{toast('Nem sikerült elküldeni: '+err.message);go('quote');}).finally(()=>{if(sb){sb.disabled=false;sb.textContent='Ajánlat megtekintése →';}});});
-  if(!selected().length){state.path='pkg';state.sel['excel-pro']=true;state.qty['excel-pro']=18;}
+  if(!selected().length)state.path='pkg';
   // Nyomtatási mód: ?print=<ajánlatszám> -> a szerver innen készíti a PDF-et
-  const printNo=new URLSearchParams(location.search).get('print');
-  if(printNo){document.body.classList.add('print');
-    fetch('/api/quote/'+encodeURIComponent(printNo)).then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);const q=j.quote;
-      state.sel={};state.qty={};(q.selection||[]).forEach(x=>{state.sel[x.id]=true;state.qty[x.id]=x.qty;});
+  function applyQuote(q){state.sel={};state.qty={};(q.selection||[]).forEach(x=>{state.sel[x.id]=true;state.qty[x.id]=x.qty;});
       const anyPkg=(q.selection||[]).some(x=>byId(x.id)&&byId(x.id).type==='pkg');state.path=anyPkg?'pkg':'single';
       const firstE=(q.selection||[]).find(x=>byId(x.id)&&byId(x.id).type!=='live');if(firstE)state.defN=firstE.qty;
       state.company=q.company||{};state.qno=q.no;state.version=1;state.customReq=q.customReq?[q.customReq.why,q.customReq.headcount+' fő',q.customReq.years+' év'].join(' · '):null;
+      if(q.accept){state.accept={proforma:q.accept.proformaNo,gross:q.accept.gross,net:q.accept.net,fast:q.accept.fast,contractUrl:'/api/quote/'+q.no+'/pdf'};state.status='Elfogadva';}
+      save();}
+  function handleHash(h){if(h==='#megrendelem'||h==='#elfogadom'){const el=$('#v-quote .decide');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+    else if(h==='#hivjatok'){const el=$('#cbTime');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.focus();}}
+    else if(h==='#tovabb'){const el=$('#fwdMail');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.focus();}}
+    else if(h==='#modositom'){go('what');}}
+  const printNo=new URLSearchParams(location.search).get('print');
+  if(!printNo&&EXC_API.no){fetch('/api/quote/'+encodeURIComponent(EXC_API.no)).then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);window.__publicUrl=j.publicUrl;applyQuote(j.quote);
+      if(j.quote.accept){go('thanks',true);}else{go('quote',true);setStatus(j.quote.status==='quote'?'Kiküldve':state.status||'Kiküldve');const h=location.hash;if(h&&h!=='#quote')setTimeout(()=>handleHash(h),300);}}).catch(e=>toast('Az ajánlat nem tölthető be: '+e.message));}
+  if(printNo){document.body.classList.add('print');
+    fetch('/api/quote/'+encodeURIComponent(printNo)).then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);const q=j.quote;window.__publicUrl=j.publicUrl;applyQuote(q);
       go('quote',true);go('pdf',true);
       if(q.accept){const T=totals();const a=q.accept;const f=x=>new Date(x).toLocaleDateString('hu-HU');
         const items=T.L.map(l=>`<tr><td>${l.name}${l.type==='pkg'?' csomag':''}</td><td style="text-align:center">${l.n} ${l.type==='live'?'alkalom':'fő'}</td><td style="text-align:right">${ft(l.net)}</td></tr>`).join('');
@@ -934,7 +959,7 @@ window.EXC_API = (() => {
           ${a.gift?`<p class="muted" style="margin-top:8px">Választott ajándék képzés: ${cname(a.gift)}</p>`:''}
           <h3>Feltételek</h3><p>Az e-learning hozzáférések a díjbekérő kiegyenlítése után 1 munkanapon belül aktiválódnak, és az aktiválástól számított 1 évig érvényesek; nem hosszabbodnak meg automatikusan. Az e-learning tételekre 30 napos pénzvisszafizetési garancia vonatkozik. Az élő képzések időpontját a felek külön egyeztetik. Fizetés: átutalással, a díjbekérő alapján, 8 napon belül. Az ajánlat elfogadásával a megrendelés a jelen visszaigazolás és a díjbekérő szerinti tartalommal létrejött.</p>
           <div class="sig"><div>Excellence Training Kft.<br>Gulyás Szabolcs, értékesítési partner</div><div>${q.company.name}<br>${q.company.contact} · elektronikusan elfogadva ${f(a.at)}</div></div>
-          <div class="foot"><span>Excellence Training Kft. · ${q.no}</span><span>Megrendelés visszaigazolása</span></div></div>`);}
+          </div>`);}
       window.__pdfReady=true;}).catch(e=>{document.body.innerHTML='<pre>PDF hiba: '+e.message+'</pre>';window.__pdfError=e.message;});}
   window.addEventListener('popstate',e=>{const v=(e.state&&e.state.v)||'start';if(VIEWS.includes(v))go(v,true);});
   window.addEventListener('beforeunload',e=>{if(cur!=='start'&&cur!=='quote'&&selected().length){e.preventDefault();e.returnValue='Az összeállításod még nincs elküldve. Biztosan kilépsz?';return e.returnValue;}});

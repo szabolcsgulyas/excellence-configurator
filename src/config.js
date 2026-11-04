@@ -27,6 +27,6 @@ export const cfg = {
   mail: { provider: e.MAIL_PROVIDER || 'resend', key: e.MAIL_API_KEY || '', from: e.MAIL_FROM || 'ajanlat@localhost', replyTo: e.MAIL_REPLY_TO || '', notifyTo: e.NOTIFY_TO || '' },
   nav: { login: e.NAV_LOGIN || '', password: e.NAV_PASSWORD || '', signKey: e.NAV_SIGN_KEY || '', exchangeKey: e.NAV_EXCHANGE_KEY || '', taxNumber: e.NAV_TAX_NUMBER || '' },
   fb: { verifyToken: e.FB_VERIFY_TOKEN || '', pageToken: e.FB_PAGE_TOKEN || '' },
-  contact: { name: 'Gulyás Szabolcs', title: 'értékesítési partner', email: e.MAIL_REPLY_TO || 'szabolcs@excellence.hu' }
+  contact: { name: 'Gulyás Szabolcs', title: 'értékesítési partner', email: e.MAIL_REPLY_TO || 'gulyas.szabolcs@excellence.hu' }
 };
 fs.mkdirSync(cfg.dataDir, { recursive: true });

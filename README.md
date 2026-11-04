@@ -39,7 +39,7 @@ A `public/` mappába másolva a `konfigurator.html`-t `index.html` néven, a sze
 ## Kulcsok, amik kellenek (Gábortól / Nóritól)
 - `BEVETEL_API_KEY` (leads.write, bookings.write), `BEVETEL_USER_ID` (saját CRM-felhasználó), `BEVETEL_CHANNEL_SPEC_ID`, `BEVETEL_BOOKING_SERVICE_ID` + `RESOURCE_ID`
 - `SZAMLAZZ_AGENT_KEY` + bank, számlaszám, előtag
-- E-mail küldő kulcs (Resend/Brevo) + SPF/DKIM az excellence.hu-n, a küldő: szabolcs@excellence.hu
+- E-mail küldő kulcs (Resend/Brevo) + SPF/DKIM az excellence.hu-n, a küldő: gulyas.szabolcs@excellence.hu
 - NAV Online Számla technikai felhasználó (adószám-lekérdezéshez; nem kötelező, nélküle kézi cégnév)
 
 ## Ismert korlátok

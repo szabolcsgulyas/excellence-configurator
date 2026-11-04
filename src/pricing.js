@@ -15,16 +15,16 @@ export function calculate(selection) {
   if (!sel.length) throw new Error('Üres kiválasztás');
   const lines = sel.map(x => {
     if (x.type === 'live') return { id: x.id, name: x.name, type: x.type, n: x.qty, pct: 0, unit: x.price, list: x.price * x.qty, net: x.price * x.qty };
+    // Csomag: fix ár/fő, nincs létszámkedvezmény (Nóri, 2026-11-04)
+    if (x.type === 'pkg') { const full = COURSES.filter(c => x.items.includes(c.id)).reduce((a, c) => a + c.price, 0) * x.qty; return { id: x.id, name: x.name, type: x.type, n: x.qty, pct: 0, unit: x.price, list: x.price * x.qty, net: x.price * x.qty, full, items: x.items }; }
     const r = bestForPackage(x.price, x.qty); const use = r.alt || r;
-    const full = x.type === 'pkg' ? COURSES.filter(c => x.items.includes(c.id)).reduce((a, c) => a + c.price, 0) * use.n : x.price * use.n;
-    return { id: x.id, name: x.name, type: x.type, n: use.n, pct: use.pct, unit: x.price, list: x.price * use.n, net: Math.round(use.total), full, bumped: !!r.alt, items: x.items };
+    return { id: x.id, name: x.name, type: x.type, n: use.n, pct: use.pct, unit: x.price, list: x.price * use.n, net: Math.round(use.total), full: x.price * use.n, bumped: !!r.alt };
   });
   const has = id => sel.some(x => x.id === id || (x.type === 'pkg' && x.items.includes(id)));
   const gifts = [];
   const ex = sel.find(x => x.id === 'excel-alap');
   if (ex) HOOK.filter(id => !has(id)).forEach(id => { const c = byId(id); gifts.push({ id, name: c.name, n: ex.qty, value: c.price * ex.qty, kind: 'hook' }); });
-  const pk = sel.find(x => x.type === 'pkg');
-  if (pk) { const g = GIFTS.find(id => !has(id)); if (g) { const c = byId(g); gifts.push({ id: g, name: c.name, n: pk.qty, value: c.price * pk.qty, kind: 'choice', choices: GIFTS.filter(id => !has(id)) }); } }
+  // Word/PPT/Outlook ajándék: nem automatikus, csak kézi ösztönzőként (Nóri) – a GIFTS lista ehhez marad meg
   const list = lines.reduce((a, l) => a + l.list, 0), net = lines.reduce((a, l) => a + l.net, 0), full = lines.reduce((a, l) => a + (l.full ?? l.list), 0);
   const fast = Math.round(net * FAST_PCT / 100);
   const r = v => Math.round(v);

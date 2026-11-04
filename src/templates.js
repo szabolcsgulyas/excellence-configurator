@@ -30,10 +30,11 @@ export const callbackMail = q => ({
   html: wrap(`<p>Szia ${first(q.company.contact)}!</p><p>Megkaptam a visszahívás-kérést, ${q.callback?.slot ? `a választott időpont: <b>${q.callback.slot}</b>.` : '1 munkanapon belül hívlak.'} Addig is itt az ajánlat:</p>${btn(link(q), 'Ajánlat megnyitása')}${sig}`)
 });
 
+export const forwardCustom = (q, subject, body) => ({ subject, html: wrap(body.split('\n').map(l => l.replace(/&/g, '&amp;').replace(/</g, '&lt;')).join('<br>')) });
 export const forwardMail = (q, from) => ({
   subject: `Képzési javaslat a csapatnak – ${q.company.name}`,
   html: wrap(`<p>Szia!</p><p>${from || q.company.contact} összeállított egy képzési tervet a csapatnak, és megkért, hogy küldjem el neked döntésre.</p>
-<p><b>Röviden:</b> ${q.calc.lines.map(l => `${l.name} (${l.n} ${l.type === 'live' ? 'alkalom' : 'fő'})`).join(', ')} – <b>${ft(q.calc.net)} + ÁFA / év</b>${q.calc.savedTotal > 0 ? `, a listaárnál ${ft(q.calc.savedTotal)}-tal olcsóbban` : ''}. 30 napos pénzvisszafizetési garancia, 1 éves hozzáférés, automatikus hosszabbítás nélkül.</p>
+<p><b>Röviden:</b> ${q.calc.lines.map(l => `${l.name} (${l.n} ${l.type === 'live' ? 'alkalom' : 'fő'})`).join(', ')} – <b>${ft(q.calc.net)} + ÁFA / év</b>${q.calc.savedTotal > 0 ? `, a listaárnál ${ft(q.calc.savedTotal)}-tal olcsóbban` : ''}. 30 napos pénzvisszafizetési garancia, 1 éves hozzáférés, automatikus hosszabbítás nélkül, a rögzített áron hosszabbítható.</p>
 ${btn(link(q), 'Ajánlat megnyitása')}<p>Az ajánlat ${VALID_DAYS} napig érvényes. Ha kérdésed van, válaszolj erre a levélre.</p>${sig}`)
 });
 
@@ -54,5 +55,5 @@ export const contractHtml = q => `<!doctype html><html lang="hu"><meta charset="
 <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%"><tr><th align="left">Képzés</th><th>Mennyiség</th><th align="right">Nettó</th></tr>
 ${q.calc.lines.map(l => `<tr><td>${l.name}</td><td align="center">${l.n} ${l.type === 'live' ? 'alkalom' : 'fő'}</td><td align="right">${ft(l.net)}</td></tr>`).join('')}
 <tr><td colspan="2"><b>Összesen nettó${q.accept?.fast ? ` (gyors döntési ${q.calc.fastPct}% levonva)` : ''}</b></td><td align="right"><b>${ft(q.accept?.net ?? q.calc.net)}</b></td></tr></table>
-<p>Hozzáférés: 1 év az aktiválástól, nem hosszabbodik automatikusan. Fizetés: átutalás díjbekérő alapján, 8 napon belül. 30 napos pénzvisszafizetési garancia az e-learning tételekre. Az élő képzések időpontját a felek külön egyeztetik.</p>
+<p>Hozzáférés: 1 év az aktiválástól, nem hosszabbodik automatikusan, a rögzített áron hosszabbítható. Fizetés: átutalás díjbekérő alapján, 8 napon belül. 30 napos pénzvisszafizetési garancia az e-learning tételekre. Az élő képzések időpontját a felek külön egyeztetik.</p>
 <p>Kelt: ${new Date().toLocaleDateString('hu-HU')}</p></body></html>`;

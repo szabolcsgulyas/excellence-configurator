@@ -52,7 +52,7 @@ app.post('/api/quote', wrap(async (req, res) => {
   res.json({ ok: true, no: q.no, url: `${cfg.publicUrl}/a/${q.no}`, calc, validUntil: q.validUntil, fastUntil: q.fastUntil });
 }));
 
-app.get('/api/quote/:no', wrap(async (req, res) => res.json({ ok: true, quote: q404(req.params.no) })));
+app.get('/api/quote/:no', wrap(async (req, res) => res.json({ ok: true, quote: q404(req.params.no), publicUrl: cfg.publicUrl })));
 
 /** 2) Elfogadás: szerződés + díjbekérő (Számlázz.hu) + e-mail mellékletekkel */
 app.post('/api/quote/:no/accept', wrap(async (req, res) => {
@@ -114,7 +114,10 @@ app.post('/api/quote/:no/question', wrap(async (req, res) => {
 /** 6) Továbbküldés a döntéshozónak */
 app.post('/api/quote/:no/forward', wrap(async (req, res) => {
   const q = q404(req.params.no); need(req.body, 'to');
-  await sendMail({ to: req.body.to, replyTo: q.company.email, ...T.forwardMail(q, q.company.contact) });
+  const attachments = []; try { const pdf = await renderQuotePdf(q.no); attachments.push({ filename: `${q.no}-ajanlat.pdf`, content: pdf.toString('base64') }); } catch (e) { console.error('PDF hiba:', e.message); }
+  const mail = req.body.body ? T.forwardCustom(q, req.body.subject || `Képzési ajánlat jóváhagyásra – ${q.no}`, req.body.body) : T.forwardMail(q, q.company.contact);
+  await sendMail({ to: req.body.to, replyTo: q.company.email, ...mail, attachments });
+  if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'Továbbküldve', `Címzett: ${req.body.to}`) });
   logEvent(q.no, 'forwarded', { to: req.body.to });
   res.json({ ok: true });
 }));
