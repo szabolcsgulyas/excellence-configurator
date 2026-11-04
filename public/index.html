@@ -267,7 +267,7 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 .kpi.hi{background:#fff;color:#0b2a4a;border-color:#fff}
 .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}.nums div{text-align:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:12px 8px}.nums b{display:block;font-family:var(--display);font-size:24px;letter-spacing:-.02em;line-height:1.1}.nums span{display:block;font-size:9.5px;opacity:.8;letter-spacing:.04em;text-transform:uppercase;margin-top:3px}
 /* course cards */
-.ccards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ccards{display:grid;grid-template-columns:1fr 1fr;gap:10px;grid-auto-rows:1fr} .pblock{margin-bottom:16px;break-inside:avoid}
 .cc{border:1px solid #dfe5ec;border-radius:10px;padding:11px 13px;background:#fff}.cc b{display:block;font-family:var(--display);font-size:12.5px;margin-bottom:2px}.cc .m{font-size:10px;color:#0a5ea8;font-weight:700;letter-spacing:.04em}.cc p{font-size:10.5px;margin:4px 0 0;color:#445}
 .cc a{display:inline-block;margin-top:4px;font-size:10px;color:#0a5ea8;font-weight:700;text-decoration:none}
 .pkgband{background:#0b2a4a;color:#fff;border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:12px}.pkgband b{font-family:var(--display);font-size:16px}.pkgband .n{font-family:var(--display);font-size:28px;letter-spacing:-.02em;white-space:nowrap;flex:none}.pkgband .n small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-left:4px;opacity:.8}.pkgband>div:first-child{min-width:0}
@@ -875,9 +875,10 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     const whatList=T.L.map(l=>l.type==='pkg'?`${l.name} csomag · ${l.n} fő`:l.type==='live'?`${l.name} · ${l.n} csoport`:l.type==='extra'?l.name:`${l.name} · ${l.n} fő`).join(' · ');
     // page 3: courses as cards
     const courseCards=(ids,n)=>`<div class="ccards">${ids.map(id=>{const c=COURSES.find(x=>x.id===id);return`<div class="cc"><b>${ico(id,16)} ${c.name}</b><div class="m">${c.videos} VIDEÓ · ${c.length.toUpperCase()}</div><p>${c.desc.split('. ')[0]}.</p><a href="#tematika-${id}">Tematika →</a></div>`;}).join('')}</div>`;
-    const p3=T.L.map(l=>{if(l.type==='pkg')return`<div class="pkgband"><div><b>${l.name} csomag</b><div class="muted" style="color:#fff">${l.sub} · Kinek: ${l.who}</div></div><div class="n">${l.n}<small>fő</small></div></div>${courseCards(l.items,l.n)}`;
-      if(l.type==='live')return`<div class="pkgband"><div><b>${l.name}</b><div class="muted" style="color:#fff">${l.desc}</div></div><div class="n">${l.n}<small>alkalom</small></div></div>`;
-      return`<div class="pkgband" style="background:#f3f6fa;color:#0b2a4a"><div><b>${l.name}</b></div><div class="n">${l.n}<small>fő</small></div></div>${courseCards([l.id],l.n)}`;}).join('');
+    const p3=T.L.filter(l=>l.type!=='extra').map((l,k)=>{const key='b'+k;
+      if(l.type==='pkg')return`<div class="pblock" data-key="${key}"><div class="pkgband"><div><b>${l.name} csomag</b><div class="muted" style="color:#fff">${l.sub} · Kinek: ${l.who}</div></div><div class="n">${l.n}<small>fő</small></div></div>${courseCards(l.items,l.n)}</div>`;
+      if(l.type==='live')return`<div class="pblock" data-key="${key}"><div class="pkgband"><div><b>${l.name}</b><div class="muted" style="color:#fff">${l.code} · ${l.desc}</div></div><div class="n">${l.n}<small>csoport</small></div></div></div>`;
+      return`<div class="pblock" data-key="${key}"><div class="pkgband" style="background:#f3f6fa;color:#0b2a4a"><div><b>${l.name}</b></div><div class="n">${l.n}<small>fő</small></div></div>${courseCards([l.id],l.n)}</div>`;}).join('');
     // alternative upsell
     let alt='';if(T.L.some(x=>x.type==='course')){const tot=seatsTotal();const next=BANDS.find(b=>b.min>tot);if(next&&next.min-tot<=10)alt=`<div class="alt"><div class="num">+${next.min-tot}</div><div><b>${next.min} hozzáféréstől ${next.pct}% a kedvezmény</b><span style="font-size:11px">Most összesen ${tot} e-learning hozzáférés van az ajánlatban. ${next.min-tot} további hozzáféréssel az egyedi képzésekre ${next.pct}% létszámkedvezmény jár.</span></div></div>`;}
     $('#paper').innerHTML=`
@@ -890,11 +891,11 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
 
     <div class="pg"><div class="grid"></div><div class="num">02</div><h1>${hasE&&hasL?'Komplex oktatási struktúra':hasL?'Élő képzés':'Miért e-learning'}</h1>
       <div class="flow" data-title="${hasE&&hasL?'Komplex oktatási struktúra':hasL?'Élő képzés':'Miért e-learning'}" data-num="02"><img class="full" src="${hasL?IMG.live:IMG.elearn}" alt="" style="height:170px;border-radius:10px;margin-top:10px"><div style="margin-top:12px;column-count:2;column-gap:20px;font-size:11.5px">${structH.replace(/<h3>.*?<\/h3>/,'')}</div>
-      <h3>Amit kiválasztottál</h3>${p3}${T.G.length?`<p style="margin-top:8px;color:#177a52"><b>Ajándék tananyag:</b> ${T.G.map(g=>g.name).join(', ')} – ${ft(T.giftVal)} értékben, díjmentesen.</p>`:''}</div>${foot(2)}</div>
+      <h3 class="kwn">Amit kiválasztottál</h3>${p3}${T.G.length?`<p style="margin-top:8px;color:#177a52"><b>Ajándék tananyag:</b> ${T.G.map(g=>g.name).join(', ')} – ${ft(T.giftVal)} értékben, díjmentesen.</p>`:''}</div>${foot(2)}</div>
 
-    <div class="pg"><div class="grid"></div><div class="num">03</div><h1>Ár</h1><p class="muted">Az árak nettó árak, 27% áfa terheli őket. Az ajánlat ${fmtDate(v)}-ig érvényes.</p>
+    <div class="pg"><div class="grid"></div><div class="num">03</div><h1>Ár</h1><div class="flow" data-num="03" data-title="Ár"><p class="muted">Az árak nettó árak, 27% áfa terheli őket. Az ajánlat ${fmtDate(v)}-ig érvényes.</p>
       <div class="pricebox" style="margin-top:8px"><table>${tableHTML(T)}</table></div>${alt}
-      <h3>Miért érdemes most dönteni</h3><div class="why light"><div><b>Gyors döntési kedvezmény −5%</b>${fmtDate(d7)}-ig elfogadva további ${ft(T.fast)} kedvezmény, így nettó ${ft(T.netFast)}.</div><div><b>Indulás 1 munkanapon belül</b>Az összeg beérkezését követő munkanapon a csapat kezdhet.</div><div><b>30 napos pénzvisszafizetési garancia</b>Minden képzésre: egy e-mail, és visszautaljuk a teljes díjat.</div><div><b>3 évre egy összegben: −30%</b>Árgaranciával, ${ft(T.net*3*0.7)} nettó a ${ft(T.net*3)} helyett.</div><div><b>Árgarancia a hosszabbításra</b>Egy év múlva a mostani áron folytathatod, áremelés esetén is.</div></div>${foot(3)}</div>
+      <div class="pblock"><h3>Miért érdemes most dönteni</h3><div class="why light"><div><b>Gyors döntési kedvezmény −5%</b>${fmtDate(d7)}-ig elfogadva további ${ft(T.fast)} kedvezmény, így nettó ${ft(T.netFast)}.</div><div><b>Indulás 1 munkanapon belül</b>Az összeg beérkezését követő munkanapon a csapat kezdhet.</div><div><b>30 napos pénzvisszafizetési garancia</b>Minden képzésre: egy e-mail, és visszautaljuk a teljes díjat.</div><div><b>3 évre egy összegben: −30%</b>Árgaranciával, ${ft(T.net*3*0.7)} nettó a ${ft(T.net*3)} helyett.</div><div><b>Árgarancia a hosszabbításra</b>Egy év múlva a mostani áron folytathatod, áremelés esetén is.</div></div></div></div>${foot(3)}</div>
 
     <div class="pg navy"><div class="grid"></div><div class="num">04</div><h1>Így zajlik, és hogyan dönthetsz</h1>
       <div class="tl5" style="margin-top:18px"><div><i>1</i>Elfogadás az ajánlatoldalon</div><div><i>2</i>Szerződés és díjbekérő azonnal</div><div><i>3</i>Átutalás</div><div><i>4</i>Hozzáférés másnap</div><div><i>5</i>Tanulás 1 évig, tanúsítvánnyal</div></div>
@@ -908,16 +909,24 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
       ${foot(5)}</div>`;
     paginatePdf();}
   // Túlcsorduló oldalak tördelése: a .flow tartalmát folytató oldalakra visszük át, majd újraszámozzuk a lábléceket
-  function paginatePdf(){const paper=$('#paper');let guard=0;
-    paper.querySelectorAll('.pg .flow').forEach(flow=>{let pg=flow.closest('.pg');
-      const overflows=p=>p.scrollHeight>p.clientHeight+2;
-      while(overflows(pg)&&guard++<60){
-        let next=pg.nextElementSibling;if(!next||!next.classList.contains('cont')){next=document.createElement('div');next.className='pg cont';next.innerHTML=`<div class="grid"></div><div class="num">${flow.dataset.num}</div><h1>${flow.dataset.title} <span class="muted" style="font-size:16px">· folytatás</span></h1><div class="flow"></div>`;pg.after(next);}
-        const nf=next.querySelector('.flow');const f=pg.querySelector('.flow');const last=f.lastElementChild;if(!last)break;
-        if(last.classList.contains('ccards')&&last.children.length>1){let g=nf.firstElementChild;if(!g||!g.classList.contains('ccards')){g=document.createElement('div');g.className='ccards';nf.prepend(g);}g.prepend(last.lastElementChild);}
-        else{nf.prepend(last);}
-        if(overflows(next)){pg=next;}
-      }});
+  function paginatePdf(){const paper=$('#paper');
+    const over=p=>p.scrollHeight>p.clientHeight+2;
+    const newPage=(after,flow)=>{const n=document.createElement('div');n.className='pg cont';n.innerHTML=`<div class="grid"></div><div class="num">${flow.dataset.num}</div><h1>${flow.dataset.title} <span class="muted" style="font-size:16px">· folytatás</span></h1><div class="flow"></div>`;after.after(n);return n;};
+    paper.querySelectorAll('.pg .flow').forEach(flow=>{let pg=flow.closest('.pg');let guard=0;
+      while(pg&&guard++<120){
+        if(!over(pg)){const nx=pg.nextElementSibling;pg=(nx&&nx.classList.contains('cont'))?nx:null;continue;}
+        let next=pg.nextElementSibling;if(!next||!next.classList.contains('cont'))next=newPage(pg,flow);
+        const f=pg.querySelector('.flow'),nf=next.querySelector('.flow');const kids=[...f.children];const last=kids[kids.length-1];if(!last)break;
+        // ha több blokk van az oldalon: az utolsó blokk egészben átkerül (a fejléc a kártyáival marad)
+        if(kids.filter(k=>!k.classList.contains('kwn')).length>1){nf.prepend(last);while(f.lastElementChild&&f.lastElementChild.classList.contains('kwn'))nf.prepend(f.lastElementChild);continue;}
+        // egyetlen, túl nagy blokk: teljes kártyasorokat (2 kártya) viszünk át, a fejléc ismétlődik
+        const cc=last.querySelector&&last.querySelector('.ccards');
+        if(last.classList.contains('pblock')&&cc&&cc.children.length>2){let cont=nf.firstElementChild;
+          if(!(cont&&cont.classList.contains('pblock')&&cont.dataset.key===last.dataset.key)){cont=document.createElement('div');cont.className='pblock';cont.dataset.key=last.dataset.key;
+            const band=last.querySelector('.pkgband').cloneNode(true);const b=band.querySelector('b');if(b)b.insertAdjacentHTML('beforeend',' <span style="font-weight:400;opacity:.75">· folytatás</span>');cont.appendChild(band);const g=document.createElement('div');g.className='ccards';cont.appendChild(g);nf.prepend(cont);}
+          const g=cont.querySelector('.ccards');const take=cc.children.length%2?1:2;for(let t=0;t<take;t++)g.prepend(cc.lastElementChild);continue;}
+        break;}
+    });
     const pages=[...paper.querySelectorAll('.pg')];const total=pages.length;
     pages.forEach((p,i)=>{if(i===0)return;let f=p.querySelector('.foot');if(!f){p.insertAdjacentHTML('beforeend',`<div class="foot"><img src="${p.classList.contains('navy')?IMG.logoW:IMG.logo}" alt="Excellence"><div class="c"><b>Gulyás Szabolcs</b> · értékesítési partner · gulyas.szabolcs@excellence.hu · +36 70 691 0920<br>Excellence Training Kft. · 8000 Székesfehérvár, Határ utca 16. · info@excellence.hu</div><div class="r"></div></div>`);f=p.querySelector('.foot');}
       f.querySelector('.r').innerHTML=`${$('#qNo').textContent}<br>${i} / ${total-1}`;});}
