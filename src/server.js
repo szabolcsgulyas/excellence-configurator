@@ -75,7 +75,8 @@ app.post('/api/quote/:no/accept', wrap(async (req, res) => {
   logEvent(q.no, 'accepted', { proforma: pf.number, fast });
   res.json({ ok: true, proforma: pf.number, net, gross: q.accept.gross, fast, contractUrl: `${cfg.publicUrl}/api/quote/${q.no}/pdf` });
   (async () => { const attachments = [];
-    try { const pdf = await renderQuotePdf(q.no, { force: true }); attachments.push({ filename: `${q.no}-megrendeles.pdf`, content: pdf.toString('base64') }); } catch (e) { console.error('PDF hiba:', e.message); }
+    try { const pdf = await renderQuotePdf(q.no, { force: true, doc: 'order' }); attachments.push({ filename: `${q.no}-megrendeles-visszaigazolas.pdf`, content: pdf.toString('base64') }); } catch (e) { console.error('PDF hiba:', e.message); }
+    try { const pdf = await renderQuotePdf(q.no); attachments.push({ filename: `${q.no}-ajanlat.pdf`, content: pdf.toString('base64') }); } catch (e) { console.error('PDF hiba:', e.message); }
     if (pf.pdfBase64) attachments.push({ filename: `${pf.number}-dijbekero.pdf`, content: pf.pdfBase64 });
     await sendMail({ to: q.company.email, ...T.acceptMail(q, pf.number), attachments });
     // CRM: a leadet nem tudjuk státuszolni API-n (nincs végpont) -> jegyzet-lead + értesítés nekem
@@ -83,8 +84,10 @@ app.post('/api/quote/:no/accept', wrap(async (req, res) => {
     if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'ELFOGADVA', `Díjbekérő: ${pf.number}`) }); })().catch(e => console.error('Háttér hiba:', e.message));
 }));
 /** Ajánlat (elfogadás után: megrendelés-visszaigazolással) PDF */
-app.get('/api/quote/:no/pdf', wrap(async (req, res) => { const q = q404(req.params.no); const buf = await renderQuotePdf(q.no, { force: !fs.existsSync(pdfPath(q.no)) || req.query.fresh === '1' });
-  res.set('Content-Type', 'application/pdf'); res.set('Content-Disposition', `inline; filename="${q.no}${q.accept ? '-megrendeles' : '-ajanlat'}.pdf"`); res.send(buf); }));
+app.get('/api/quote/:no/pdf', wrap(async (req, res) => { const q = q404(req.params.no); const doc = req.query.doc === 'order' ? 'order' : 'quote';
+  if (doc === 'order' && !q.accept) throw new Error('Még nincs megrendelve');
+  const buf = await renderQuotePdf(q.no, { doc, force: !fs.existsSync(pdfPath(q.no, doc)) || req.query.fresh === '1' });
+  res.set('Content-Type', 'application/pdf'); res.set('Content-Disposition', `inline; filename="${q.no}${doc === 'order' ? '-megrendeles-visszaigazolas' : '-ajanlat'}.pdf"`); res.send(buf); }));
 
 /** 3) Visszahívás: foglalás a CRM-ben + értesítések */
 app.post('/api/quote/:no/callback', wrap(async (req, res) => {

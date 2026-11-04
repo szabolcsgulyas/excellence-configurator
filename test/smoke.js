@@ -4,7 +4,7 @@ const j = async (m, p, b) => { const r = await fetch(B + p, { method: m, headers
 const company = { name: 'Mintacég Kereskedelmi Kft.', addr: '1117 Budapest, Példa utca 1.', contact: 'Kovács Petra', role: 'HR vezető', email: 'petra@mintaceg.hu', phone: '+36 30 123 4567', taxid: '12345678-2-43' };
 await j('GET', '/api/health');
 await j('GET', '/api/nav/12345678');
-const c = await j('POST', '/api/calc', { selection: [{ id: 'excel-pro', qty: 48 }, { id: 'kimut', qty: 48 }, { id: 'excel-alap', qty: 10 }, { id: 'live-ai', qty: 1 }] });
+const c = await j('POST', '/api/calc', { selection: [{ id: 'office-start', qty: 48 }, { id: 'kimut', qty: 48 }, { id: 'excel-alap', qty: 10 }, { id: 'live-ai', qty: 1 }] });
 console.assert(c.calc.lines[0].n === 48 && c.calc.lines[0].pct === 0, 'csomag: nincs létszámkedvezmény');
 console.assert(c.calc.lines[1].n === 51 && c.calc.lines[1].pct === 36, 'egyedi képzés sávugrás: 48 -> 51 fő 36%');
 console.assert(c.calc.gifts.length === 2 && c.calc.gifts.every(g => g.kind === 'hook'), 'Excel alap mellé Függvények + Diagramok');

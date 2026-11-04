@@ -10,16 +10,22 @@ async function browser() {
   return browserP;
 }
 
-export const pdfPath = no => path.join(cfg.dataDir, `${no}.pdf`);
+export const pdfPath = (no, doc = 'quote') => path.join(cfg.dataDir, `${no}${doc === 'order' ? '-megrendeles' : ''}.pdf`);
 
 /** Legenerálja (és fájlba menti) az ajánlat PDF-jét. Visszaad: Buffer */
-export async function renderQuotePdf(no, { force = false } = {}) {
-  const out = pdfPath(no);
+// Egyszerre csak egy renderelés fut (kevés memória a szerveren), hiba esetén új böngészővel egyszer újrapróbáljuk
+let chain = Promise.resolve();
+export function renderQuotePdf(no, opts = {}) {
+  const run = () => renderOnce(no, opts).catch(async e => { console.error('PDF újrapróbálás:', e.message); try { const b = await browserP; await b?.close(); } catch {} browserP = null; return renderOnce(no, opts); });
+  const p = chain.then(run, run); chain = p.catch(() => {}); return p;
+}
+async function renderOnce(no, { force = false, doc = 'quote' } = {}) {
+  const out = pdfPath(no, doc);
   if (!force && fs.existsSync(out)) return fs.readFileSync(out);
   const b = await browser();
   const page = await b.newPage({ viewport: { width: 900, height: 1200 } });
   try {
-    await page.goto(`http://127.0.0.1:${cfg.port}/?print=${encodeURIComponent(no)}`, { waitUntil: 'networkidle', timeout: 30000 });
+    await page.goto(`http://127.0.0.1:${cfg.port}/?print=${encodeURIComponent(no)}&doc=${doc}`, { waitUntil: 'networkidle', timeout: 30000 });
     await page.waitForFunction(() => window.__pdfReady || window.__pdfError, null, { timeout: 30000 });
     const err = await page.evaluate(() => window.__pdfError); if (err) throw new Error(err);
     await page.evaluate(() => document.fonts && document.fonts.ready);
