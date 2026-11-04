@@ -1,0 +1,21 @@
+// Végigjátssza a teljes folyamatot száraz módban. Futtatás: npm start (másik ablakban), majd npm test
+const B = process.env.BASE || 'http://localhost:3000';
+const j = async (m, p, b) => { const r = await fetch(B + p, { method: m, headers: { 'Content-Type': 'application/json' }, body: b ? JSON.stringify(b) : undefined }); const t = await r.json(); console.log(m, p, '->', JSON.stringify(t).slice(0, 220)); if (!t.ok) throw new Error(t.error); return t; };
+const company = { name: 'Mintacég Kereskedelmi Kft.', addr: '1117 Budapest, Példa utca 1.', contact: 'Kovács Petra', role: 'HR vezető', email: 'petra@mintaceg.hu', phone: '+36 30 123 4567', taxid: '12345678-2-43' };
+await j('GET', '/api/health');
+await j('GET', '/api/nav/12345678');
+const c = await j('POST', '/api/calc', { selection: [{ id: 'excel-pro', qty: 48 }, { id: 'live-ai', qty: 1 }] });
+console.assert(c.calc.lines[0].n === 51 && c.calc.lines[0].pct === 36, 'sávugrás: 48 fő -> 51 fő 36%');
+console.assert(c.calc.gifts.length === 1 && c.calc.gifts[0].kind === 'choice', 'csomag mellé választható ajándék');
+const q = await j('POST', '/api/quote', { company, selection: [{ id: 'excel-pro', qty: 18 }], utm: { source: 'facebook', campaign: 'szintfelmero' } });
+await j('POST', `/api/quote/${q.no}/question`, { text: 'Lehet részletfizetés?' });
+await j('POST', `/api/quote/${q.no}/custom-price`, { why: 'Nagyobb létszám van tervben', headcount: 120, years: 3, note: 'két telephely' });
+await j('POST', `/api/quote/${q.no}/forward`, { to: 'cfo@mintaceg.hu' });
+await j('POST', `/api/quote/${q.no}/callback`, { phone: '+36 30 123 4567', startTime: new Date(Date.now() + 864e5).toISOString(), slot: 'holnap 10:00' });
+const a = await j('POST', `/api/quote/${q.no}/accept`, { gift: 'ppt' });
+console.assert(a.fast === true && a.net === q.calc.netFast, 'gyors döntési 5% 7 napon belül');
+await j('POST', '/api/cron/reminders');
+await j('POST', '/api/fb/webhook', { name: 'Nagy Béla', email: 'bela@ceg.hu', company: 'Céges Kft.', campaign: 'szintfelmero', answers: { letszam: '25' } });
+const g = await j('GET', `/api/quote/${q.no}`);
+console.log('Események:', g.quote.events.map(e => e.type).join(' → '));
+console.log('\nOK – minden lépés lefutott száraz módban. Napló: data/dryrun.jsonl');
