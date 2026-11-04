@@ -153,7 +153,7 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 .field input,.field select{font:inherit;padding:11px 13px;border:1px solid var(--line-2);border-radius:10px;background:var(--surface);color:var(--fg);width:100%}
 .field input:focus{border-color:var(--brand)}
 .field .help{font-size:.8rem;color:var(--muted)} .field .help.ok{color:var(--good)} .field .help.err{color:var(--warn)}
-.taxrow{display:flex;gap:8px;align-items:flex-end} .taxrow .field{flex:1}
+.taxrow{display:flex;gap:8px;align-items:flex-end} .taxrow .field{flex:1;margin:0} .taxrow .btn{height:46px}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem} .check input{width:18px;height:18px;accent-color:var(--brand);margin-top:3px}
 /* aside */
 .aside .card{padding:16px} .aside .sum{font-family:var(--display);font-variant-numeric:tabular-nums} .aside .big{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--brand-ink)}
@@ -347,7 +347,9 @@ body.print .pg:last-child{break-after:auto;page-break-after:auto}
 .top .bar2 .rail div{padding-inline:12px}
 .top .bar2 .hintrow{padding-block:0 6px;justify-content:flex-start} .top .bar2 .hintrow:has(.hint:empty){display:none}
 .wiz{display:flex;gap:8px;align-items:center;margin-left:auto;flex:1 1 auto;justify-content:flex-end}
-.wiz .btn{padding:10px 14px;font-size:.92rem;white-space:nowrap}
+.wiz .btn{padding:10px 14px;font-size:.92rem;white-space:nowrap;gap:7px}
+.wiz .btn .k{font-weight:800;letter-spacing:.02em} .wiz .btn .l{font-weight:500;opacity:.85;font-family:var(--body)} .wiz .btn .l::before{content:"·";margin-right:7px;opacity:.5}
+.wiz .btn.acc .l{opacity:.9} .btn svg.dl{vertical-align:-3px}
 .wiz .hint,.hintrow .hint{font-size:.82rem;color:rgba(255,255,255,.75)}
 .wiz .btn.ghost{color:#fff;border-color:rgba(255,255,255,.35)} .wiz .btn.ghost:hover{background:rgba(255,255,255,.1)}
 .wiz .btn.acc:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
@@ -433,9 +435,9 @@ body:not(.print) .main>.rail{display:none}
     <div class="lead"><h2>3. Kinek szóljon az ajánlat?</h2><p class="muted">Add meg az adószámot, a cégnevet és a székhelyet a NAV-adatbázisból töltjük ki. <span class="proto" style="display:inline;border:0;padding:0">(Prototípus: mintaadatokkal előre kitöltve.)</span></p></div>
     <form class="card form" id="reqForm" novalidate>
       <div class="full taxrow">
-        <div class="field"><label for="taxid">Adószám</label><input id="taxid" placeholder="12345678-2-41" inputmode="numeric" required autocomplete="off" value="12345678-2-41"><span class="help" id="taxHelp">Demóhoz: 12345678-2-41, 23456789-2-13 vagy 34567890-2-41</span></div>
-        <button class="btn sec" type="button" id="navBtn">Cégadatok lekérése</button>
-      </div>
+        <div class="field"><label for="taxid">Adószám</label><input id="taxid" placeholder="12345678-2-41" inputmode="numeric" required autocomplete="off" value="12345678-2-41"></div>
+        <button class="btn sec" type="button" id="navBtn" style="white-space:nowrap">Cégadatok lekérése</button>
+      </div><span class="help full" id="taxHelp" style="margin-top:-8px">Add meg az adószámot, és a NAV adatbázisából kitöltjük a cégnevet és a székhelyet. (Demóhoz: 12345678-2-41)</span>
       <div class="field"><label for="company">Cégnév</label><input id="company" required value="Mintacég Kereskedelmi Kft."></div>
       <div class="field"><label for="addr">Székhely</label><input id="addr"></div>
       <div class="field"><label for="name">Kapcsolattartó neve</label><input id="name" required value="Kovács Petra"></div>
@@ -483,14 +485,14 @@ body:not(.print) .main>.rail{display:none}
       </div>
     </div>
 
-    <div class="row"><h3>Mit szeretnél tenni?</h3><button class="btn sm ghost" id="pdfBtn">⬇ Ajánlat letöltése PDF-ben</button></div>
+    <div class="row"><h3>Mit szeretnél tenni?</h3><button class="btn sm ghost" id="pdfBtn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>Ajánlat letöltése PDF-ben</button></div>
     <div class="decide">
       <div class="card primary"><div><h4>Megrendelem az ajánlatot</h4><ol class="howto"><li><span><b>Azonnal</b> e-mailben küldjük a megrendelés visszaigazolását és a díjbekérőt (8 napos fizetési határidő).</span></li><li><span><b>Utalás után 1 munkanapon belül</b> létrehozzuk a hozzáféréseket; a résztvevők e-mailben kapják a belépőt.</span></li><li><span><b>7 napon belüli megrendelésnél</b> a gyors döntési 5% automatikusan levonódik.</span></li></ol></div><button class="btn big acc" data-act="Elfogadva">Megrendelem</button></div>
       <div class="card"><h4>Beszélnék valakivel</h4><p>Válassz időpontot, és az Excellence értékesítője hív.</p>
         <select id="cbTime"><option>Holnap délelőtt (9–12)</option><option>Holnap délután (13–17)</option><option>2 munkanapon belül, bármikor</option></select>
         <button class="btn sec" data-act="Visszahívást kér">Hívjatok vissza</button>
         <input id="qQuestion" placeholder="Vagy írd meg a kérdésed…"><button class="btn ghost sm" data-act="Kérdés">Kérdés elküldése</button></div>
-      <div class="card"><h4>Változtatnék</h4><p>Más létszám vagy képzés: új verziót készítünk ugyanezen a linken. Nagyobb keretnél egyedi árat kérhetsz.</p><button class="btn ghost" id="modify">Módosítom az összeállítást</button><button class="btn ghost" id="customBtn">Egyedi árat kérek</button>
+      <div class="card"><h4>Változtatnék</h4><p>Más létszám vagy képzés: új verziót készítünk ugyanezen a linken. Nagyobb keretnél egyedi árat kérhetsz.</p><button class="btn ghost" id="modify">Módosítom az összeállítást</button><p style="margin:6px 0 0"><b>Mondd el, mire van szükséged, és megcsináljuk együtt.</b></p><button class="btn ghost" id="customBtn">Egyedi árat kérek</button>
         <div class="cdone" id="cdone" hidden><span class="status" style="background:var(--warn-soft);color:var(--warn)">Egyedi ár kérése folyamatban</span><div class="small" style="margin-top:6px">1 munkanapon belül jelentkezünk az egyedi ajánlattal; addig ez az ajánlat érvényben marad, és ugyanezen a linken jelenik meg az új verzió.</div></div></div>
       <div class="card"><h4>Nem én döntök</h4><p>Kész levelet írunk a döntéshozónak az ajánlattal és egy rövid indoklással – elküldés előtt átnézheted és szerkesztheted.</p><input id="fwdMail" type="email" placeholder="döntéshozó e-mail-címe"><button class="btn ghost" id="fwdOpen">Levél megírása →</button></div>
     </div>
@@ -940,7 +942,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     summary:{back:['← Vissza: képzések szerkesztése',()=>go('what'),'← Képzések'],next:['Hivatalos ajánlatot kérek →',()=>go('form')],need:true,hint:'Nem kötelez semmire. 14 napig érvényes, bármikor módosítható.'},
     form:{back:['← Vissza az árakhoz',()=>go('summary'),'← Árak'],next:['Ajánlat elkészítése →',()=>$('#reqForm').requestSubmit()]},
     quote:{back:['← Vissza',()=>go('what')],sec:['⬇ PDF',()=>openPdf()],next:['Megrendelem az ajánlatot',()=>{const b=$('#v-quote button[data-act="Elfogadva"]');if(b)b.click();},'Megrendelem']},
-    thanks:{sec:['⬇ Megrendelés PDF',()=>openPdf()]},
+    thanks:{sec:['⬇ Megrendelés letöltése PDF-ben',()=>openPdf(),'⬇ PDF']},
     pdf:{back:['← Vissza az ajánlathoz',()=>go('quote'),'← Ajánlat'],next:['⬇ Letöltés',()=>openPdf()]},
     fwd:{back:['← Vissza az ajánlathoz',()=>go('quote'),'← Ajánlat'],next:['Küldés innen (PDF csatolva)',()=>$('#fwdSend').click(),'Küldés (PDF-fel)']}
   };
@@ -948,7 +950,8 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
   function measureTop(){document.documentElement.style.setProperty('--toph',document.querySelector('.top').offsetHeight+'px');}
   window.addEventListener('resize',measureTop);
   function renderWiz(){const w=WIZ[cur];const el=$('#wiz');el.hidden=!w;requestAnimationFrame(measureTop);if(!w){$('#wizHint').textContent='';return;}
-    const mob=window.innerWidth<=600;const set=(id,c)=>{const b=$('#'+id);b.hidden=!c;if(c){b.textContent=(mob&&c[2])||c[0];b.onclick=c[1];}};
+    const mob=window.innerWidth<=600;const lab=t=>{const m=t.match(/^(←\s*)?(Vissza|Tovább)(:?)\s*(.*)$/);if(!m)return t.replace(/^⬇\s*/,'<svg class="dl" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg> ');return`<span class="k">${m[1]||''}${m[2]}</span>${m[4]?`<span class="l">${m[4]}</span>`:''}`;};
+    const set=(id,c)=>{const b=$('#'+id);b.hidden=!c;if(c){b.innerHTML=lab((mob&&c[2])||c[0]);b.onclick=c[1];}};
     set('wizBack',w.back);set('wizSec',w.sec);set('wizNext',w.next);
     const ok=!w.need||selected().length>0;$('#wizNext').disabled=!ok;$('#wizHint').textContent=w.need&&!ok?w.hint:(cur==='summary'?w.hint:'');
     if(cur==='quote'&&state.status==='Elfogadva'){$('#wizNext').textContent='Megrendelve ✓';$('#wizNext').disabled=true;}}
