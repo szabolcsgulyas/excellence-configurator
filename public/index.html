@@ -953,8 +953,8 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     const dsum=f=>T.L.filter(f).reduce((a,l)=>a+(l.list-l.net),0);const liveDisc=dsum(l=>l.type==='live');const bandDisc=dsum(l=>l.type!=='pkg'&&l.type!=='live');
     const gv=k=>T.G.filter(g=>g.gift===k).reduce((a,g)=>a+g.unit*g.n,0);const seatGift=gv('seats'),netGift=gv('net');const seatDisc=bandDisc+seatGift;
     const row=(t,v,sub)=>v>0?`<div style="color:var(--good)"><span>${t}${sub?`<small style="display:block;opacity:.75;font-size:.85em">${sub}</small>`:''}</span><span>− ${ft(v)}</span></div>`:'';
-    const netNames=T.G.filter(g=>g.gift==='net').map(g=>g.name).join(', ');
-    return`<div><span>Teljes érték (listaáron)${T.giftVal>0?'<small style="display:block;opacity:.75;font-size:.85em">ajándék képzésekkel együtt</small>':''}</span><span>${ft(T.full+T.giftVal)}</span></div>${row('Csomagkedvezmény',pkgDisc)}${row('Létszámkedvezmény',seatDisc,seatGift>0?'Outlook ajándék 10 fő felett':'')}${row('Napszám-kedvezmény',liveDisc,'élő képzések')}${row('Nagyrendelési kedvezmény',netGift,netNames?'ajándék: '+netNames:'')}<div><b>Nettó</b><b>${ft(T.net)}</b></div><div><span>ÁFA 27%</span><span>${ft(T.vat)}</span></div>`;}
+    const giftNames=T.G.map(g=>g.name).join(', ');
+    return`<div><span>Teljes érték (listaáron)${T.giftVal>0?'<small style="display:block;opacity:.75;font-size:.85em">ajándék képzésekkel együtt</small>':''}</span><span>${ft(T.full+T.giftVal)}</span></div>${row('Csomagkedvezmény',pkgDisc)}${row('Létszámkedvezmény',bandDisc)}${row('Napszám-kedvezmény',liveDisc,'élő képzések')}${row('Ajándékkedvezmény',T.giftVal,giftNames)}<div><b>Nettó</b><b>${ft(T.net)}</b></div><div><span>ÁFA 27%</span><span>${ft(T.vat)}</span></div>`;}
   function renderAside(){
     const T=totals();const items=selected();
     $('#asideCount').textContent=items.length?items.length+' tétel':'';$('#asideChips').innerHTML=kosarHTML();$('#asideLines').innerHTML=linesHTML();$('#asideGross').textContent=ft(T.gross);
