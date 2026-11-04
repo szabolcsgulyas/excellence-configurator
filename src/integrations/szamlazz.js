@@ -9,7 +9,7 @@ export function buildProformaXml(q) {
   const today = new Date(); const due = new Date(today); due.setDate(due.getDate() + 8);
   const items = q.calc.lines.map(l => {
     const unitNet = Math.round(l.net / l.n), net = unitNet * l.n, vat = Math.round(net * 0.27);
-    return `<tetel><megnevezes>${esc(l.name)} – ${l.type === 'live' ? 'élő képzés' : 'e-learning hozzáférés, 1 év'}</megnevezes><mennyiseg>${l.n}</mennyiseg><mennyisegiEgyseg>${l.type === 'live' ? 'alkalom' : 'fő'}</mennyisegiEgyseg><nettoEgysegar>${unitNet}</nettoEgysegar><afakulcs>27</afakulcs><nettoErtek>${net}</nettoErtek><afaErtek>${vat}</afaErtek><bruttoErtek>${net + vat}</bruttoErtek></tetel>`;
+    return `<tetel><megnevezes>${esc(l.name)} – ${l.type === 'live' ? 'élő képzés' : 'e-learning hozzáférés, 1 év'}</megnevezes><mennyiseg>${l.n}</mennyiseg><mennyisegiEgyseg>${l.type === 'live' ? 'csoport' : l.type === 'extra' && l.id === 'x-track' ? 'év' : 'fő'}</mennyisegiEgyseg><nettoEgysegar>${unitNet}</nettoEgysegar><afakulcs>27</afakulcs><nettoErtek>${net}</nettoErtek><afaErtek>${vat}</afaErtek><bruttoErtek>${net + vat}</bruttoErtek></tetel>`;
   }).join('');
   const fastNote = q.accept?.fast ? ` Gyors döntési kedvezmény (${q.calc.fastPct}%) érvényesítve.` : '';
   return `<?xml version="1.0" encoding="UTF-8"?>
