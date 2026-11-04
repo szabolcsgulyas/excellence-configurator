@@ -68,7 +68,8 @@ p{margin:0} .muted{color:var(--muted)} .small{font-size:.9rem}
 .matrix th[data-pk]:hover,.matrix td[data-pk]:hover{background:var(--surface-2)}
 /* package cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-#pkgGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:stretch;width:calc(100vw - 48px);position:relative;left:50%;transform:translateX(-50%)}
+#pkgGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:stretch;width:calc((100vw - 48px) * 5 / 7);position:relative;left:50%;transform:translateX(-50%)}
+@media (max-width:1400px){#pkgGrid{width:calc(100vw - 48px)}}
 @media (max-width:760px){#pkgGrid{width:auto;left:auto;transform:none}}
 #pkgGrid .pkg{height:100%;padding:18px 18px} #pkgGrid .pkg .tag{position:static;align-self:flex-start;order:-1} #pkgGrid .pkg h3{font-size:1rem} #pkgGrid .pkg ul{flex:1;margin:0;padding-left:18px;font-size:.8rem} #pkgGrid .pkg .who{font-size:.78rem}
 @media (max-width:1150px){#pkgGrid{grid-template-columns:repeat(3,minmax(0,1fr))}} @media (max-width:760px){#pkgGrid{grid-template-columns:1fr}}
