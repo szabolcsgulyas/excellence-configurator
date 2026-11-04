@@ -68,8 +68,9 @@ p{margin:0} .muted{color:var(--muted)} .small{font-size:.9rem}
 .matrix th[data-pk]:hover,.matrix td[data-pk]:hover{background:var(--surface-2)}
 /* package cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-#pkgGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;align-items:stretch}
-#pkgGrid .pkg{height:100%;padding:16px 14px} #pkgGrid .pkg .tag{position:static;align-self:flex-start;order:-1} body.pkgwide .wrap,body.pkgwide .top .in,body.pkgwide .sticky .in{max-width:1400px} #pkgGrid .pkg h3{font-size:1rem} #pkgGrid .pkg ul{flex:1;margin:0;padding-left:18px;font-size:.8rem} #pkgGrid .pkg .who{font-size:.78rem}
+#pkgGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:stretch;width:calc(100vw - 48px);position:relative;left:50%;transform:translateX(-50%)}
+@media (max-width:760px){#pkgGrid{width:auto;left:auto;transform:none}}
+#pkgGrid .pkg{height:100%;padding:18px 18px} #pkgGrid .pkg .tag{position:static;align-self:flex-start;order:-1} #pkgGrid .pkg h3{font-size:1rem} #pkgGrid .pkg ul{flex:1;margin:0;padding-left:18px;font-size:.8rem} #pkgGrid .pkg .who{font-size:.78rem}
 @media (max-width:1150px){#pkgGrid{grid-template-columns:repeat(3,minmax(0,1fr))}} @media (max-width:760px){#pkgGrid{grid-template-columns:1fr}}
 .pkg{display:flex;flex-direction:column;gap:10px;position:relative;transition:transform .15s,box-shadow .15s,border-color .15s}
 .pkg:hover{transform:translateY(-2px);box-shadow:0 12px 30px -14px rgba(15,27,45,.35)}
@@ -661,7 +662,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
       <tbody>${AREAS.map((a,i)=>`<tr><td>${a}</td>${PACKAGES.map(p=>`<td class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" style="cursor:pointer">${dot(p.cover[i])}</td>`).join('')}</tr>`).join('')}
       <tr><td class="muted small">Kijelölve</td>${PACKAGES.map(p=>`<td class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" style="cursor:pointer">${state.sel[p.id]?'<b style="color:var(--good)">✓</b>':'<span class="muted small">kattints</span>'}</td>`).join('')}</tr></tbody></table>`;
     $('#pkgGrid').innerHTML=PACKAGES.map(p=>{const u=pkgUnit(p);return`<div class="card pkg ${state.sel[p.id]?'sel':''}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<h3>${p.name}</h3><p class="muted small">${p.sub}</p><p class="who"><b>Kinek:</b> ${p.who}</p><p class="who"><b>Eredmény:</b> ${p.promise}</p>
-      <ul class="il">${p.items.map(id=>`<li class="${ICONS[id]?'':'noico'}">${ico(id,18)}<span>${cname(id)}</span></li>`).join('')}</ul><button class="tlink pk-syl" data-pksyl="${p.id}">Csomag tartalma és tematikája →</button><div class="ladder"><div><span>A képzések külön-külön</span><span>${ft(p.list)}</span></div><div class="hi"><span>Csomagkedvezmény ${Math.round((1-p.price/p.list)*100)}%</span><span>− ${ft(p.list-p.price)}</span></div></div><div class="price">${ft(p.price)}<span class="muted small"> /fő/év</span></div><div class="muted small" style="margin-top:-6px">${state.defN} főre: <b>${ft(p.price*state.defN)}</b> nettó/év</div>
+      <ul class="il">${p.items.map(id=>`<li class="${ICONS[id]?'':'noico'}">${ico(id,18)}<span>${cname(id)}</span></li>`).join('')}</ul><button class="tlink pk-syl" data-pksyl="${p.id}">Csomag tartalma és tematikája →</button><div class="ladder"><div><span>Külön-külön</span><span>${ft(p.list)}</span></div><div class="hi"><span>Csomagban −${Math.round((1-p.price/p.list)*100)}%</span><span>− ${ft(p.list-p.price)}</span></div></div><div class="price">${ft(p.price)}<span class="muted small"> /fő/év</span></div><div class="muted small" style="margin-top:-6px">${state.defN} főre: <b>${ft(p.price*state.defN)}</b> nettó/év</div>
       <button class="btn sm add ${state.sel[p.id]?'added':''}" data-toggle="${p.id}">${state.sel[p.id]?'✓ Kiválasztva · levétel':'+ Ezt választom'}</button></div>`;}).join('');
     $('#liveListPkg').innerHTML=LIVE.map(liveRow).join('');
     $('#toCountPkg').disabled=!selected().length;$('#hintPkg').textContent=selected().length?'':'Válassz legalább egy csomagot (vagy élő tréninget).';
