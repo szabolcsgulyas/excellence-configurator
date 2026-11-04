@@ -46,10 +46,11 @@ app.post('/api/quote', wrap(async (req, res) => {
     message: `Ajánlat ${q.no}: ${summary}. Nettó ${calc.net.toLocaleString('hu-HU')} Ft${q.belowMin ? ' (500 000 Ft minimum alatt)' : ''}. ${cfg.publicUrl}/a/${q.no}${customReq ? ' · Egyedi árkérés: ' + customReq : ''}` });
   q.crm = { leadId: lead.id || lead.leadId || null }; saveQuote(q);
   logEvent(q.no, 'quote_created', { leadId: q.crm.leadId });
-  let pdf = null; try { pdf = await renderQuotePdf(q.no, { force: true }); } catch (e) { console.error('PDF hiba:', e.message); }
-  await sendMail({ to: company.email, ...T.quoteMail(q), attachments: pdf ? [{ filename: `${q.no}-ajanlat.pdf`, content: pdf.toString('base64') }] : [] });
-  if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'Új ajánlat') });
   res.json({ ok: true, no: q.no, url: `${cfg.publicUrl}/a/${q.no}`, calc, validUntil: q.validUntil, fastUntil: q.fastUntil });
+  // PDF és levelek a válasz után, háttérben (a felhasználó ne várjon a Chromiumra)
+  (async () => { let pdf = null; try { pdf = await renderQuotePdf(q.no, { force: true }); } catch (e) { console.error('PDF hiba:', e.message); }
+    await sendMail({ to: company.email, ...T.quoteMail(q), attachments: pdf ? [{ filename: `${q.no}-ajanlat.pdf`, content: pdf.toString('base64') }] : [] });
+    if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'Új ajánlat') }); })().catch(e => console.error('Háttér hiba:', e.message));
 }));
 
 app.get('/api/quote/:no', wrap(async (req, res) => res.json({ ok: true, quote: q404(req.params.no), publicUrl: cfg.publicUrl })));
@@ -63,15 +64,15 @@ app.post('/api/quote/:no/accept', wrap(async (req, res) => {
   q.accept = { at: new Date().toISOString(), fast, net, gross: Math.round(net * 1.27), gift: req.body.gift || null, dueDate: addDays(8).slice(0, 10) };
   const pf = await szamlazz.createProforma(q);
   q.accept.proformaNo = pf.number; saveQuote(q);
-  const attachments = [];
-  try { const pdf = await renderQuotePdf(q.no, { force: true }); attachments.push({ filename: `${q.no}-megrendeles.pdf`, content: pdf.toString('base64') }); } catch (e) { console.error('PDF hiba:', e.message); }
-  if (pf.pdfBase64) attachments.push({ filename: `${pf.number}-dijbekero.pdf`, content: pf.pdfBase64 });
-  await sendMail({ to: q.company.email, ...T.acceptMail(q, pf.number), attachments });
-  // CRM: a leadet nem tudjuk státuszolni API-n (nincs végpont) -> jegyzet-lead + értesítés nekem
-  await bevetel.createLead({ name: `${q.company.name} – ELFOGADVA`, email: q.company.email, message: `Ajánlat ${q.no} elfogadva. Díjbekérő: ${pf.number}, nettó ${net.toLocaleString('hu-HU')} Ft.${fast ? ' Gyors döntési 5% érvényesítve.' : ''}` , utm: q.utm });
-  if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'ELFOGADVA', `Díjbekérő: ${pf.number}`) });
   logEvent(q.no, 'accepted', { proforma: pf.number, fast });
   res.json({ ok: true, proforma: pf.number, net, gross: q.accept.gross, fast, contractUrl: `${cfg.publicUrl}/api/quote/${q.no}/pdf` });
+  (async () => { const attachments = [];
+    try { const pdf = await renderQuotePdf(q.no, { force: true }); attachments.push({ filename: `${q.no}-megrendeles.pdf`, content: pdf.toString('base64') }); } catch (e) { console.error('PDF hiba:', e.message); }
+    if (pf.pdfBase64) attachments.push({ filename: `${pf.number}-dijbekero.pdf`, content: pf.pdfBase64 });
+    await sendMail({ to: q.company.email, ...T.acceptMail(q, pf.number), attachments });
+    // CRM: a leadet nem tudjuk státuszolni API-n (nincs végpont) -> jegyzet-lead + értesítés nekem
+    await bevetel.createLead({ name: `${q.company.name} – ELFOGADVA`, email: q.company.email, message: `Ajánlat ${q.no} elfogadva. Díjbekérő: ${pf.number}, nettó ${net.toLocaleString('hu-HU')} Ft.${fast ? ' Gyors döntési 5% érvényesítve.' : ''}` , utm: q.utm });
+    if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'ELFOGADVA', `Díjbekérő: ${pf.number}`) }); })().catch(e => console.error('Háttér hiba:', e.message));
 }));
 /** Ajánlat (elfogadás után: megrendelés-visszaigazolással) PDF */
 app.get('/api/quote/:no/pdf', wrap(async (req, res) => { const q = q404(req.params.no); const buf = await renderQuotePdf(q.no, { force: !fs.existsSync(pdfPath(q.no)) || req.query.fresh === '1' });
