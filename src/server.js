@@ -20,6 +20,14 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
+// Ha nincs PUBLIC_URL (vagy localhost), az első külső kérésből tanuljuk meg a nyilvános címet
+app.use((req, res, next) => {
+  if ((!process.env.PUBLIC_URL || /localhost|127\.0\.0\.1/.test(cfg.publicUrl)) && req.headers.host && !/^(localhost|127\.0\.0\.1)/.test(req.headers.host)) {
+    const proto = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    cfg.publicUrl = `${proto}://${req.headers.host}`; console.log('PUBLIC_URL felismerve:', cfg.publicUrl);
+  }
+  next();
+});
 const wrap = fn => (req, res) => fn(req, res).catch(e => { console.error(e); res.status(400).json({ ok: false, error: e.message }); });
 const need = (o, ...k) => { for (const x of k) if (!o?.[x]) throw new Error(`Hiányzó mező: ${x}`); };
 const q404 = no => { const q = getQuote(no); if (!q) throw new Error('Nincs ilyen ajánlat'); return q; };

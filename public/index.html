@@ -930,7 +930,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     const q=e.target.closest('[data-inc],[data-dec],[data-set]');if(q){const id=q.dataset.inc||q.dataset.dec||q.dataset.set;let n=qtyOf(byId(id));
       if(q.dataset.set)n=parseInt(q.dataset.val,10);else n+=q.dataset.inc?1:-1;setQty(id,n);rerenderCur();return;}
     const a=e.target.closest('[data-act]');if(a){const act=a.dataset.act;const fail=err=>toast('Nem sikerült: '+err.message);
-      if(act==='Elfogadva'){const t0=showBusy('order');EXC_API.accept(state.giftChoice||null).then(j=>{state.accept=j;setStatus(act);busyDone(t0,()=>go('thanks'));}).catch(err=>{fail(err);go('quote');});}
+      if(act==='Elfogadva'){const t0=showBusy('order');EXC_API.accept(state.giftChoice||null).then(j=>{state.accept={...j,contractUrl:'/api/quote/'+EXC_API.no+'/pdf'};setStatus(act);busyDone(t0,()=>go('thanks'));}).catch(err=>{fail(err);go('quote');});}
       else if(act==='Visszahívást kér'){EXC_API.callback(state.company.phone,null,$('#cbTime').value).then(()=>{setStatus(act);toast('Visszahívás rögzítve.');}).catch(fail);}
       else if(act==='Kérdés'){const t=$('#qQuestion').value.trim();if(!t){toast('Írd be a kérdésed.');return;}EXC_API.question(t).then(()=>{setStatus(act);toast('Kérdés elküldve.');}).catch(fail);}
       else setStatus(act);}
