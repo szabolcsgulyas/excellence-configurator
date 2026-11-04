@@ -71,7 +71,14 @@ p{margin:0} .muted{color:var(--muted)} .small{font-size:.9rem}
 #pkgGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:stretch;width:calc((100vw - 48px) * 5 / 7);position:relative;left:50%;transform:translateX(-50%)}
 @media (max-width:1400px){#pkgGrid{width:calc(100vw - 48px)}}
 @media (max-width:760px){#pkgGrid{width:auto;left:auto;transform:none}}
-#pkgGrid .pkg{height:100%;padding:18px 18px} #pkgGrid .pkg{overflow:hidden} #pkgGrid .pkg .tag{position:absolute;top:26px;right:-46px;transform:rotate(45deg);width:180px;text-align:center;padding:5px 0;border-radius:0;box-shadow:0 2px 6px rgba(0,0,0,.15);font-size:.58rem;letter-spacing:.06em} #pkgGrid .pkg h3{font-size:.98rem;white-space:nowrap} #pkgGrid .pkg ul{flex:1;margin:0;padding-left:18px;font-size:.8rem} #pkgGrid .pkg .who{font-size:.78rem}
+#pkgGrid .pkg{height:100%;padding:0;overflow:hidden;gap:0}
+.pkg .phead{background:var(--pk);color:#fff;padding:18px 16px 26px;position:relative;text-align:center} .pkg .phead.dark{color:#1f1a00}
+.pkg .phead h3{padding:0;margin:0;font-size:1.02rem;white-space:nowrap;letter-spacing:-.01em} .pkg .phead .pp{margin-top:6px;font-family:var(--display)} .pkg .phead .pp b{font-size:1.45rem;font-weight:800;letter-spacing:-.02em} .pkg .phead .pp span{font-size:.72rem;opacity:.8;margin-left:4px}
+.pkg .phead .wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:14px;display:block}
+.pkg .pbody{padding:10px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1} .pkg .pbody .sub{font-size:.86rem;color:var(--muted);text-align:center;margin:0 0 2px}
+.pkg .tlink.more{font-size:.78rem;align-self:flex-start} .pkg .ladder .tot{border-top:1px dashed var(--line-2);padding-top:6px;margin-top:4px}
+.pkg .pbody .btn.add{margin-top:auto} #pkgGrid .pkg .tag{position:absolute;top:26px;right:-46px;transform:rotate(45deg);width:180px;text-align:center;padding:5px 0;border-radius:0;box-shadow:0 2px 6px rgba(0,0,0,.15);font-size:.58rem;letter-spacing:.06em} #pkgGrid .pkg .tag{top:12px;right:-56px;width:170px;z-index:2;font-size:.52rem}
+#pkgGrid .ladder div{white-space:normal;align-items:baseline} #pkgGrid .ladder div span:first-child{overflow:visible;text-overflow:clip;font-size:.78rem} #pkgGrid .ladder div span:last-child{white-space:nowrap} #pkgGrid .pkg ul{margin:0;padding-left:0;font-size:.8rem;line-height:1.25} #pkgGrid .pkg ul.il li{margin:2px 0;gap:6px} #pkgGrid .pkg .who{font-size:.78rem;margin:0}
 @media (max-width:1150px){#pkgGrid{grid-template-columns:repeat(3,minmax(0,1fr))}} @media (max-width:760px){#pkgGrid{grid-template-columns:1fr}}
 .pkg{display:flex;flex-direction:column;gap:10px;position:relative;transition:transform .15s,box-shadow .15s,border-color .15s}
 .pkg:hover{transform:translateY(-2px);box-shadow:0 12px 30px -14px rgba(15,27,45,.35)}
@@ -671,9 +678,15 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     $('#matrix').innerHTML=`<table><thead><tr><th>Terület</th>${PACKAGES.map(p=>{const u=pkgUnit(p);return`<th class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" role="button" tabindex="0" style="cursor:pointer">${p.name}<span class="pp">${ft(p.price)}/fő</span></th>`;}).join('')}</tr></thead>
       <tbody>${AREAS.map((a,i)=>`<tr><td>${a}</td>${PACKAGES.map(p=>`<td class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" style="cursor:pointer">${dot(p.cover[i])}</td>`).join('')}</tr>`).join('')}
       <tr><td class="muted small">Kijelölve</td>${PACKAGES.map(p=>`<td class="${state.sel[p.id]?'selcol':''}" data-pk="${p.id}" style="cursor:pointer">${state.sel[p.id]?'<b style="color:var(--good)">✓</b>':'<span class="muted small">kattints</span>'}</td>`).join('')}</tr></tbody></table>`;
-    $('#pkgGrid').innerHTML=PACKAGES.map(p=>{const u=pkgUnit(p);return`<div class="card pkg ${state.sel[p.id]?'sel':''}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<h3>${p.name}</h3><p class="muted small">${p.sub}</p><p class="who"><b>Kinek:</b> ${p.who}</p><p class="who"><b>Eredmény:</b> ${p.promise}</p>
-      <ul class="il">${p.items.map(id=>`<li class="${ICONS[id]?'':'noico'}">${ico(id,18)}<span>${cname(id)}</span></li>`).join('')}</ul><button class="tlink pk-syl" data-pksyl="${p.id}">Csomag tartalma és tematikája →</button><div class="ladder"><div><span>Külön-külön</span><span>${ft(p.list)}</span></div><div class="hi"><span>Csomagban −${Math.round((1-p.price/p.list)*100)}%</span><span>− ${ft(p.list-p.price)}</span></div></div><div class="price">${ft(p.price)}<span class="muted small"> /fő/év</span></div><div class="muted small" style="margin-top:-6px">${state.defN} főre: <b>${ft(p.price*state.defN)}</b> nettó/év</div>
-      <button class="btn sm add ${state.sel[p.id]?'added':''}" data-toggle="${p.id}">${state.sel[p.id]?'✓ Kiválasztva · levétel':'+ Ezt választom'}</button></div>`;}).join('');
+    const PK_COL={'office-start':'#1aa3a3','excel-pro':'#0b2a4a','data-bi':'#0a5ea8','smart-office':'#f5c542','creative-lab':'#5b4bd6'};
+    $('#pkgGrid').innerHTML=PACKAGES.map(p=>{const col=PK_COL[p.id]||'#0b2a4a';const dark=p.id==='smart-office';const open=!!state.pkgOpen?.[p.id];const items=open?p.items:p.items.slice(0,6);const more=p.items.length-6;
+      return`<div class="card pkg ${state.sel[p.id]?'sel':''}" style="--pk:${col}">${p.tag?`<span class="tag">${p.tag}</span>`:''}
+      <div class="phead ${dark?'dark':''}"><h3>${p.name}</h3><div class="pp"><b>${ft(p.price)}</b><span>/fő/év</span></div><svg class="wave" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M0,0 C30,12 70,12 100,0 L100,12 L0,12 Z" fill="var(--surface)"/></svg></div>
+      <div class="pbody"><p class="sub">${p.sub}</p><p class="who"><b>Kinek:</b> ${p.who}</p><p class="who"><b>Eredmény:</b> ${p.promise}</p>
+      <ul class="il">${items.map(id=>`<li class="${ICONS[id]?'':'noico'}">${ico(id,16)}<span>${cname(id)}</span></li>`).join('')}</ul>${more>0?`<button class="tlink more" data-more="${p.id}">${open?'Kevesebb ▲':'+'+more+' további képzés ▼'}</button>`:''}
+      <button class="tlink pk-syl" data-pksyl="${p.id}">Csomag tartalma és tematikája →</button>
+      <div class="ladder"><div><span>Külön-külön</span><span>${ft(p.list)}</span></div><div class="hi"><span>Csomagban −${Math.round((1-p.price/p.list)*100)}%</span><span>− ${ft(p.list-p.price)}</span></div><div class="tot"><span>${state.defN} fő / év</span><span><b>${ft(p.price*state.defN)}</b></span></div></div>
+      <button class="btn sm add ${state.sel[p.id]?'added':''}" data-toggle="${p.id}">${state.sel[p.id]?'✓ Kiválasztva · levétel':'+ Ezt választom'}</button></div></div>`;}).join('');
     $('#liveListPkg').innerHTML=LIVE.map(liveRow).join('');
     $('#toCountPkg').disabled=!selected().length;$('#hintPkg').textContent=selected().length?'':'Válassz legalább egy csomagot (vagy élő tréninget).';
   }
@@ -897,6 +910,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     const sy=e.target.closest('[data-syl]');if(sy){e.stopPropagation();openSyl(sy.dataset.syl);return;}
     const lv=e.target.closest('[data-live]');if(lv){e.stopPropagation();openLive(lv.dataset.live);return;}
     const ps=e.target.closest('[data-pksyl]');if(ps){e.stopPropagation();openPkgSyl(ps.dataset.pksyl);return;}
+    const mo=e.target.closest('[data-more]');if(mo){e.stopPropagation();state.pkgOpen=state.pkgOpen||{};state.pkgOpen[mo.dataset.more]=!state.pkgOpen[mo.dataset.more];renderPkg();return;}
     const pth=e.target.closest('[data-path]');if(pth){setPath(pth.dataset.path);return;}
     const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return;}
     const dn=e.target.closest('[data-dn]');if(dn){setDefN(state.defN+parseInt(dn.dataset.dn,10));return;}
