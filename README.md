@@ -47,3 +47,6 @@ A `public/` mappába másolva a `konfigurator.html`-t `index.html` néven, a sze
 - A szerződés most egyszerű HTML; a hivatalos docx-sablonból PDF-generálás a következő lépés (docx -> PDF LibreOffice-szal vagy docx-templates + puppeteer).
 - A Meta nyers webhookjához (leadgen) Page access token kell; addig Zapier/Make tolja a kibontott mezőket.
 - Tár: JSON fájl. Néhány száz ajánlatig bőven elég; utána SQLite.
+
+## Admin felület
+`/admin` – belépés e-mailes linkkel (száraz módban a link a képernyőn is megjelenik). Két szerepkör: owner (`ADMIN_OWNERS`) és Excellence (`ADMIN_PARTNERS`). Teendők, ajánlatok (jóváhagyás, visszaküldés, módosítás új verzióként, egyedi kedvezmény indoklással, jegyzet, kézi állapot, GDPR-törlés, CSV), látogatói idővonal (csak statisztika-hozzájárulással), félbehagyott Facebook-leadek emlékeztetővel. Részletek: `docs/admin-spec.md`. Időzített feladatok 10 percenként futnak, kézzel: `POST /api/cron/admin-jobs`.

@@ -57,3 +57,31 @@ ${q.calc.lines.map(l => `<tr><td>${l.name}</td><td align="center">${l.n} ${l.typ
 <tr><td colspan="2"><b>Összesen nettó${q.accept?.fast ? ` (gyors döntési ${q.calc.fastPct}% levonva)` : ''}</b></td><td align="right"><b>${ft(q.accept?.net ?? q.calc.net)}</b></td></tr></table>
 <p>Hozzáférés: 1 év az aktiválástól, nem hosszabbodik automatikusan, a rögzített áron hosszabbítható. Fizetés: átutalás díjbekérő alapján, 8 napon belül. 30 napos pénzvisszafizetési garancia az e-learning tételekre. Az élő képzések időpontját a felek külön egyeztetik.</p>
 <p>Kelt: ${new Date().toLocaleDateString('hu-HU')}</p></body></html>`;
+
+// ---- Admin és jóváhagyási folyamat ----
+const adminLink = q => `${cfg.publicUrl}/admin#q=${q.no}`;
+export const loginMail = url => ({ subject: 'Belépés az Excellence ajánlat-adminba', html: wrap(`<p>Szia!</p><p>Ezzel a linkkel léphetsz be az admin felületre. A link 15 percig érvényes, és csak egyszer használható.</p>${btn(url, 'Belépés')}<p style="color:#667;font-size:13px">Ha nem te kérted, hagyd figyelmen kívül ezt a levelet.</p>`) });
+export const pendingApprovalMail = q => ({
+  subject: `Megrendelés rögzítve – ellenőrzés alatt (${q.no})`,
+  html: wrap(`<p>Szia ${first(q.company.contact)}!</p><p>Köszönöm a megrendelést, rögzítettük <b>${q.no}</b> számon. A kalkulációt kollégánk 1 munkanapon belül ellenőrzi, és utána küldjük a megrendelés visszaigazolását és a díjbekérőt.</p>${btn(link(q), 'Ajánlat megnyitása')}${sig}`)
+});
+export const coordinationMail = q => ({
+  subject: `Megrendelés rögzítve – egyeztetünk (${q.no})`,
+  html: wrap(`<p>Szia ${first(q.company.contact)}!</p><p>Köszönöm a megrendelést, rögzítettük <b>${q.no}</b> számon. A kiválasztott kiegészítők (${q.calc.lines.filter(l => l.type === 'extra').map(l => l.name).concat(q.calc.certRequested ? ['hivatalos tanúsítvány'] : []).join(', ')}) miatt kollégánk 1 munkanapon belül felveszi veled a kapcsolatot, és utána küldjük a díjbekérőt.</p>${btn(link(q), 'Ajánlat megnyitása')}${sig}`)
+});
+export const approvalRequestMail = (q, reminder = false) => ({
+  subject: `${reminder ? '[EMLÉKEZTETŐ] ' : ''}Jóváhagyásra vár: ${q.company.name} – ${ft(q.accept?.net ?? q.calc.net)} (${q.no})`,
+  html: wrap(`<p><b>${reminder ? 'Még mindig jóváhagyásra vár' : 'Új megrendelés jóváhagyásra vár'}</b> (pilot időszak).</p><p>${q.company.name} · ${q.company.contact} (${q.company.email})</p><p>${q.calc.lines.map(l => `${l.name} × ${l.n} – ${ft(l.net)}`).join('<br>')}</p><p>Nettó: <b>${ft(q.accept?.net ?? q.calc.net)}</b>${q.accept?.fast ? ' (gyors döntési kedvezménnyel)' : ''}</p>${btn(adminLink(q), 'Megnyitás az adminban – jóváhagyás')}`)
+});
+export const returnedMail = (q, reason) => ({
+  subject: `Megrendelés – pontosítás szükséges (${q.no})`,
+  html: wrap(`<p>Szia ${first(q.company.contact)}!</p><p>Köszönöm a megrendelést. Az ellenőrzés során egy pontosításra van szükség: ${String(reason || '').replace(/</g, '&lt;')}</p><p>Hamarosan küldjük a javított ajánlatot, vagy keresünk telefonon.</p>${sig}`)
+});
+export const revisedMail = (q, changes) => ({
+  subject: `Frissített ajánlat – ${q.company.name} (${q.no}-v${q.version})`,
+  html: wrap(`<p>Szia ${first(q.company.contact)}!</p><p>Frissítettük az ajánlatot. A változások:</p><ul>${changes.map(c => `<li>${c}</li>`).join('')}</ul><p>Az új nettó összeg: <b>${ft(q.calc.net)} + ÁFA</b>. A korábbi verzió érvényét veszti.</p>${btn(link(q), 'Frissített ajánlat megnyitása')}${sig}`)
+});
+export const abandonMail = (lead, url) => ({
+  subject: 'Elmentettük a képzési összeállításodat',
+  html: wrap(`<p>Szia ${first(lead.name)}!</p><p>Láttam, hogy elkezdted összeállítani a csapat képzési tervét. Elmentettük, onnan folytathatod, ahol abbahagytad – az ajánlatot 2 perc alatt megkapod.</p>${btn(url, 'Folytatom az összeállítást')}<p>Ha elakadtál valamiben (létszám, élő vagy online képzés, egyedi ár), válaszolj erre a levélre, és segítek.</p>${sig}`)
+});

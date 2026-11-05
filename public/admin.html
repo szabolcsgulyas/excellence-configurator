@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Excellence Ajánlat Admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f4f6fa;--surface:#fff;--surface-2:#f1f4f8;--fg:#0f1b2d;--muted:#5b6b80;--line:#e1e7ef;--line-2:#cfd8e3;--brand:#0a5ea8;--brand-soft:#e3eefa;--navy:#0b2a4a;--accent:#f5c542;--good:#177a52;--good-soft:#e2f4ec;--warn:#9a6700;--warn-soft:#fff4d6;--bad:#b42318;--bad-soft:#fde8e6;--live:#6f42c1;--display:"Plus Jakarta Sans",system-ui,sans-serif;--body:"IBM Plex Sans",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0c1320;--surface:#141d2e;--surface-2:#1a2539;--fg:#e9eef6;--muted:#9aa9bd;--line:#26334a;--line-2:#34435e;--brand:#5aa0e6;--brand-soft:#1c3352;--good:#4fcf92;--good-soft:#173a2c;--warn:#f0c14b;--warn-soft:#3a3016;--bad:#ff8a7a;--bad-soft:#3d1d1b}}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+h1,h2,h3,h4{font-family:var(--display);margin:0;letter-spacing:-.01em}a{color:var(--brand)}
+button{font:inherit;cursor:pointer}input,select,textarea{font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line-2);border-radius:9px;padding:9px 11px;width:100%}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:10px;padding:9px 14px;font-weight:600;background:var(--brand);color:#fff;white-space:nowrap}
+.btn.acc{background:var(--accent);color:#1f1a00}.btn.ghost{background:transparent;border-color:var(--line-2);color:var(--fg)}.btn.good{background:var(--good);color:#fff}.btn.bad{background:transparent;border-color:var(--bad);color:var(--bad)}.btn.sm{padding:6px 10px;font-size:.85rem;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:default}
+header{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.hin{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hin img{height:26px}.hin .tag{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+nav{display:flex;gap:4px;margin-left:auto}nav button{border:0;background:transparent;padding:8px 12px;border-radius:9px;font-weight:600;color:var(--muted);white-space:nowrap}nav button.on{background:var(--navy);color:#fff}
+nav .cnt{display:inline-block;min-width:20px;padding:0 6px;margin-left:6px;border-radius:99px;background:var(--accent);color:#1f1a00;font-size:.75rem}
+.who{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted)}
+main{max-width:1200px;margin:0 auto;padding:18px 16px 60px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sp{flex:1}
+.muted{color:var(--muted)}.small{font-size:.84rem}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:99px;font-size:.74rem;font-weight:700;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--good-soft);color:var(--good)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.bad{background:var(--bad-soft);color:var(--bad)}.pill.info{background:var(--brand-soft);color:var(--brand)}.pill.live{background:color-mix(in srgb,var(--live) 15%,transparent);color:var(--live)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);display:inline-block;box-shadow:0 0 0 3px var(--good-soft);animation:pulse 1.6s infinite}@keyframes pulse{50%{opacity:.4}}
+.grid{display:grid;gap:12px}
+.todo{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 16px}
+.todo .ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:1.15rem;background:var(--surface-2)}
+.todo b{font-family:var(--display)}.todo .acts{display:flex;gap:6px}
+.k-approval .ic{background:var(--warn-soft)}.k-coordination .ic,.k-cert .ic{background:var(--brand-soft)}.k-abandoned .ic{background:var(--bad-soft)}.k-callback .ic,.k-custom .ic{background:var(--good-soft)}
+.empty{padding:40px 16px;text-align:center;color:var(--muted)}
+.tbl{width:100%;border-collapse:collapse}.tbl th{text-align:left;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}.tbl tr.click{cursor:pointer}.tbl tr.click:hover td{background:var(--surface-2)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}.kpi{padding:12px 14px}.kpi b{display:block;font-family:var(--display);font-size:1.35rem}
+.drawer{position:fixed;inset:0;z-index:40;display:flex;justify-content:flex-end;background:rgba(5,15,30,.45)}
+.drawer .pan{width:min(760px,100%);height:100%;overflow:auto;background:var(--bg);box-shadow:-10px 0 40px rgba(0,0,0,.25)}
+.pan .ph{position:sticky;top:0;z-index:2;background:var(--surface);border-bottom:1px solid var(--line);padding:14px 16px;display:flex;gap:10px;align-items:flex-start}
+.pan .pb{padding:16px;display:grid;gap:14px}
+.acts-bar{display:flex;gap:8px;flex-wrap:wrap}
+.items td{padding:8px 6px}.items tr:last-child td{border-bottom:0}
+.tl{list-style:none;margin:0;padding:0;position:relative}.tl:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl li{position:relative;padding:0 0 12px 26px}.tl li:before{content:"";position:absolute;left:2px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--line-2)}
+.tl li.q:before{border-color:var(--brand);background:var(--brand)}.tl li.c:before{border-color:var(--good)}.tl li.r:before{border-color:var(--bad)}.tl li.s:before{border-color:var(--muted)}
+.tl time{font-size:.78rem;color:var(--muted);margin-right:6px;font-variant-numeric:tabular-nums}
+.dlg{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:rgba(5,15,30,.5);padding:16px}.dlg .box{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--surface);border-radius:16px;padding:18px;display:grid;gap:12px}
+.field{display:grid;gap:4px}.field label{font-size:.8rem;font-weight:600;color:var(--muted)}
+.login{min-height:100vh;display:grid;place-items:center;padding:16px}.login .card{width:min(420px,100%);display:grid;gap:14px;padding:24px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;z-index:90;font-weight:600;display:none}
+.comm{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}.comm div{background:var(--surface-2);border-radius:10px;padding:10px}.comm b{display:block;font-family:var(--display)}
+.hide-m{}
+@media (max-width:760px){.hin{gap:8px}nav{order:3;width:100%;margin:0;overflow-x:auto}nav button{flex:1}.who span{display:none}.hide-m{display:none}
+  .tbl.resp thead{display:none}.tbl.resp tr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:12px 4px;border-bottom:1px solid var(--line)}.tbl.resp td{padding:0;border:0}.tbl.resp td.hide-m{display:none}
+  .todo{grid-template-columns:auto 1fr}.todo .acts{grid-column:1/-1}.todo .acts .btn{flex:1}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+<script>
+const $=s=>document.querySelector(s);
+const ft=v=>Math.round(v||0).toLocaleString('hu-HU')+' Ft';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dt=x=>x?new Date(x).toLocaleString('hu-HU',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+const ago=x=>{const m=Math.round((Date.now()-new Date(x))/60000);return m<1?'most':m<60?m+' perce':m<1440?Math.round(m/60)+' órája':Math.round(m/1440)+' napja';};
+const toast=t=>{const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600);};
+const api=(p,o={})=>fetch('/api/admin'+p,{credentials:'same-origin',...o,headers:{'Content-Type':'application/json',...(o.headers||{})},body:o.body?JSON.stringify(o.body):undefined}).then(async r=>{const j=await r.json().catch(()=>({ok:false,error:'Hiba'}));if(r.status===401){S.me=null;render();throw new Error('Belépés szükséges');}if(!j.ok)throw new Error(j.error||'Hiba');return j;});
+const S={me:null,tab:'todos',cat:{},todos:[],live:[],quotes:[],visits:[],search:''};
+const STAGE={pending_approval:['Jóváhagyásra vár','warn'],coordination:['Egyeztetés alatt','info'],approved:['Jóváhagyva','ok'],auto:['Automatikusan lezárva','ok'],returned:['Visszaküldve','bad']};
+const STATUS={quote:['Ajánlat kiküldve',''],quote_created:['Ajánlat kiküldve',''],question:['Kérdezett',''],custom_price_requested:['Egyedi árat kér','info'],forwarded:['Továbbküldve',''],callback_requested:['Visszahívást kér','info'],accepted:['Megrendelve','ok'],reminder:['Emlékeztető kiment',''],approval_requested:['Jóváhagyásra vár','warn']};
+const stBadge=r=>{const s=r.stage&&STAGE[r.stage]||STATUS[r.status]||[r.status||'–',''];return`<span class="pill ${s[1]}">${s[0]}</span>`+(r.adminState?` <span class="pill">${esc(r.adminState)}</span>`:'')+(r.cert?' <span class="pill info">tanúsítvány</span>':'');};
+const EV={quote_created:'Ajánlatot kért',question:'Kérdést küldött',custom_price_requested:'Egyedi árat kért',forwarded:'Továbbküldte',callback_requested:'Visszahívást kért',accepted:'Megrendelés véglegesítve (díjbekérő kiment)',approval_requested:'Megrendelte – jóváhagyásra vár',needs_coordination:'Megrendelte – kiegészítő miatt egyeztetni',approved:'Jóváhagyva',returned:'Visszaküldve pontosításra',revised:'Új verzió kiküldve',reminder:'Emlékeztető levél ment',approval_reminder:'Jóváhagyási emlékeztető ment',closed_by_changed:'Lezáró módosítva',admin_state:'Állapot módosítva',
+  step:'Lépés',cart_add:'Kosárba tette',cart_remove:'Kivette a kosárból',qty:'Létszámot módosított',cart_set:'Visszatöltött összeállítás',detail:'Részleteket nézett'};
+const STEPN={start:'Kezdőlap',pkg:'Csomagok',single:'Egyedi képzések',summary:'Ár',form:'Cégadatok',quote:'Ajánlat',thanks:'Köszönő oldal',pdf:'PDF',fwd:'Továbbküldés',busy:'Feldolgozás'};
+const nm=id=>S.cat[id]?.name||id;
+const isPartner=()=>S.me?.role==='partner';
+
+function render(){
+  if(!S.me){renderLogin();return;}
+  const cnt=S.todos.length;
+  $('#app').innerHTML=`<header><div class="hin"><img src="/img/logo.png" alt="Excellence"><span class="tag">Ajánlat admin</span>
+    <nav><button data-tab="todos" class="${S.tab==='todos'?'on':''}">Teendők${cnt?`<span class="cnt">${cnt}</span>`:''}</button><button data-tab="quotes" class="${S.tab==='quotes'?'on':''}">Ajánlatok</button><button data-tab="visits" class="${S.tab==='visits'?'on':''}">Látogatások</button></nav>
+    <div class="who"><span>${esc(S.me.email)} · ${S.me.role==='owner'?'partner (Szabolcs)':'Excellence'}</span><button class="btn ghost sm" id="logout">Kilépés</button></div></div></header><main id="main"></main>`;
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;history.replaceState(null,'','#'+S.tab);load();});
+  $('#logout').onclick=()=>api('/logout',{method:'POST'}).then(()=>{S.me=null;render();});
+  ({todos:renderTodos,quotes:renderQuotes,visits:renderVisits})[S.tab]();
+}
+function renderLogin(){
+  const err=new URLSearchParams(location.search).get('err');
+  $('#app').innerHTML=`<div class="login"><form class="card" id="lf"><img src="/img/logo.png" alt="Excellence" style="height:30px"><h2>Belépés az ajánlat-adminba</h2>
+    <p class="muted small">Add meg az e-mail címed, és küldünk egy belépőlinket. Jelszó nem kell.</p>${err?'<p class="pill bad">A link lejárt vagy már felhasználták. Kérj újat.</p>':''}
+    <div class="field"><label for="le">E-mail cím</label><input id="le" type="email" required autocomplete="email" placeholder="nev@excellence.hu"></div>
+    <button class="btn acc" type="submit">Belépőlink küldése</button><div id="lmsg" class="small"></div></form></div>`;
+  $('#lf').onsubmit=e=>{e.preventDefault();fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('#le').value})}).then(r=>r.json()).then(j=>{
+    $('#lmsg').innerHTML='Ha ez a cím jogosult, pár percen belül megérkezik a belépőlink. 15 percig érvényes.'+(j.devLink?`<br><br><b>Teszt mód:</b> <a href="${j.devLink}">belépés most</a>`:'');});};
+}
+const KIND={approval:['⏳','Jóváhagyás'],coordination:['🧩','Egyeztetés'],cert:['🎓','Tanúsítvány'],callback:['📞','Visszahívás'],custom:['💬','Egyedi ár'],abandoned:['🛒','Félbehagyta']};
+function renderTodos(){
+  const live=S.live.length?`<div class="card row" style="margin-bottom:12px"><span class="dot"></span><b>Most az oldalon: ${S.live.length}</b><span class="muted small">${S.live.map(v=>esc(v.lead?.name||v.device)+' · '+(v.steps.slice(-1)[0]?STEPN[v.steps.slice(-1)[0]]||'':'')).join(' · ')}</span></div>`:'';
+  const pilot=S.me.pilot&&S.me.pilot.done<S.me.pilot.limit?`<p class="muted small" style="margin:0 0 12px">Pilot időszak: ${S.me.pilot.done} / ${S.me.pilot.limit} rendelés – addig minden rendelést az Excellence hagy jóvá.</p>`:'';
+  $('#main').innerHTML=`<div class="row" style="margin-bottom:12px"><h2>Teendők</h2><span class="sp"></span><button class="btn ghost sm" id="rf">Frissítés</button></div>${pilot}${live}
+    <div class="grid">${S.todos.length?S.todos.map((t,i)=>`<div class="card todo k-${t.kind}"><div class="ic">${KIND[t.kind][0]}</div><div><div class="row" style="gap:6px"><span class="pill">${KIND[t.kind][1]}</span><span class="muted small">${ago(t.at)}</span></div><b>${esc(t.title)}</b><div class="muted small">${esc(t.sub||'')}</div></div>
+      <div class="acts">${t.no?`<button class="btn sm" data-open="${t.no}">Megnyitás</button>`:`<button class="btn sm" data-visit="${t.sid}">Megnézem</button>`}${['cert','callback','custom','abandoned'].includes(t.kind)?`<button class="btn ghost sm" data-done="${i}">Kész</button>`:''}</div></div>`).join(''):'<div class="card empty">Nincs teendő. 🎉</div>'}</div>`;
+  $('#rf').onclick=load;bindOpen();
+  document.querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>{const t=S.todos[b.dataset.done];api('/todos/done',{method:'POST',body:{kind:t.kind,no:t.no,sid:t.sid}}).then(()=>{toast('Kész');load();}).catch(e=>toast(e.message));});
+}
+function renderQuotes(){
+  const rows=S.quotes.filter(q=>!S.search||[q.no,q.company,q.contact,q.email].join(' ').toLowerCase().includes(S.search.toLowerCase()));
+  const ord=rows.filter(q=>q.commission);const sum=ord.reduce((a,q)=>a+q.net,0),com=ord.reduce((a,q)=>a+q.commission.amount,0);
+  $('#main').innerHTML=`<div class="row" style="margin-bottom:12px"><h2>Ajánlatok</h2><span class="sp"></span><a class="btn ghost sm" href="/api/admin/export.csv">⬇ CSV</a></div>
+    <div class="kpis"><div class="card kpi"><span class="muted small">Ajánlatok</span><b>${rows.length}</b></div><div class="card kpi"><span class="muted small">Megrendelések</span><b>${ord.length}</b></div><div class="card kpi"><span class="muted small">Rendelésérték (nettó)</span><b>${ft(sum)}</b></div><div class="card kpi"><span class="muted small">Várható jutalék</span><b>${ft(com)}</b></div></div>
+    <div class="card"><input id="qs" placeholder="Keresés: cég, név, e-mail, ajánlatszám" value="${esc(S.search)}" style="margin-bottom:10px">
+    <table class="tbl resp"><thead><tr><th>Ajánlat</th><th>Cég</th><th class="hide-m">Létrehozva</th><th>Állapot</th><th class="num">Nettó</th><th class="num hide-m">Jutalék</th></tr></thead><tbody>
+    ${rows.map(q=>`<tr class="click" data-open="${q.no}"><td><b>${q.no}</b>${q.version>1?` <span class="muted small">v${q.version}</span>`:''}${q.lead?' <span class="pill live">FB-lead</span>':''}</td><td>${esc(q.company)}<div class="muted small">${esc(q.contact)}</div></td><td class="hide-m muted small">${dt(q.createdAt)}</td><td>${stBadge(q)}</td><td class="num"><b>${ft(q.net)}</b></td><td class="num hide-m">${q.commission?ft(q.commission.amount)+`<div class="muted small">${q.commission.pct}%${q.commission.closedBy==='sales'?' · sales':''}</div>`:'–'}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">Nincs találat</td></tr>'}</tbody></table></div>`;
+  const qs=$('#qs');qs.oninput=()=>{S.search=qs.value;const p=qs.selectionStart;renderQuotes();const n=$('#qs');n.focus();n.setSelectionRange(p,p);};bindOpen();
+}
+function renderVisits(){
+  $('#main').innerHTML=`<div class="row" style="margin-bottom:12px"><h2>Látogatások</h2><span class="sp"></span><span class="muted small">Csak a statisztikai sütit elfogadó látogatók · 6 hónapig őrizzük</span></div>
+    <div class="card"><table class="tbl resp"><thead><tr><th>Látogató</th><th>Forrás</th><th class="hide-m">Lépések</th><th class="num">Kosár</th><th>Eredmény</th></tr></thead><tbody>
+    ${S.visits.map(v=>`<tr class="click" data-visit="${v.sid}"><td>${v.live?'<span class="dot"></span> ':''}<b>${esc(v.lead?.name||'Névtelen látogató')}</b>${v.lead?.company?`<div class="muted small">${esc(v.lead.company)}</div>`:''}<div class="muted small">${dt(v.first)} · ${v.minutes} perc · ${esc(v.device)}</div></td>
+      <td class="small">${esc(v.utm?.source||'közvetlen')}${v.utm?.campaign?`<div class="muted">${esc(v.utm.campaign)}</div>`:''}</td><td class="hide-m small">${v.steps.map(s=>STEPN[s]||s).join(' → ')}</td><td class="num">${v.cartN}</td>
+      <td>${v.quoteNo?`<span class="pill ok">${v.quoteNo}</span>`:v.abandoned?'<span class="pill bad">félbehagyta</span>':v.live?'<span class="pill live">most az oldalon</span>':'<span class="pill">nem kért ajánlatot</span>'}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">Még nincs mért látogatás.</td></tr>'}</tbody></table></div>`;
+  bindOpen();
+}
+function bindOpen(){document.querySelectorAll('[data-open]').forEach(b=>b.onclick=e=>{e.stopPropagation();openQuote(b.dataset.open);});document.querySelectorAll('[data-visit]').forEach(b=>b.onclick=e=>{e.stopPropagation();openVisit(b.dataset.visit);});}
+
+function evLine(e){const n=EV[e.type]||e.type;let x='';
+  if(e.type==='step')x=STEPN[e.step]||e.step;else if(e.id)x=nm(e.id)+(e.qty?` – ${e.qty}`:'');else if(e.type==='cart_set')x=Object.keys(e.cart||{}).map(nm).join(', ');
+  if(e.type==='revised'&&e.changes)x=e.changes.join('; ');if(e.type==='returned')x=e.reason||'';if(e.by)x+=(x?' · ':'')+e.by;
+  const cls=['cart_add','qty','cart_set'].includes(e.type)?'c':e.type==='cart_remove'||e.type==='returned'?'r':e.src==='q'?'q':'s';
+  return`<li class="${cls}"><time>${dt(e.at)}</time><b>${esc(n)}</b>${x?` <span class="muted">${esc(x)}</span>`:''}</li>`;}
+function timeline(evs){if(!evs.length)return'<p class="muted small">Nincs esemény.</p>';const out=[];let lastStep=null;
+  for(const e of evs.sort((a,b)=>a.at.localeCompare(b.at))){if(e.type==='step'){if(e.step===lastStep)continue;lastStep=e.step;}out.push(evLine(e));}return`<ul class="tl">${out.join('')}</ul>`;}
+function drawer(html){closeDrawer();const d=document.createElement('div');d.className='drawer';d.id='drw';d.innerHTML=`<div class="pan">${html}</div>`;d.onclick=e=>{if(e.target===d)closeDrawer();};document.body.appendChild(d);document.body.style.overflow='hidden';}
+function closeDrawer(){const d=$('#drw');if(d)d.remove();document.body.style.overflow='';if(/^#q=|^#v=/.test(location.hash))history.replaceState(null,'','#'+S.tab);}
+addEventListener('keydown',e=>{if(e.key==='Escape'){if($('.dlg'))$('.dlg').remove();else closeDrawer();}});
+
+async function openQuote(no){
+  history.replaceState(null,'','#q='+no);
+  let j;try{j=await api('/quotes/'+encodeURIComponent(no));}catch(e){toast(e.message);return;}
+  const q=j.quote,c=q.commission,pend=['pending_approval','coordination'].includes(q.stage);
+  const evs=[...(q.events||[]).map(e=>({...e,src:'q'})),...j.visits.flatMap(v=>v.events)];
+  const lines=q.calc.lines;
+  drawer(`<div class="ph"><div class="sp"><div class="row" style="gap:6px"><h3>${q.no}${(q.version||1)>1?' · v'+q.version:''}</h3>${stBadge({stage:q.stage,status:q.status,adminState:q.adminState,cert:q.calc.certRequested})}${q.lead?'<span class="pill live">FB-lead</span>':''}</div>
+      <div><b>${esc(q.company.name)}</b> · ${esc(q.company.contact)}${q.company.role?' ('+esc(q.company.role)+')':''}</div><div class="small"><a href="mailto:${esc(q.company.email)}">${esc(q.company.email)}</a>${q.company.phone?` · <a href="tel:${esc(q.company.phone)}">${esc(q.company.phone)}</a>`:''}${q.company.taxid?' · '+esc(q.company.taxid):''}</div></div><button class="btn ghost sm" onclick="closeDrawer()">✕</button></div>
+    <div class="pb">
+      ${pend?`<div class="card" style="border-color:var(--warn);background:var(--warn-soft)"><b>${q.stage==='pending_approval'?'Pilot: a rendelés jóváhagyásra vár':'Kiegészítő miatt egyeztetni kell, utána jóváhagyás'}</b><div class="small">Megrendelve: ${dt(q.accept.at)} · ${ft(q.accept.net)} nettó${q.accept.fast?' (gyors döntési kedvezménnyel)':''}</div>
+        ${isPartner()?`<div class="acts-bar" style="margin-top:10px"><button class="btn good" id="apv">✓ Jóváhagyom – díjbekérő mehet</button><button class="btn bad" id="ret">Visszaküldöm pontosításra</button></div>`:'<div class="small muted" style="margin-top:6px">Jóváhagyni az Excellence munkatársai tudják.</div>'}</div>`:''}
+      ${q.stage==='returned'?`<div class="card" style="border-color:var(--bad)"><b>Visszaküldve:</b> ${esc(q.returned?.reason)}<div class="small muted">Módosítsd az ajánlatot, és új verzióként kimegy az ügyfélnek.</div></div>`:''}
+      <div class="acts-bar">${!q.accept||q.stage==='returned'?'<button class="btn ghost sm" id="rev">✎ Módosítás / egyedi kedvezmény</button>':''}<button class="btn ghost sm" id="note">+ Jegyzet</button>
+        <select id="ast" style="width:auto;padding:6px 10px"><option value="">Kézi állapot…</option>${['Felhívtam','Visszahívni','Gondolkodik','Nem aktuális','Elvesztett'].map(s=>`<option ${q.adminState===s?'selected':''}>${s}</option>`).join('')}<option value="">– törlés –</option></select>
+        <a class="btn ghost sm" href="/a/${q.no}" target="_blank">Ügyféloldal ↗</a><a class="btn ghost sm" href="/api/quote/${q.no}/pdf" target="_blank">PDF</a><button class="btn bad sm" id="era">GDPR-törlés</button></div>
+      <div class="card"><h4 style="margin-bottom:6px">Tételek</h4><table class="tbl items">${lines.map(l=>`<tr><td>${esc(l.name)}<div class="muted small">${l.type==='pkg'?'csomag':l.type==='live'?'élő képzés':l.type==='extra'?'kiegészítő':'egyedi e-learning'}${l.pct?' · −'+l.pct+'%':''}</div></td><td class="num">${l.n} ${l.type==='live'?'csop.':'fő'}</td><td class="num">${ft(l.net)}</td></tr>`).join('')}
+        ${q.calc.certRequested?'<tr><td colspan="3"><span class="pill info">Hivatalos tanúsítványt kér – egyeztetni</span></td></tr>':''}
+        ${(q.calc.gifts||[]).length?`<tr><td colspan="3" class="small muted">Ajándék: ${q.calc.gifts.map(g=>esc(g.name)).join(', ')}</td></tr>`:''}
+        ${q.calc.customDiscount?`<tr><td>Egyedi kedvezmény<div class="muted small">${esc(q.calc.customDiscount.reason)} · ${esc(q.calc.customDiscount.by)}</div></td><td></td><td class="num">− ${ft(q.calc.customDiscount.amount)}</td></tr>`:''}
+        <tr><td><b>Nettó</b></td><td></td><td class="num"><b>${ft(q.calc.net)}</b></td></tr></table></div>
+      ${c?`<div class="card"><div class="row"><h4>Jutalék</h4><span class="sp"></span><select id="cby" style="width:auto;padding:5px 9px"><option value="self" ${c.closedBy==='self'?'selected':''}>Partner zárta (teljes)</option><option value="sales" ${c.closedBy==='sales'?'selected':''}>Sales zárta (fele)</option></select></div>
+        <div class="comm" style="margin-top:8px"><div><span class="muted small">Alap (nettó)</span><b>${ft(c.base)}</b></div><div><span class="muted small">Jutalék</span><b>${c.pct}%</b></div><div><span class="muted small">Összeg</span><b>${ft(c.amount)}</b></div><div><span class="muted small">Állapot</span><b>${c.final?'végleges':c.paid?'fizetve, 30 nap':'fizetésre vár'}</b></div></div></div>`:''}
+      ${(q.notes||[]).length?`<div class="card"><h4 style="margin-bottom:6px">Jegyzetek</h4>${q.notes.map(n=>`<p style="margin:0 0 8px"><span class="muted small">${dt(n.at)} · ${esc(n.by)}</span><br>${esc(n.text)}</p>`).join('')}</div>`:''}
+      <div class="card"><h4 style="margin-bottom:10px">Idővonal</h4>${timeline(evs)}${j.visits.length?`<p class="muted small">${j.visits.length} mért látogatás · ${j.visits.map(v=>v.device+', '+v.minutes+' perc, '+esc(v.utm?.source||'közvetlen')).join(' | ')}</p>`:'<p class="muted small">A böngészési lépések csak statisztikai süti-hozzájárulás esetén látszanak.</p>'}</div>
+      ${q.accept?`<p class="muted small">Elfogadás: ${dt(q.accept.at)} · IP: ${esc(q.accept.ip)} · ${esc((q.accept.userAgent||'').slice(0,80))}</p>`:''}
+    </div>`);
+  const reload=()=>{openQuote(no);load(true);};
+  $('#apv')&&($('#apv').onclick=()=>{if(!confirm('Jóváhagyod? A díjbekérő és a visszaigazolás azonnal kimegy az ügyfélnek.'))return;api(`/quotes/${no}/approve`,{method:'POST',body:{}}).then(r=>{toast('Jóváhagyva, díjbekérő: '+r.proforma);reload();}).catch(e=>toast(e.message));});
+  $('#ret')&&($('#ret').onclick=()=>dialog('Visszaküldés pontosításra',`<div class="field"><label>Mit kell pontosítani?</label><textarea id="dr" rows="3"></textarea></div><label class="row small"><input type="checkbox" id="dn" style="width:auto" checked> Az ügyfél kapjon róla levelet</label>`,()=>api(`/quotes/${no}/return`,{method:'POST',body:{reason:$('#dr').value,notify:$('#dn').checked}}).then(()=>{toast('Visszaküldve');reload();})));
+  $('#note').onclick=()=>dialog('Belső jegyzet',`<div class="field"><label>Jegyzet (az ügyfél nem látja)</label><textarea id="dn2" rows="4"></textarea></div>`,()=>api(`/quotes/${no}/note`,{method:'POST',body:{text:$('#dn2').value}}).then(()=>{toast('Mentve');reload();}));
+  $('#ast').onchange=e=>api(`/quotes/${no}/state`,{method:'POST',body:{state:e.target.value}}).then(()=>{toast('Állapot mentve');reload();}).catch(er=>toast(er.message));
+  $('#cby')&&($('#cby').onchange=e=>{const reason=prompt('Miért módosítod, ki zárta a rendelést?');if(!reason){reload();return;}api(`/quotes/${no}/closed-by`,{method:'POST',body:{closedBy:e.target.value,reason}}).then(()=>{toast('Mentve');reload();}).catch(er=>toast(er.message));});
+  $('#era').onclick=()=>dialog('GDPR-törlés',`<p class="small">Az ügyfél személyes adatai (név, e-mail, telefon, cégadatok, jegyzetek, IP, böngészési adatok) véglegesen törlődnek. A pénzügyi tételek névtelenül megmaradnak az elszámoláshoz. <b>Nem vonható vissza.</b></p><div class="field"><label>Megerősítéshez írd be: ${no}</label><input id="dc"></div>`,()=>api(`/quotes/${no}/erase`,{method:'POST',body:{confirm:$('#dc').value}}).then(()=>{toast('Törölve');closeDrawer();load();}),'Végleges törlés');
+  $('#rev')&&($('#rev').onclick=()=>reviseDialog(q));
+}
+function reviseDialog(q){
+  const sel=(q.selection||[]).map(x=>({...x}));
+  const opts=Object.values(S.cat).filter(x=>!sel.some(s=>s.id===x.id)).map(x=>`<option value="${x.id}">${esc(x.name)} (${x.type==='pkg'?'csomag':x.type==='live'?'élő':x.type==='extra'?'kiegészítő':'e-learning'})</option>`).join('');
+  dialog('Ajánlat módosítása (új verzió)',`<p class="small muted">A módosítás új verzióként (v${(q.version||1)+1}) megy ki; a korábbi verzió érvényét veszti.</p>
+    <div id="rl" class="grid" style="gap:8px">${sel.map((s,i)=>`<div class="row"><span class="sp">${esc(nm(s.id))}</span><input type="number" min="0" value="${s.qty}" data-i="${i}" style="width:90px"></div>`).join('')}</div>
+    <div class="row"><select id="ra" class="sp"><option value="">+ Új tétel hozzáadása…</option>${opts}</select><input id="raq" type="number" min="1" value="10" style="width:90px"></div>
+    <div class="field"><label>Egyedi kedvezmény (opcionális)</label><div class="row"><select id="dty" style="width:auto"><option value="pct">%</option><option value="fix">Ft</option></select><input id="dva" type="number" min="0" placeholder="0" class="sp"></div></div>
+    <div class="field"><label>Indoklás (kedvezménynél kötelező)</label><input id="dre" placeholder="pl. 3 éves keretszerződés, 120 fő"></div>
+    <label class="row small"><input type="checkbox" id="rn" style="width:auto" checked> Új verzió kiküldése az ügyfélnek e-mailben</label><p class="small muted">0 létszám = a tétel kikerül.</p>`,()=>{
+      document.querySelectorAll('#rl input').forEach(i=>sel[i.dataset.i].qty=+i.value);
+      const add=$('#ra').value;const selection=sel.filter(s=>s.qty>0);if(add)selection.push({id:add,qty:+$('#raq').value||1});
+      return api(`/quotes/${q.no}/revise`,{method:'POST',body:{selection,discount:{type:$('#dty').value,value:+$('#dva').value||0,reason:$('#dre').value},notify:$('#rn').checked}}).then(r=>{toast(`v${r.version} kiküldve – ${ft(r.net)}`);openQuote(q.no);load(true);});},'Mentés és kiküldés');
+}
+async function openVisit(sid){
+  history.replaceState(null,'','#v='+sid);let j;try{j=await api('/visits/'+encodeURIComponent(sid));}catch(e){toast(e.message);return;}const v=j.visit,l=j.leadInfo;
+  drawer(`<div class="ph"><div class="sp"><div class="row" style="gap:6px"><h3>${esc(l?.name||'Névtelen látogató')}</h3>${v.live?'<span class="pill live">most az oldalon</span>':''}${v.abandoned?'<span class="pill bad">félbehagyta</span>':''}${v.quoteNo?`<span class="pill ok">${v.quoteNo}</span>`:''}</div>
+    ${l?`<div class="small">${esc(l.company||'')} · <a href="mailto:${esc(l.email)}">${esc(l.email)}</a>${l.phone?` · <a href="tel:${esc(l.phone)}">${esc(l.phone)}</a>`:''}${l.campaign?' · '+esc(l.campaign):''}</div>`:''}
+    <div class="small muted">${dt(v.first)} – ${dt(v.last)} · ${v.minutes} perc · ${esc(v.device)} · IP ${esc(v.ip)} · ${esc(v.utm?.source||'közvetlen')}</div></div><button class="btn ghost sm" onclick="closeDrawer()">✕</button></div>
+    <div class="pb">${Object.keys(v.cart||{}).length?`<div class="card"><h4 style="margin-bottom:6px">Utolsó kosár</h4>${Object.entries(v.cart).map(([k,n])=>`<div class="row"><span class="sp">${esc(nm(k))}</span><span class="muted">${n||''}</span></div>`).join('')}</div>`:''}
+    ${v.quoteNo?`<button class="btn sm" data-open="${v.quoteNo}">Ajánlat megnyitása: ${v.quoteNo}</button>`:''}
+    <div class="card"><h4 style="margin-bottom:10px">Idővonal</h4>${timeline(v.events)}</div></div>`);
+  bindOpen();
+}
+function dialog(title,body,onOk,okLabel='Mentés'){const d=document.createElement('div');d.className='dlg';d.innerHTML=`<div class="box"><h3>${title}</h3>${body}<div class="row" style="justify-content:flex-end"><button class="btn ghost" data-x>Mégse</button><button class="btn acc" data-ok>${okLabel}</button></div></div>`;
+  d.onclick=e=>{if(e.target===d||e.target.dataset.x!==undefined)d.remove();};document.body.appendChild(d);
+  d.querySelector('[data-ok]').onclick=()=>{const b=d.querySelector('[data-ok]');b.disabled=true;Promise.resolve(onOk()).then(()=>d.remove()).catch(e=>{toast(e.message);b.disabled=false;});};const f=d.querySelector('input,textarea');f&&f.focus();}
+
+async function load(silent){
+  try{const [t,q,v]=await Promise.all([api('/todos'),api('/quotes'),api('/visits')]);S.todos=t.todos;S.live=t.live;S.quotes=q.quotes;S.visits=v.visits;if(!silent||!$('#drw'))render();else{const m=$('#main');if(m)({todos:renderTodos,quotes:renderQuotes,visits:renderVisits})[S.tab]();}}catch(e){if(S.me)toast(e.message);}
+}
+(async function init(){
+  const h=location.hash.slice(1);if(['todos','quotes','visits'].includes(h))S.tab=h;
+  try{S.me=await api('/me');const c=await api('/catalog');c.items.forEach(x=>S.cat[x.id]=x);}catch(e){S.me=null;}
+  if(!S.me){render();return;}
+  await load();
+  const m=location.hash.match(/^#q=(.+)$/);if(m)openQuote(decodeURIComponent(m[1]));const v=location.hash.match(/^#v=(.+)$/);if(v)openVisit(decodeURIComponent(v[1]));
+  setInterval(()=>{if(!$('#drw')&&!$('.dlg')&&document.visibilityState==='visible')load(true);},30000);
+})();
+</script>
+</body>
+</html>
