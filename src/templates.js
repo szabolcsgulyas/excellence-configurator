@@ -45,7 +45,7 @@ export const reminderMail = (q, kind) => {
 
 export const notifyMail = (q, type, extra = '') => ({
   subject: `[${type}] ${q.company.name} – ${ft(q.calc.net)} (${q.no})`,
-  html: wrap(`<p><b>${type}</b> · ${q.company.name} · ${q.company.contact} (${q.company.email}${q.company.phone ? ', ' + q.company.phone : ''})</p><p>${q.calc.lines.map(l => `${l.name} × ${l.n}`).join('<br>')}</p><p>Nettó: ${ft(q.calc.net)}</p>${extra ? `<p>${extra}</p>` : ''}<p><a href="${link(q)}">${link(q)}</a></p>`)
+  html: wrap(`<p><b>${type}</b> · ${q.company.name} · ${q.company.contact} (${q.company.email}${q.company.phone ? ', ' + q.company.phone : ''})</p><p>${q.calc.lines.map(l => `${l.name} × ${l.n}`).join('<br>')}</p>${q.calc.certRequested ? '<p><b>Hivatalos tanúsítványt kér</b> – egyeztetni kell, mely tananyagokhoz (5 000 Ft/fő/tananyag, külön számla).</p>' : ''}<p>Nettó: ${ft(q.calc.net)}</p>${extra ? `<p>${extra}</p>` : ''}<p><a href="${link(q)}">${link(q)}</a></p>`)
 });
 
 /** Egyszerű szerződés-szöveg (HTML). Élesben a hivatalos docx sablonból generáljuk PDF-be. */
@@ -53,7 +53,7 @@ export const contractHtml = q => `<!doctype html><html lang="hu"><meta charset="
 <h2>Képzési szolgáltatási szerződés – ${q.no}</h2>
 <p><b>Szolgáltató:</b> Excellence Training Kft. &nbsp; <b>Megrendelő:</b> ${q.company.name}, ${q.company.addr}, adószám: ${q.company.taxid}, kapcsolattartó: ${q.company.contact} (${q.company.email})</p>
 <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%"><tr><th align="left">Képzés</th><th>Mennyiség</th><th align="right">Nettó</th></tr>
-${q.calc.lines.map(l => `<tr><td>${l.name}</td><td align="center">${l.n} ${l.type === 'live' ? 'alkalom' : 'fő'}</td><td align="right">${ft(l.net)}</td></tr>`).join('')}
+${q.calc.lines.map(l => `<tr><td>${l.name}</td><td align="center">${l.n} ${l.type === 'live' ? 'alkalom' : 'fő'}</td><td align="right">${ft(l.net)}</td></tr>`).join('')}${q.calc.certRequested ? '<tr><td colspan="3">Hivatalos tanúsítvány: igényelve – egyeztetés után külön számlázzuk (5 000 Ft/fő/tananyag).</td></tr>' : ''}
 <tr><td colspan="2"><b>Összesen nettó${q.accept?.fast ? ` (gyors döntési ${q.calc.fastPct}% levonva)` : ''}</b></td><td align="right"><b>${ft(q.accept?.net ?? q.calc.net)}</b></td></tr></table>
 <p>Hozzáférés: 1 év az aktiválástól, nem hosszabbodik automatikusan, a rögzített áron hosszabbítható. Fizetés: átutalás díjbekérő alapján, 8 napon belül. 30 napos pénzvisszafizetési garancia az e-learning tételekre. Az élő képzések időpontját a felek külön egyeztetik.</p>
 <p>Kelt: ${new Date().toLocaleDateString('hu-HU')}</p></body></html>`;

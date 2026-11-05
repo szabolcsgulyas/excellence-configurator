@@ -49,7 +49,7 @@ app.post('/api/quote', wrap(async (req, res) => {
   const q = { no: nextQuoteNo(), createdAt: new Date().toISOString(), validUntil: addDays(VALID_DAYS), fastUntil: addDays(FAST_DAYS), company, selection, calc, utm: utm || {}, status: 'quote', events: [] };
   if (calc.net < MIN_ORDER && !calc.hasLive) q.belowMin = true; // 500k alatt is kiadjuk, de jelezzük a CRM-ben
   saveQuote(q);
-  const summary = calc.lines.map(l => `${l.name} × ${l.n}`).join(', ');
+  const summary = calc.lines.map(l => `${l.name} × ${l.n}`).join(', ') + (calc.certRequested ? ' | HIVATALOS TANÚSÍTVÁNYT KÉR – egyeztetni (5 000 Ft/fő/tananyag, külön számla)' : '');
   const lead = await bevetel.createLead({ name: `${company.name} – ${company.contact}`, email: company.email, phone: company.phone, utm,
     message: `Ajánlat ${q.no}: ${summary}. Nettó ${calc.net.toLocaleString('hu-HU')} Ft${q.belowMin ? ' (500 000 Ft minimum alatt)' : ''}. ${cfg.publicUrl}/a/${q.no}${customReq ? ' · Egyedi árkérés: ' + customReq : ''}` });
   q.crm = { leadId: lead.id || lead.leadId || null }; saveQuote(q);

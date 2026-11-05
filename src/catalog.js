@@ -27,7 +27,7 @@ export const LIVE = [
 ].map(([code, name, price, days]) => ({ id: 'live-' + code.toLowerCase(), code, name, price, days, type: 'live' }));
 
 export const EXTRAS = [
-  { id: 'x-cert', code: 'KT03', name: 'Hivatalos tanfolyam (igazolással)', price: 5000, per: 'seat' },
+  { id: 'x-cert', code: 'KT03', name: 'Hivatalos tanúsítvány (igény, külön egyeztetés)', price: 5000, per: 'seat', request: true },
   { id: 'x-track', code: 'KT04', name: 'Résztvevők haladásának nyomon követése', price: 30000, per: 'flat' },
   { id: 'x-exam', code: 'KT05', name: 'Záró tudásellenőrzés', price: 5000, per: 'exam' }
 ].map(x => ({ ...x, type: 'extra' }));

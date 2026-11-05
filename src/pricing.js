@@ -20,7 +20,7 @@ export function calculate(selection) {
     else if (x.type === 'course') lines.push({ id: x.id, code: x.code, name: x.name, type: x.type, n: x.qty, pct: bp, unit: x.price, list: x.price * x.qty, net: r(x.price * x.qty * (1 - bp / 100)), full: x.price * x.qty });
     else if (x.type === 'live') lines.push({ id: x.id, code: x.code, name: x.name, type: x.type, n: x.qty, days: x.days, pct: dp, unit: x.price, list: x.price * x.qty, net: r(x.price * x.qty * (1 - dp / 100)), full: x.price * x.qty });
   }
-  for (const x of sel.filter(y => y.type === 'extra')) {
+  for (const x of sel.filter(y => y.type === 'extra' && !y.request)) {
     const n = x.per === 'flat' ? 1 : x.per === 'seat' ? seats : sel.filter(y => (y.type === 'course' && EXAM_IDS.includes(y.id)) || (y.type === 'pkg' && y.items.some(i => EXAM_IDS.includes(i)))).reduce((a, y) => Math.max(a, y.qty), 0);
     if (n > 0) lines.push({ id: x.id, code: x.code, name: x.name, type: 'extra', n, pct: 0, unit: x.price, list: x.price * n, net: x.price * n, full: x.price * n });
   }
@@ -31,6 +31,7 @@ export function calculate(selection) {
   const list = lines.reduce((a, l) => a + l.list, 0), net = lines.reduce((a, l) => a + l.net, 0), full = lines.reduce((a, l) => a + l.full, 0);
   const fast = r(net * FAST_PCT / 100);
   return {
+    certRequested: sel.some(x => x.id === 'x-cert'),
     lines, gifts, giftValue: gifts.reduce((a, g) => a + g.value, 0), seats, seatBandPct: bp, liveDays: days, dayPct: dp,
     list, full, net, discount: full - net, savedTotal: full - net,
     vatPct: VAT, vat: r(net * VAT / 100), gross: r(net * (1 + VAT / 100)),

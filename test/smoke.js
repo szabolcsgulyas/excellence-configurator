@@ -4,11 +4,12 @@ const j = async (m, p, b) => { const r = await fetch(B + p, { method: m, headers
 const company = { name: 'Mintacég Kereskedelmi Kft.', addr: '1117 Budapest, Példa utca 1.', contact: 'Kovács Petra', role: 'HR vezető', email: 'petra@mintaceg.hu', phone: '+36 30 123 4567', taxid: '12345678-2-43' };
 await j('GET', '/api/health');
 await j('GET', '/api/nav/12345678');
-const c = await j('POST', '/api/calc', { selection: [{ id: 'office-pro', qty: 30 }, { id: 'pbi', qty: 25 }, { id: 'excel-alap', qty: 5 }, { id: 'live-ms02', qty: 2 }, { id: 'live-pp01', qty: 1 }, { id: 'x-track', qty: 1 }] });
+const c = await j('POST', '/api/calc', { selection: [{ id: 'office-pro', qty: 30 }, { id: 'pbi', qty: 25 }, { id: 'excel-alap', qty: 5 }, { id: 'live-ms02', qty: 2 }, { id: 'live-pp01', qty: 1 }, { id: 'x-track', qty: 1 }, { id: 'x-cert', qty: 1 }] });
 console.assert(c.calc.lines[0].pct === 0, 'csomag: nincs létszámkedvezmény');
 console.assert(c.calc.seats === 60 && c.calc.lines[1].pct === 36, 'összesített sáv: 30+25+5 = 60 -> 36%');
 console.assert(c.calc.liveDays === 6 && c.calc.dayPct === 8, 'élő: 2x2 + 1x2 = 6 nap -> 8%');
 console.assert(['outlook','canva','fuggv','diagram','chatgpt'].every(id => c.calc.gifts.some(g => g.id === id)) && c.calc.lines.some(l => l.id === 'x-track' && l.net === 30000), 'ajándékszabály + kiegészítő');
+console.assert(c.calc.certRequested === true && !c.calc.lines.some(l => l.id === 'x-cert'), 'tanúsítvány csak igény, nincs ára');
 const q = await j('POST', '/api/quote', { company, selection: [{ id: 'office-pro', qty: 18 }], utm: { source: 'facebook', campaign: 'szintfelmero' } });
 await j('POST', `/api/quote/${q.no}/question`, { text: 'Lehet részletfizetés?' });
 await j('POST', `/api/quote/${q.no}/custom-price`, { why: 'Nagyobb létszám van tervben', headcount: 120, years: 3, note: 'két telephely' });
