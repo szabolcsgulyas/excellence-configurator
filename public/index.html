@@ -195,6 +195,22 @@ table.sum tfoot tr.net td{font-weight:700}table.sum tfoot tr.total td{font-famil
 .card.live-zone h3{color:color-mix(in srgb,#6f42c1 75%,var(--fg))}
 .card.live-zone .item.sel{border-color:#6f42c1;box-shadow:0 0 0 2px color-mix(in srgb,#6f42c1 25%,transparent)}
 .kgrp.live{color:#6f42c1}
+.ckbar{position:fixed;left:0;right:0;bottom:var(--ckb,0px);z-index:60;padding:0 16px 12px;pointer-events:none}
+.ckbar .ckin{pointer-events:auto;max-width:980px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 40px rgba(10,30,60,.22);padding:16px 18px;display:flex;align-items:center;gap:18px}
+.ckbar p{margin:0;font-size:.9rem;line-height:1.5;flex:1}
+.ckbar a,.ckbox a{color:var(--brand);font-weight:600}
+.ckbtns{display:flex;gap:10px;flex:none}
+.ckbtns .btn{min-width:130px;justify-content:center}
+.ckcats{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.ckcat{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;padding:12px 14px;border:1px solid var(--line);border-radius:12px;cursor:pointer}
+.ckcat b{display:block;font-family:var(--display)}.ckcat small{display:block;color:var(--muted);font-size:.84rem;line-height:1.45;margin-top:2px}
+.sw{position:relative;flex:none;width:46px;height:26px;margin-top:2px}.sw input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line-2,#c9d3df);transition:.2s}.sw i:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw input:checked+i{background:var(--good)}.sw input:checked+i:after{left:23px}.sw.lock{opacity:.6}.sw input:focus-visible+i{outline:2px solid var(--brand);outline-offset:2px}
+.ckbox .ckbtns{justify-content:flex-end}.ckbox .ckcats{margin:4px 0 12px}
+#ckModal{z-index:70}
+@media (max-width:720px){.ckbar .ckin{flex-direction:column;align-items:stretch;gap:12px;padding:14px}.ckbtns .btn{flex:1;min-width:0}}
+
 .labout{margin:6px 0 0;font-size:.88rem;line-height:1.45;color:var(--fg);opacity:.85}
 .card.live-zone .btn.sec{background:color-mix(in srgb,#6f42c1 12%,var(--surface));color:#5a32a8}
 .blend{margin:12px 0 8px;padding:12px 14px;border-radius:12px;background:#fff7dc;border:1px solid #f3d36b;font-size:.92rem;line-height:1.45} .aside .sum{font-family:var(--display);font-variant-numeric:tabular-nums} .aside .big{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--brand-ink)}
@@ -644,13 +660,27 @@ body.print .demobar{display:none!important}
     <div class="soc" id="socials"><a href="https://www.facebook.com/Excellence.hu" target="_blank" rel="noopener" data-social="facebook" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.3c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.3v2.3H7.4V14h2.8v8h3.3z"/></svg></a><a href="https://www.linkedin.com/company/excellence-ms365-ai-tanfolyam/" target="_blank" rel="noopener" data-social="linkedin" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M6.9 8.5H3.6V21h3.3V8.5zM5.3 3C4.1 3 3.3 3.8 3.3 4.8s.8 1.9 1.9 1.9c1.2 0 2-.8 2-1.9S6.4 3 5.3 3zM21 13.3c0-3.6-1.9-5.2-4.5-5.2-2.1 0-3 1.1-3.5 1.9V8.5H9.7V21H13v-6.9c0-1.8.3-3.6 2.6-3.6 2.2 0 2.2 2.1 2.2 3.7V21H21v-7.7z"/></svg></a><a href="https://www.tiktok.com/@excelnekedhu" target="_blank" rel="noopener" data-social="tiktok" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24"><path d="M16.6 5.8c-1-.7-1.7-1.8-1.9-3.1h-3.3v13.4c0 1.5-1.2 2.7-2.7 2.7S6 17.6 6 16.1s1.2-2.7 2.7-2.7c.3 0 .6 0 .8.1V10c-.3 0-.5-.1-.8-.1-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6V9.4c1.3.9 2.9 1.5 4.6 1.5V7.6c-1 0-2-.3-2.7-1.8z"/></svg></a><a href="https://www.youtube.com/@Excelneked" target="_blank" rel="noopener" data-social="youtube" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24"><path d="M22.5 7.2c-.3-1-1-1.7-2-2C18.8 4.7 12 4.7 12 4.7s-6.8 0-8.5.5c-1 .3-1.7 1-2 2C1 9 1 12 1 12s0 3 .5 4.8c.3 1 1 1.7 2 2 1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5c1-.3 1.7-1 2-2 .5-1.8.5-4.8.5-4.8s0-3-.5-4.8zM9.8 15.1V8.9L15.5 12l-5.7 3.1z"/></svg></a></div></div>
   <div><h5>Elérhetőség</h5><p>Excellence Training Kft.</p><p>8000 Székesfehérvár, Határ utca 16.</p><p><a href="tel:+36707768888">+36 70 776 8888</a></p><p><a href="mailto:info@excellence.hu">info@excellence.hu</a></p></div>
   <div><h5>Az ajánlatról</h5><p>Kapcsolattartó: <b style="color:#fff">Gulyás Szabolcs</b></p><p><a href="mailto:gulyas.szabolcs@excellence.hu">gulyas.szabolcs@excellence.hu</a></p><p>Kérdésed van? Válaszolj az ajánlat e-mailre, vagy kérj visszahívást az ajánlatoldalon.</p></div>
-  <div><h5>Jogi információk</h5><p><a href="https://excellence.hu/adatvedelem/" target="_blank" rel="noopener">Adatkezelési tájékoztató</a></p><p>Adószám: 27036666-2-07</p><p>Felnőttképzési nyilvántartási szám: B/2020/000094</p></div>
+  <div><h5>Jogi információk</h5><p><a href="https://excellence.hu/adatvedelem/" target="_blank" rel="noopener">Adatkezelési tájékoztató</a></p><p><a href="#" id="ckOpen">Süti-beállítások</a></p><p>Adószám: 27036666-2-07</p><p>Felnőttképzési nyilvántartási szám: B/2020/000094</p></div>
 </div><div class="legal"><span>© <span id="footYear"></span> Excellence Training Kft. Minden jog fenntartva.</span><span>Az árak nettó árak, az ÁFA 27%. Az ajánlat 14 napig érvényes.</span></div></footer>
 <div class="sticky actbar" id="sticky"><div class="in"><div class="wiz" id="wiz"><button class="btn ghost" id="wizBack"></button><button class="btn ghost" id="wizSec"></button></div>
   <button class="sumbtn" id="openKosar" type="button"><span class="s" id="stickySum"></span><span class="muted small" id="stickyText"></span><span class="caret">▴</span></button>
   <div class="nextwrap"><span class="hint" id="wizHint"></span><button class="btn acc" id="wizNext"></button></div></div></div>
 <div class="overlay" id="overlay" hidden><div class="panel"><div class="row"><h4>Összeállítás</h4><button class="btn sm ghost" id="closeKosar">Bezár</button></div><div id="ovChips"></div><div class="lines" id="ovLines" style="margin-top:10px"></div></div></div>
 <div class="toast" id="toast"></div>
+<div class="ckbar" id="ckBar" hidden role="region" aria-label="Süti-beállítások"><div class="ckin">
+  <p>Sütiket használunk az oldal működéséhez, a látogatás méréséhez és a hirdetéseink fejlesztéséhez. A mérést és a hirdetési sütiket csak a hozzájárulásoddal kapcsoljuk be, és bármikor módosíthatod a láblécben. <a href="#" id="ckMore">Részletek</a></p>
+  <div class="ckbtns"><button class="btn ghost" id="ckNo" type="button">Elutasítom</button><button class="btn acc" id="ckYes" type="button">Elfogadom</button></div>
+</div></div>
+<div class="modal" id="ckModal" hidden><div class="mbox ckbox" role="dialog" aria-modal="true" aria-labelledby="ckTitle">
+  <div class="mhead"><div><h3 id="ckTitle">Süti-beállítások</h3><p class="muted small">Kategóriánként döntheted el, mit engedélyezel. A döntésedet bármikor módosíthatod a lábléc „Süti-beállítások” linkjével.</p></div><button class="btn sm ghost" id="ckClose" type="button" aria-label="Bezár">✕</button></div>
+  <div class="mbody"><div class="ckcats">
+    <label class="ckcat"><span><b>Szükséges</b><small>Az oldal működéséhez kell: a félbehagyott összeállítás mentése a böngésződben és a biztonságos működés. Nem kapcsolható ki.</small></span><span class="sw on lock"><input type="checkbox" checked disabled><i></i></span></label>
+    <label class="ckcat"><span><b>Statisztika</b><small>Saját mérésünk arról, hogyan használod a kalkulátort: mely lépéseket és képzéseket nézed, mit teszel a kosárba és veszel ki, mennyi ideig maradsz. Az adatokat az Excellence megbízásából kezeljük, 6 hónapig őrizzük, harmadik félnek nem adjuk át.</small></span><span class="sw"><input type="checkbox" id="ckStat"><i></i></span></label>
+    <label class="ckcat"><span><b>Marketing</b><small>A Meta (Facebook) hirdetések mérése és fejlesztése a Meta Pixellel: így tudjuk, mely hirdetésekből érkeznek ajánlatkérések. A Meta saját adatkezelési szabályai szerint kezeli az adatokat.</small></span><span class="sw"><input type="checkbox" id="ckMkt"><i></i></span></label>
+  </div>
+  <p class="muted small">Részletek az <a href="https://excellence.hu/adatvedelem/" target="_blank" rel="noopener">Excellence adatkezelési tájékoztatójában</a>.</p></div>
+  <div class="ckbtns" style="padding:12px 18px 16px;border-top:1px solid var(--line)"><button class="btn ghost" id="ckSave" type="button">Kiválasztottak mentése</button><button class="btn acc" id="ckAll" type="button">Mindet elfogadom</button></div>
+</div></div>
 <div class="modal" id="cmodal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="cmTitle"><div class="mhead"><div><h3 id="cmTitle">Egyedi árat kérek</h3><p class="muted small">Pár adat, hogy az Excellence pontos egyedi ajánlatot adhasson.</p></div><button class="btn sm ghost" id="cmClose" aria-label="Bezár">✕</button></div><div class="mbody">        <div class="cpanel" id="cpanel" style="border-top:0;padding-top:0;margin-top:0">
           <label class="cf"><span>Mi az ok?</span><select id="cpWhy"><option>Nagyobb létszám van tervben</option><option>Több csapat, több csomag</option><option>Éves keretmegállapodás</option><option>Élő képzéssel összevonnám</option><option>Más ajánlatot is kaptam</option><option>Egyéb</option></select></label>
           <div class="cp2"><label class="cf"><span>Tervezett létszám</span><div class="iu"><input id="cpN" type="number" min="1" placeholder="60"><em>fő</em></div></label><label class="cf"><span>Időtáv</span><div class="iu"><select id="cpY"><option>1</option><option>2</option><option>3</option></select><em>év</em></div></label></div>
@@ -1183,6 +1213,30 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
   try{history.replaceState({v:'start'},'','#start');}catch(e){}
   $('#topLogo').src=IMG.logo;$('#footLogo').src=IMG.logoW;$('#sigLogo').src=IMG.logo;$('#footYear').textContent=new Date().getFullYear();
   go('start',true);
+})();
+
+(function(){const $=s=>document.querySelector(s);
+  // ---- Süti-hozzájárulás (saját banner; mérés/marketing csak hozzájárulással) ----
+  const CK_KEY='exc-consent',CK_V=1,CK_DAYS=365;
+  const ckGet=()=>{try{const c=JSON.parse(localStorage.getItem(CK_KEY)||'null');if(c&&c.v===CK_V&&Date.now()-c.ts<CK_DAYS*864e5)return c;}catch(e){}return null;};
+  window.consent={has:k=>!!(ckGet()||{})[k],get:ckGet};
+  let ckMem=null;
+  function ckSet(stat,mkt,action){const prev=ckGet()||ckMem;const c={v:CK_V,ts:Date.now(),id:prev?.id||(Date.now().toString(36)+Math.random().toString(36).slice(2,8)),stat:!!stat,mkt:!!mkt};ckMem=c;
+    try{localStorage.setItem(CK_KEY,JSON.stringify(c));}catch(e){}
+    fetch('/api/consent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...c,action})}).catch(()=>{});
+    $('#ckBar').hidden=true;$('#ckModal').hidden=true;ckApply();}
+  let pixelOn=false;
+  function ckApply(){const c=ckGet()||ckMem;if(c&&c.mkt&&!pixelOn){fetch('/api/public-config').then(r=>r.json()).then(cfg=>{if(!cfg.metaPixelId||pixelOn)return;pixelOn=true;
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init',cfg.metaPixelId);fbq('track','PageView');}).catch(()=>{});}
+    document.dispatchEvent(new CustomEvent('consentchange',{detail:c}));}
+  function ckPos(){const a=$('#sticky');const h=a&&getComputedStyle(a).display!=='none'?a.offsetHeight:0;document.documentElement.style.setProperty('--ckb',h+'px');}
+  function ckOpenModal(){const c=ckGet()||ckMem;$('#ckStat').checked=!!c?.stat;$('#ckMkt').checked=!!c?.mkt;$('#ckModal').hidden=false;}
+  $('#ckYes').onclick=()=>ckSet(1,1,'accept_all');$('#ckNo').onclick=()=>ckSet(0,0,'reject_all');
+  $('#ckMore').onclick=e=>{e.preventDefault();ckOpenModal();};$('#ckOpen').onclick=e=>{e.preventDefault();ckOpenModal();};
+  $('#ckAll').onclick=()=>ckSet(1,1,'accept_all_detail');$('#ckSave').onclick=()=>ckSet($('#ckStat').checked,$('#ckMkt').checked,'save_detail');
+  $('#ckClose').onclick=()=>{$('#ckModal').hidden=true;};
+  if(!ckGet()&&!/[?&]print=/.test(location.search)){$('#ckBar').hidden=false;ckPos();setInterval(()=>{if(!$('#ckBar').hidden)ckPos();},500);}else ckApply();
 })();
 </script>
 </body>

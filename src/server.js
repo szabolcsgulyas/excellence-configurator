@@ -33,6 +33,17 @@ const need = (o, ...k) => { for (const x of k) if (!o?.[x]) throw new Error(`Hi�
 const q404 = no => { const q = getQuote(no); if (!q) throw new Error('Nincs ilyen ajánlat'); return q; };
 const addDays = n => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString(); };
 
+// Süti-hozzájárulás naplózása (igazoláshoz): időpont, verzió, kategóriák, csonkolt IP. Nem igényel hozzájárulást.
+const CONSENT_LOG = path.join(cfg.dataDir, 'consent.jsonl');
+const truncIp = ip => ip.includes(':') ? ip.split(':').slice(0, 3).join(':') + '::' : ip.replace(/\.\d+$/, '.0');
+app.post('/api/consent', (req, res) => {
+  const b = req.body || {};
+  const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString().split(',')[0].trim();
+  const rec = { ts: new Date().toISOString(), id: String(b.id || '').slice(0, 40), v: Number(b.v) || 0, stat: !!b.stat, mkt: !!b.mkt, action: String(b.action || '').slice(0, 20), ip: truncIp(ip), ua: String(req.headers['user-agent'] || '').slice(0, 200) };
+  fs.appendFile(CONSENT_LOG, JSON.stringify(rec) + '\n', () => {});
+  res.json({ ok: true });
+});
+app.get('/api/public-config', (req, res) => res.json({ metaPixelId: process.env.META_PIXEL_ID || '' }));
 app.get('/api/health', (req, res) => res.json({ ok: true, dryRun: cfg.dryRun, quotes: listQuotes().length }));
 
 /** Árkalkuláció előnézet (a konfigurátor is hívhatja ellenőrzésre) */
