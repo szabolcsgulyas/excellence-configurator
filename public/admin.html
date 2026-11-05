@@ -96,7 +96,7 @@ function renderLogin(){
     <p class="muted small">Add meg az e-mail címed, és küldünk egy belépőlinket. Jelszó nem kell.</p>${err?'<p class="pill bad">A link lejárt vagy már felhasználták. Kérj újat.</p>':''}
     <div class="field"><label for="le">E-mail cím</label><input id="le" type="email" required autocomplete="email" placeholder="nev@excellence.hu"></div>
     <button class="btn acc" type="submit">Belépőlink küldése</button><div id="lmsg" class="small"></div></form></div>`;
-  $('#lf').onsubmit=e=>{e.preventDefault();fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('#le').value})}).then(r=>r.json()).then(j=>{
+  $('#lf').onsubmit=e=>{e.preventDefault();fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('#le').value,key:new URLSearchParams(location.search).get('key')||undefined})}).then(r=>r.json()).then(j=>{
     $('#lmsg').innerHTML='Ha ez a cím jogosult, pár percen belül megérkezik a belépőlink. 15 percig érvényes.'+(j.devLink?`<br><br><b>Teszt mód:</b> <a href="${j.devLink}">belépés most</a>`:'');});};
 }
 const KIND={approval:['⏳','Jóváhagyás'],coordination:['🧩','Egyeztetés'],cert:['🎓','Tanúsítvány'],callback:['📞','Visszahívás'],custom:['💬','Egyedi ár'],abandoned:['🛒','Félbehagyta']};

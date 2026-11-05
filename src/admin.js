@@ -76,7 +76,9 @@ export function mountAdmin(app, { wrap, finalizeOrder }) {
       const t = crypto.randomBytes(24).toString('base64url'); tokens[t] = { email, exp: Date.now() + 15 * 60e3 }; writeJ('admin-tokens.json', tokens);
       const url = `${cfg.publicUrl}/api/admin/verify?t=${t}`;
       await sendMail({ to: email, ...T.loginMail(url) });
-      if (cfg.dryRun) devLink = url;
+      // Száraz módban (amíg nincs levelezés) a link a képernyőn jelenik meg – de csak helyben, vagy a titkos ADMIN_DEV_KEY ismeretében
+      const local = /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(req.headers.host || '');
+      if (cfg.dryRun && (local || (process.env.ADMIN_DEV_KEY && req.body.key === process.env.ADMIN_DEV_KEY))) devLink = url;
     }
     res.json({ ok: true, ...(devLink ? { devLink } : {}) }); // nem áruljuk el, létezik-e a cím
   }));
