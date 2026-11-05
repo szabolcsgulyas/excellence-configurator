@@ -18,7 +18,8 @@ export const cfg = {
   dryRun: (e.DRY_RUN ?? 'true') !== 'false',
   port: +(e.PORT || 3000),
   allowedOrigins: (e.ALLOWED_ORIGINS || '*').split(',').map(s => s.trim()),
-  publicUrl: e.PUBLIC_URL || 'http://localhost:3000',
+  // https:// hiányában kiegészítjük, a záró perjelet levágjuk (pl. ha a Railway-en séma nélkül adták meg)
+  publicUrl: (u => !u ? 'http://localhost:3000' : (/^https?:\/\//.test(u) ? u : 'https://' + u).replace(/\/+$/, ''))((e.PUBLIC_URL || '').trim()),
   bevetel: {
     base: e.BEVETEL_BASE_URL || '', key: e.BEVETEL_API_KEY || '', userId: e.BEVETEL_USER_ID || '',
     channelSpecId: e.BEVETEL_CHANNEL_SPEC_ID || '', serviceId: e.BEVETEL_BOOKING_SERVICE_ID || '', resourceId: e.BEVETEL_BOOKING_RESOURCE_ID || ''
