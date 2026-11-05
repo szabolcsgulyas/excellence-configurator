@@ -46,5 +46,9 @@
 - Tölcsér, források (UTM/kampány), képzések (be/ki), bevétel és jutalék.
 
 ## Ütemezés
-1. kör: belépés, teendők, ajánlatok, jóváhagyás + kiegészítős kézi lezárás, látogatói idővonal, félbehagyás.
-2. kör: statisztikák, jutalék-nézet, TIG.
+1. kör (kész): belépés, teendők, ajánlatok, jóváhagyás + kiegészítős kézi lezárás, látogatói idővonal, félbehagyás.
+2. kör (kész): statisztikák (tölcsér, források, képzések, havi bontás), jutalék-nézet, fizetés/visszafizetés rögzítése, negyedéves TIG (tervezet → Excellence-jóváhagyás → nyomtatható/CSV), korrekciós sorok.
+
+## Nyitott
+- A Számlázz.hu fizetés-lekérdezés válaszszerkezetét a teszt-fiókkal ellenőrizni kell; addig a fizetés kézzel is jelölhető.
+- Megújulások jutaléka (Nóri: „mindenre jár jutalék”) – a megújítási folyamattal együtt.

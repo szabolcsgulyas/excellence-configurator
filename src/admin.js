@@ -9,6 +9,7 @@ import { getQuote, saveQuote, listQuotes, logEvent, deleteQuote } from './store.
 import { sendMail } from './integrations/mail.js';
 import * as T from './templates.js';
 import { ALL } from './catalog.js';
+import * as szamlazz from './integrations/szamlazz.js';
 
 const D = cfg.dataDir;
 const readJ = (f, d) => { try { return JSON.parse(fs.readFileSync(path.join(D, f), 'utf8')); } catch { return d; } };
@@ -45,8 +46,10 @@ export function attachQuoteToVisit(sid, no) { const v = sid && visits[sid]; if (
 export const commissionTier = net => net > 2000000 ? 20 : net > 500000 ? 17 : net >= 5000 ? 15 : 0;
 export function commissionOf(q) {
   if (!q.accept) return null;
-  const base = q.accept.net; const tier = commissionTier(base); const pct = q.closedBy === 'sales' ? tier / 2 : tier;
-  return { base, pct, tierPct: tier, amount: Math.round(base * pct / 100), closedBy: q.closedBy || 'self', paid: !!q.paidAt, final: !!q.paidAt && Date.now() - new Date(q.paidAt) > 30 * DAY };
+  const refunded = (q.refunds || []).reduce((a, r) => a + r.amount, 0);
+  const base = Math.max(0, q.accept.net - refunded); const tier = commissionTier(q.accept.net); const pct = q.closedBy === 'sales' ? tier / 2 : tier;
+  const amount = Math.round(base * pct / 100), settled = q.tigSettled || 0;
+  return { base, refunded, pct, tierPct: tier, amount, closedBy: q.closedBy || 'self', paid: !!q.paidAt, paidAt: q.paidAt || null, finalAt: q.paidAt ? new Date(+new Date(q.paidAt) + 30 * DAY).toISOString() : null, final: !!q.paidAt && Date.now() - new Date(q.paidAt) > 30 * DAY, settled, open: amount - settled, tigs: q.tigs || [] };
 }
 
 export function mountAdmin(app, { wrap, finalizeOrder }) {
@@ -194,6 +197,88 @@ export function mountAdmin(app, { wrap, finalizeOrder }) {
     res.set('Content-Type', 'text/csv; charset=utf-8'); res.set('Content-Disposition', 'attachment; filename="ajanlatok.csv"'); res.send('﻿' + rows.map(r => r.map(esc).join(';')).join('\r\n'));
   });
 
+  // ---------- fizetés, visszafizetés ----------
+  app.post('/api/admin/quotes/:no/paid', auth(), wrap(async (req, res) => {
+    const q = qx(req.params.no); if (!q.accept?.proformaNo) throw new Error('Még nincs díjbekérő');
+    q.paidAt = req.body.unset ? null : (req.body.at ? new Date(req.body.at).toISOString() : new Date().toISOString()); q.paidSource = 'kézi: ' + req.admin.email; saveQuote(q);
+    logEvent(q.no, req.body.unset ? 'admin_unpaid' : 'paid', { by: req.admin.email, manual: true }); res.json({ ok: true });
+  }));
+  app.post('/api/admin/quotes/:no/refund', auth(), wrap(async (req, res) => {
+    const q = qx(req.params.no); const amount = Math.round(+req.body.amount || 0); const reason = String(req.body.reason || '').trim();
+    if (!q.accept || amount <= 0 || amount > q.accept.net) throw new Error('Érvénytelen összeg'); if (!reason) throw new Error('Add meg az okát');
+    (q.refunds = q.refunds || []).push({ amount, reason, by: req.admin.email, at: new Date().toISOString() }); saveQuote(q);
+    logEvent(q.no, 'admin_refund', { amount, reason, by: req.admin.email }); res.json({ ok: true });
+  }));
+
+  // ---------- statisztika ----------
+  app.get('/api/admin/stats', auth(), (req, res) => {
+    const days = +req.query.days || 0; const from = days ? Date.now() - days * DAY : 0; const inR = x => x && +new Date(x) >= from;
+    const qs = listQuotes().filter(q => !q.deleted && inR(q.createdAt)); const vs = Object.values(visits).filter(v => inR(v.first));
+    const orders = qs.filter(q => q.accept), paid = orders.filter(q => q.paidAt);
+    const funnel = [
+      { k: 'Mért látogatás', n: vs.length }, { k: 'Kosárba tett valamit', n: vs.filter(v => v.events.some(e => e.type === 'cart_add' || e.type === 'cart_set')).length },
+      { k: 'Eljutott a cégadatokig', n: vs.filter(v => v.events.some(e => e.type === 'step' && e.step === 'form')).length },
+      { k: 'Ajánlatot kért', n: qs.length }, { k: 'Megrendelte', n: orders.length }, { k: 'Fizetett', n: paid.length }];
+    const src = {}; const key = u => [u?.source || 'közvetlen', u?.campaign || ''].join('|');
+    for (const v of vs) { const k = key(v.utm); (src[k] = src[k] || { visits: 0, quotes: 0, orders: 0, net: 0 }).visits++; }
+    for (const q of qs) { const k = key(q.utm); const o = (src[k] = src[k] || { visits: 0, quotes: 0, orders: 0, net: 0 }); o.quotes++; if (q.accept) { o.orders++; o.net += q.accept.net; } }
+    const courses = {}; const C = id => (courses[id] = courses[id] || { id, name: ALL.find(x => x.id === id)?.name || id, added: 0, removed: 0, quoted: 0, ordered: 0 });
+    for (const v of vs) for (const e of v.events) { if (e.type === 'cart_add') C(e.id).added++; if (e.type === 'cart_remove') C(e.id).removed++; }
+    for (const q of qs) for (const l of q.calc.lines) { C(l.id).quoted++; if (q.accept) C(l.id).ordered++; }
+    const months = {}; for (const q of orders) { const m = q.accept.at.slice(0, 7); const o = (months[m] = months[m] || { month: m, orders: 0, net: 0, paidNet: 0, commission: 0 }); const c = commissionOf(q); o.orders++; o.net += q.accept.net; if (q.paidAt) o.paidNet += c.base; o.commission += c.amount; }
+    res.json({ ok: true, funnel, sources: Object.entries(src).map(([k, o]) => ({ source: k.split('|')[0], campaign: k.split('|')[1], ...o })).sort((a, b) => b.net - a.net || b.quotes - a.quotes),
+      courses: Object.values(courses).sort((a, b) => b.ordered - a.ordered || b.added - a.added), months: Object.values(months).sort((a, b) => a.month.localeCompare(b.month)),
+      totals: { quotes: qs.length, orders: orders.length, net: orders.reduce((a, q) => a + q.accept.net, 0), avg: orders.length ? Math.round(orders.reduce((a, q) => a + q.accept.net, 0) / orders.length) : 0, commission: orders.reduce((a, q) => a + commissionOf(q).amount, 0), conv: qs.length ? Math.round(orders.length / qs.length * 100) : 0 } });
+  });
+
+  // ---------- jutalék és TIG (negyedéves teljesítésigazolás) ----------
+  let tigs = readJ('tigs.json', []); const saveTigs = () => writeJ('tigs.json', tigs);
+  const qEnd = qt => { const [y, n] = qt.split('-Q').map(Number); return new Date(Date.UTC(y, n * 3, 1) - 1); };
+  const qStart = qt => { const [y, n] = qt.split('-Q').map(Number); return new Date(Date.UTC(y, (n - 1) * 3, 1)); };
+  const tigCandidates = end => listQuotes().filter(q => q.accept).map(q => ({ q, c: commissionOf(q) })).filter(({ c }) => c && c.final && new Date(c.finalAt) <= end && c.open !== 0);
+  app.get('/api/admin/commission', auth(), (req, res) => {
+    const rows = listQuotes().filter(q => q.accept && !q.deleted).map(q => ({ no: q.no, company: q.company.name, acceptedAt: q.accept.at, ...commissionOf(q) }));
+    const sum = f => rows.filter(f).reduce((a, r) => a + r.open, 0);
+    res.json({ ok: true, rows, tigs: tigs.map(t => ({ ...t, lines: undefined, n: t.lines.length })), summary: {
+      waiting: rows.filter(r => !r.paid).reduce((a, r) => a + r.amount, 0), inGrace: sum(r => r.paid && !r.final), ready: sum(r => r.final), settled: rows.reduce((a, r) => a + r.settled, 0) } });
+  });
+  app.post('/api/admin/tig', auth(['owner']), wrap(async (req, res) => {
+    const qt = String(req.body.quarter || ''); if (!/^\d{4}-Q[1-4]$/.test(qt)) throw new Error('Negyedév formátuma: 2026-Q4');
+    if (tigs.some(t => t.status === 'draft')) throw new Error('Már van jóváhagyásra váró TIG – előbb azt kell lezárni vagy törölni');
+    const end = qEnd(qt); const lines = tigCandidates(end).map(({ q, c }) => ({ no: q.no, company: q.company.name, net: q.accept.net, base: c.base, pct: c.pct, closedBy: c.closedBy, amount: c.open, kind: c.settled ? 'korrekció' : 'jutalék', note: c.settled ? `korábban elszámolva: ${c.settled.toLocaleString('hu-HU')} Ft${c.refunded ? '; visszafizetés: ' + c.refunded.toLocaleString('hu-HU') + ' Ft' : ''}` : '' }));
+    if (!lines.length) throw new Error('Ebben a negyedévben nincs elszámolható tétel');
+    const t = { id: `TIG-${qt}`, quarter: qt, from: qStart(qt).toISOString().slice(0, 10), to: end.toISOString().slice(0, 10), createdAt: new Date().toISOString(), createdBy: req.admin.email, status: 'draft', lines, total: lines.reduce((a, l) => a + l.amount, 0) };
+    if (tigs.some(x => x.id === t.id)) t.id += '-' + (tigs.filter(x => x.id.startsWith(t.id)).length + 1);
+    tigs.push(t); saveTigs(); for (const to of users().partners) await sendMail({ to, subject: `Teljesítésigazolás jóváhagyásra: ${t.id}`, html: `<p>Új teljesítésigazolás vár jóváhagyásra (${t.lines.length} tétel, ${t.total.toLocaleString('hu-HU')} Ft).</p><p><a href="${cfg.publicUrl}/admin#commission">Megnyitás az adminban</a></p>` });
+    res.json({ ok: true, tig: t });
+  }));
+  app.get('/api/admin/tig/:id', auth(), (req, res) => { const t = tigs.find(x => x.id === req.params.id); if (!t) return res.status(404).json({ ok: false }); res.json({ ok: true, tig: t }); });
+  app.post('/api/admin/tig/:id/approve', auth(['partner']), wrap(async (req, res) => {
+    const t = tigs.find(x => x.id === req.params.id); if (!t || t.status !== 'draft') throw new Error('Nem jóváhagyható');
+    for (const l of t.lines) { const q = getQuote(l.no); if (!q) continue; q.tigSettled = (q.tigSettled || 0) + l.amount; (q.tigs = q.tigs || []).push(t.id); saveQuote(q); logEvent(q.no, 'admin_tig', { tig: t.id, amount: l.amount }); }
+    t.status = 'approved'; t.approvedBy = req.admin.email; t.approvedAt = new Date().toISOString(); saveTigs();
+    for (const to of users().owners) await sendMail({ to, subject: `Teljesítésigazolás jóváhagyva: ${t.id}`, html: `<p>${t.id} jóváhagyva (${t.total.toLocaleString('hu-HU')} Ft), jóváhagyta: ${t.approvedBy}. A számla kiállítható.</p><p><a href="${cfg.publicUrl}/api/admin/tig/${t.id}/print">Teljesítésigazolás megnyitása</a></p>` });
+    res.json({ ok: true });
+  }));
+  app.post('/api/admin/tig/:id/delete', auth(['owner']), wrap(async (req, res) => { const i = tigs.findIndex(x => x.id === req.params.id && x.status === 'draft'); if (i < 0) throw new Error('Csak jóváhagyásra váró TIG törölhető'); tigs.splice(i, 1); saveTigs(); res.json({ ok: true }); }));
+  app.get('/api/admin/tig/:id/print', auth(), (req, res) => {
+    const t = tigs.find(x => x.id === req.params.id); if (!t) return res.status(404).send('Nincs ilyen TIG');
+    const f = v => Math.round(v).toLocaleString('hu-HU') + ' Ft', d = x => x ? new Date(x).toLocaleDateString('hu-HU') : '';
+    res.set('Content-Type', 'text/html; charset=utf-8').send(`<!doctype html><html lang="hu"><meta charset="utf-8"><title>${t.id}</title><style>body{font-family:Arial,sans-serif;font-size:13px;color:#111;max-width:820px;margin:30px auto;padding:0 20px}h1{font-size:20px}table{width:100%;border-collapse:collapse;margin:16px 0}th,td{border-bottom:1px solid #ccc;padding:6px;text-align:left}td.n,th.n{text-align:right}.sig{display:flex;gap:40px;margin-top:60px}.sig div{flex:1;border-top:1px solid #000;padding-top:6px;text-align:center}.draft{color:#b42318;font-weight:bold}@media print{button{display:none}}</style>
+<button onclick="print()">Nyomtatás / PDF</button><h1>Teljesítésigazolás – ${t.id}</h1>${t.status === 'draft' ? '<p class="draft">TERVEZET – jóváhagyásra vár</p>' : ''}
+<p><b>Megbízó:</b> Excellence Training Kft., 8000 Székesfehérvár, Határ utca 16., adószám: 27036666-2-07<br><b>Megbízott:</b> ${cfg.contact.name}, ${cfg.contact.title}<br><b>Időszak:</b> ${t.from} – ${t.to}<br><b>Tárgy:</b> értékesítési jutalék a kifizetett és a 30 napos visszafizetési időn túljutott megrendelések után</p>
+<table><tr><th>Ajánlat</th><th>Ügyfél</th><th class="n">Nettó alap</th><th class="n">Mérték</th><th>Jelleg</th><th class="n">Összeg</th></tr>${t.lines.map(l => `<tr><td>${l.no}</td><td>${l.company}</td><td class="n">${f(l.base)}</td><td class="n">${l.pct}%${l.closedBy === 'sales' ? ' (sales)' : ''}</td><td>${l.kind}${l.note ? `<br><small>${l.note}</small>` : ''}</td><td class="n">${f(l.amount)}</td></tr>`).join('')}
+<tr><th colspan="5">Összesen (a jutalék az ÁFA-t nem tartalmazza)</th><th class="n">${f(t.total)}</th></tr></table>
+<p>Megbízó igazolja, hogy a Megbízott a fenti időszakban a felsorolt megrendeléseket érintően a szerződés szerinti tevékenységet teljesítette, a jutalék kifizethető.</p>
+${t.status === 'approved' ? `<p><b>Jóváhagyta:</b> ${t.approvedBy}, ${d(t.approvedAt)} (elektronikus jóváhagyás az ajánlat-adminban)</p>` : ''}
+<div class="sig"><div>Excellence Training Kft.</div><div>${cfg.contact.name}</div></div></html>`);
+  });
+  app.get('/api/admin/tig/:id/csv', auth(), (req, res) => {
+    const t = tigs.find(x => x.id === req.params.id); if (!t) return res.sendStatus(404);
+    const rows = [['Ajánlat', 'Ügyfél', 'Nettó alap', 'Mérték %', 'Lezárta', 'Jelleg', 'Összeg', 'Megjegyzés'], ...t.lines.map(l => [l.no, l.company, l.base, l.pct, l.closedBy, l.kind, l.amount, l.note]), ['', '', '', '', '', 'Összesen', t.total, '']];
+    res.set('Content-Type', 'text/csv; charset=utf-8').set('Content-Disposition', `attachment; filename="${t.id}.csv"`).send('﻿' + rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(';')).join('\r\n'));
+  });
+
   // ---------- időzített feladatok: félbehagyás, jóváhagyási emlékeztető, adatmegőrzés ----------
   async function jobs() {
     const now = Date.now();
@@ -213,6 +298,7 @@ export function mountAdmin(app, { wrap, finalizeOrder }) {
       const lastPing = Math.max(...[q.accept.at, ...(q.events || []).filter(e => e.type === 'approval_reminder').map(e => e.at)].map(x => +new Date(x)));
       if (now - lastPing > DAY) { for (const to of users().partners) await sendMail({ to, ...T.approvalRequestMail(q, true) }); if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'Jóváhagyás késik', '1 munkanapja vár jóváhagyásra') }); logEvent(q.no, 'approval_reminder'); }
     }
+    for (const q of listQuotes()) if (q.accept?.proformaNo && !q.paidAt && !q.deleted) { const r = await szamlazz.checkPaid(q).catch(() => null); if (r?.paid) { q.paidAt = new Date(r.paidAt).toISOString(); q.paidSource = 'Számlázz.hu: ' + r.invoiceNo; saveQuote(q); logEvent(q.no, 'paid', { invoice: r.invoiceNo }); } }
     for (const [k, t] of Object.entries(tokens)) if (t.exp < now) delete tokens[k];
     for (const [k, s] of Object.entries(sessions)) if (s.exp < now) delete sessions[k];
   }
