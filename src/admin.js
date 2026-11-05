@@ -21,7 +21,6 @@ export const users = () => ({
 });
 const roleOf = email => { const u = users(); email = (email || '').toLowerCase(); return u.owners.includes(email) ? 'owner' : u.partners.includes(email) ? 'partner' : null; };
 export const pilotLimit = () => +(process.env.PILOT_ORDERS ?? 20);
-export const pilotMode = () => process.env.PILOT_MODE || 'after_accept';
 
 // ---- tárak ----
 let tokens = readJ('admin-tokens.json', {});      // belépőlinkek
@@ -41,13 +40,11 @@ const device = ua => /iphone|android.*mobile|mobile/i.test(ua) ? 'mobil' : /ipad
 function cartOf(v) { const c = {}; for (const e of v.events) { if (e.type === 'cart_add') c[e.id] = e.qty || 1; if (e.type === 'cart_remove') delete c[e.id]; if (e.type === 'qty' && c[e.id] != null) c[e.id] = e.qty; if (e.type === 'cart_set') Object.assign(c, e.cart || {}); } return c; }
 export function attachQuoteToVisit(sid, no) { const v = sid && visits[sid]; if (v) { v.quoteNo = no; saveVisits(); } }
 
-// ---- jutalék (sávok a rendelés értéke szerint; ha a sales zárta: fele) ----
-const COMM = [{ min: 0, pct: 15 }, { min: +(process.env.COMM_T2 || 1000000), pct: 17 }, { min: +(process.env.COMM_T3 || 3000000), pct: 20 }];
+// ---- jutalék (Nóri levele szerint): ha a partner viszi végig, a megrendelés nettó értékének 20%-a; ha az Excellence salese zárja, 10–10% ----
 export function commissionOf(q) {
   if (!q.accept) return null;
-  const base = q.accept.net; const tier = [...COMM].reverse().find(t => base >= t.min).pct;
-  const half = q.closedBy === 'sales'; const pct = half ? tier / 2 : tier;
-  return { base, pct, tierPct: tier, amount: Math.round(base * pct / 100), closedBy: q.closedBy || 'self', paid: !!q.paidAt, final: !!q.paidAt && Date.now() - new Date(q.paidAt) > 30 * DAY };
+  const base = q.accept.net; const pct = q.closedBy === 'sales' ? 10 : 20;
+  return { base, pct, amount: Math.round(base * pct / 100), closedBy: q.closedBy || 'self', paid: !!q.paidAt, final: !!q.paidAt && Date.now() - new Date(q.paidAt) > 30 * DAY };
 }
 
 export function mountAdmin(app, { wrap, finalizeOrder }) {
@@ -96,7 +93,7 @@ export function mountAdmin(app, { wrap, finalizeOrder }) {
     req.admin = { email: s.email, role }; next();
   };
   app.post('/api/admin/logout', (req, res) => { delete sessions[cookies(req).adm]; writeJ('admin-sessions.json', sessions); res.set('Set-Cookie', 'adm=; Path=/; Max-Age=0'); res.json({ ok: true }); });
-  app.get('/api/admin/me', auth(), (req, res) => res.json({ ok: true, ...req.admin, pilot: { limit: pilotLimit(), done: ordersCount(), mode: pilotMode() } }));
+  app.get('/api/admin/me', auth(), (req, res) => res.json({ ok: true, ...req.admin, pilot: { limit: pilotLimit(), done: ordersCount() } }));
 
   // ---------- adatok ----------
   const quoteRow = q => ({ no: q.no, version: q.version || 1, createdAt: q.createdAt, company: q.company?.name, contact: q.company?.contact, email: q.company?.email, net: q.accept?.net ?? q.calc.net, status: q.status, stage: q.stage || null, adminState: q.adminState || null, lead: !!q.lead, utm: q.utm, cert: !!q.calc.certRequested, extras: q.calc.lines.some(l => l.type === 'extra'), deleted: !!q.deleted, commission: commissionOf(q) });

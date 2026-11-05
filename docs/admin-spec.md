@@ -21,7 +21,7 @@
 
 ## Elfogadás utáni folyamat
 - Ha bármely **kiegészítő** (tanúsítvány, tudásellenőrzés, haladáskövetés) be van jelölve → nincs automatikus díjbekérő, „egyeztetés alatt”, lead a sales csatornára.
-- **Pilot**: az első `PILOT_ORDERS` (alap: 20) rendelésnél jóváhagyás kell az elfogadás után, a díjbekérő előtt (A változat; `PILOT_MODE=before_quote` esetén már az ajánlat előtt).
+- **Pilot**: az első `PILOT_ORDERS` (alap: 20) rendelésnél jóváhagyás kell az elfogadás után, a díjbekérő előtt (A változat; a B – jóváhagyás az ajánlat előtt – nem kell).
 - Jóváhagyó: **bárki az Excellence-felhasználók közül** (owner nem hagyhat jóvá).
 - Ha 1 munkanapon belül nincs döntés → emlékeztető a jóváhagyóknak + jelzés az ownernek.
 
@@ -30,8 +30,9 @@
 
 ## Jutalék
 - Látja az owner és az Excellence is.
-- **Ki zárta**: ha a megrendelést az ügyfél a kalkulátorban adta le → automatikusan Szabolcsé (teljes jutalék); egyébként a CRM dönt (sales → fele).
-- Sávok a rendelés értéke szerint: 15% / 17% / 20%.
+- **Mérték (Nóri levele szerint)**: a megrendelés nettó értékének **20%-a**, ha Szabolcs viszi végig; ha az Excellence salese zárja, **10–10%**.
+- **Ki zárta**: ha a megrendelést az ügyfél a kalkulátorban adta le → automatikusan Szabolcsé (20%); egyébként a CRM dönt (sales → 10%).
+- Megújulásra is jár jutalék (Nóri: „mindenre jár jutalék”).
 - **Alap**: kifizetett nettó (élő képzéssel együtt); a 30 napos visszafizetési idő után végleges.
 - Fizetés: **Számlázz.hu-ból automatikusan** (banki kapcsolat → végszámla).
 

@@ -11,7 +11,7 @@ import { sendMail } from './integrations/mail.js';
 import { queryTaxpayer } from './integrations/nav.js';
 import * as T from './templates.js';
 import { renderQuotePdf, pdfPath } from './pdf.js';
-import { mountAdmin, users, pilotLimit, pilotMode, ordersCount, attachQuoteToVisit, createLeadToken, leadByToken } from './admin.js';
+import { mountAdmin, users, pilotLimit, ordersCount, attachQuoteToVisit, createLeadToken, leadByToken } from './admin.js';
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -86,7 +86,7 @@ app.post('/api/quote/:no/accept', wrap(async (req, res) => {
   q.accept = { at: new Date().toISOString(), fast, net, gross: Math.round(net * 1.27), gift: req.body.gift || null, dueDate: addDays(8).slice(0, 10), ip, userAgent: (req.headers['user-agent'] || '').slice(0, 200) };
   q.closedBy = 'self'; // a kalkulátorban leadott megrendelés automatikusan a partneré (teljes jutalék)
   const hasExtras = q.calc.certRequested || q.calc.lines.some(l => l.type === 'extra');
-  const pilot = pilotMode() === 'after_accept' && priorOrders < pilotLimit();
+  const pilot = priorOrders < pilotLimit();
   if (hasExtras || pilot) {
     q.stage = hasExtras ? 'coordination' : 'pending_approval'; saveQuote(q);
     logEvent(q.no, hasExtras ? 'needs_coordination' : 'approval_requested', { fast });
