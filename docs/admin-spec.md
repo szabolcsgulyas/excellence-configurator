@@ -30,8 +30,9 @@
 
 ## Jutalék
 - Látja az owner és az Excellence is.
-- **Mérték (Nóri levele szerint)**: a megrendelés nettó értékének **20%-a**, ha Szabolcs viszi végig; ha az Excellence salese zárja, **10–10%**.
-- **Ki zárta**: ha a megrendelést az ügyfél a kalkulátorban adta le → automatikusan Szabolcsé (20%); egyébként a CRM dönt (sales → 10%).
+- **Sávok a nettó megrendelési érték szerint** (Nórival egyeztetve): 5 000 – 500 000 Ft: **15%** · 500 001 – 2 000 000 Ft: **17%** · 2 000 000 Ft felett: **20%**.
+- Ha az Excellence salese zárja a leadet, **a sáv fele** jár.
+- **Ki zárta**: ha a megrendelést az ügyfél a kalkulátorban adta le → automatikusan Szabolcsé (teljes sáv); egyébként a CRM dönt (sales → fele).
 - Megújulásra is jár jutalék (Nóri: „mindenre jár jutalék”).
 - **Alap**: kifizetett nettó (élő képzéssel együtt); a 30 napos visszafizetési idő után végleges.
 - Fizetés: **Számlázz.hu-ból automatikusan** (banki kapcsolat → végszámla).

@@ -40,11 +40,13 @@ const device = ua => /iphone|android.*mobile|mobile/i.test(ua) ? 'mobil' : /ipad
 function cartOf(v) { const c = {}; for (const e of v.events) { if (e.type === 'cart_add') c[e.id] = e.qty || 1; if (e.type === 'cart_remove') delete c[e.id]; if (e.type === 'qty' && c[e.id] != null) c[e.id] = e.qty; if (e.type === 'cart_set') Object.assign(c, e.cart || {}); } return c; }
 export function attachQuoteToVisit(sid, no) { const v = sid && visits[sid]; if (v) { v.quoteNo = no; saveVisits(); } }
 
-// ---- jutalék (Nóri levele szerint): ha a partner viszi végig, a megrendelés nettó értékének 20%-a; ha az Excellence salese zárja, 10–10% ----
+// ---- jutalék (Nórival egyeztetett sávok, nettó megrendelési érték szerint); ha az Excellence salese zárja a leadet: a fele ----
+// 5 000 – 500 000 Ft: 15% · 500 001 – 2 000 000 Ft: 17% · 2 000 000 Ft felett: 20%
+export const commissionTier = net => net > 2000000 ? 20 : net > 500000 ? 17 : net >= 5000 ? 15 : 0;
 export function commissionOf(q) {
   if (!q.accept) return null;
-  const base = q.accept.net; const pct = q.closedBy === 'sales' ? 10 : 20;
-  return { base, pct, amount: Math.round(base * pct / 100), closedBy: q.closedBy || 'self', paid: !!q.paidAt, final: !!q.paidAt && Date.now() - new Date(q.paidAt) > 30 * DAY };
+  const base = q.accept.net; const tier = commissionTier(base); const pct = q.closedBy === 'sales' ? tier / 2 : tier;
+  return { base, pct, tierPct: tier, amount: Math.round(base * pct / 100), closedBy: q.closedBy || 'self', paid: !!q.paidAt, final: !!q.paidAt && Date.now() - new Date(q.paidAt) > 30 * DAY };
 }
 
 export function mountAdmin(app, { wrap, finalizeOrder }) {
