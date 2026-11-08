@@ -555,6 +555,8 @@ body.print .demobar{display:none!important}
       <div class="field"><label for="role">Beosztás</label><input id="role" placeholder="pl. HR-vezető" value="HR-vezető"></div>
       <div class="field"><label for="email">E-mail</label><input id="email" type="email" required value="petra.kovacs@mintaceg.hu"><span class="help">Ide küldjük az ajánlatot.</span></div>
       <div class="field"><label for="phone">Telefon</label><input id="phone" type="tel" value="+36 30 123 4567"><span class="help">Csak akkor hívunk, ha te kéred.</span></div>
+      <div class="field"><label for="billEmail">Számlabefogadó e-mail cím</label><input id="billEmail" type="email" placeholder="pl. szamla@ceg.hu"><span class="help">Ide küldjük a díjbekérőt és a számlát. Ha üres, a fenti címre.</span></div>
+      <div class="field"><label for="po">PO-szám (nem kötelező)</label><input id="po" placeholder="Ha a cégetek megrendelésszámot ad"><span class="help">Rákerül a díjbekérőre és a számlára.</span></div>
       <label class="check full"><input type="checkbox" id="gdpr" required checked> <span>Elfogadom az adatkezelési tájékoztatót. Az adatokat kizárólag az ajánlat elkészítéséhez használjuk.</span></label>
       <div class="actions full"><button class="btn ghost" type="button" data-go="summary">← Ár</button><button class="btn" type="submit">Ajánlat elkészítése →</button></div>
     </form>
@@ -598,7 +600,7 @@ body.print .demobar{display:none!important}
 
     <div class="row"><h3>Mit szeretnél tenni?</h3><button class="btn sm ghost" id="pdfBtn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>Ajánlat letöltése PDF-ben</button></div>
     <div class="decide">
-      <div class="card primary"><div><h4>Megrendelem az ajánlatot</h4><ol class="howto"><li><span><b>Azonnal</b> e-mailben küldjük a megrendelés visszaigazolását és a díjbekérőt (8 napos fizetési határidő).</span></li><li><span><b>Utalás után 1 munkanapon belül</b> létrehozzuk a hozzáféréseket; a résztvevők e-mailben kapják a belépőt.</span></li><li><span><b>7 napon belüli megrendelésnél</b> a gyors döntési 5% automatikusan levonódik.</span></li></ol><p class="small" id="qGiftLine" style="margin:8px 0 0"></p></div><button class="btn big acc" data-act="Elfogadva">Megrendelem</button></div>
+      <div class="card primary"><div><h4>Megrendelem az ajánlatot</h4><ol class="howto"><li><span><b>Megrendelés után</b> e-mailben küldjük a megrendelés visszaigazolását és a díjbekérőt (30 napos fizetési határidő). Élő képzésnél előbb egyeztetjük az időpontokat és a szerződést.</span></li><li><span><b>A hozzáférésekhez</b> kérjük a résztvevők listáját (név, e-mail, képzés); sablont küldünk, és felvesszük veled a kapcsolatot.</span></li><li><span><b>Utalás után</b> létrehozzuk a hozzáféréseket; a résztvevők e-mailben kapják a belépőt.</span></li><li><span><b>7 napon belüli megrendelésnél</b> a gyors döntési 5% automatikusan levonódik.</span></li></ol><p class="small" id="qGiftLine" style="margin:8px 0 0"></p></div><button class="btn big acc" data-act="Elfogadva">Megrendelem</button></div>
       <div class="card"><h4>Beszélnék valakivel</h4><p>Válassz időpontot, és az Excellence értékesítője hív.</p>
         <select id="cbTime"><option>Holnap délelőtt (9–12)</option><option>Holnap délután (13–17)</option><option>2 munkanapon belül, bármikor</option></select>
         <button class="btn sec" data-act="Visszahívást kér">Hívjatok vissza</button>
@@ -622,8 +624,8 @@ body.print .demobar{display:none!important}
       <p>Az ajánlatot elfogadtátok, a megrendelést rögzítettük <b id="tNo"></b> számon. Így folytatódik:</p>
       <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">
         <li id="tPend" hidden></li><li id="tOrdLi"><b>Megrendelés:</b> az elfogadott ajánlat a visszaigazolással együtt, e-mailben is elküldtük. Itt is letölthető: <button class="tlink" id="tContract">Megrendelés visszaigazolása (PDF)</button></li>
-        <li id="tInvLi"><b>Díjbekérő:</b> <b id="tGross"></b> bruttó, átutalással, 8 napos fizetési határidővel. Letöltés: <button class="tlink" id="tInvoice">Díjbekérő (PDF)</button></li>
-        <li><b>Résztvevők:</b> kérjük, küldd el a résztvevők nevét és e-mail-címét (válasz e-mailben vagy táblázatban). Ha nincs még meg a lista, ráér a fizetésig.</li>
+        <li id="tInvLi"><b>Díjbekérő:</b> <b id="tGross"></b> bruttó, átutalással, 30 napos fizetési határidővel. Letöltés: <button class="tlink" id="tInvoice">Díjbekérő (PDF)</button></li>
+        <li id="tPartLi"><b>Résztvevők:</b> a hozzáférésekhez kérjük a résztvevők nevét, e-mail címét és hogy ki melyik képzést kapja. Kollégánk felveszi veled a kapcsolatot; a listát ebben a sablonban is elküldheted: <a class="tlink" href="/resztvevok-sablon.xlsx" download>Résztvevők – Excel-sablon</a></li>
         <li><b>Indulás:</b> az összeg beérkezését követő munkanapon aktiváljuk a hozzáféréseket, és minden résztvevő belépőt kap.</li>
       </ol>
       <div class="card" style="background:var(--surface-2);box-shadow:none"><div class="muted small" style="margin-bottom:8px">Kérdés esetén:</div><div class="sig"><img id="sigLogo" alt="Excellence"><div><b>Gulyás Szabolcs</b><span>értékesítési partner · Excellence Training Kft.</span><span><a href="mailto:gulyas.szabolcs@excellence.hu">gulyas.szabolcs@excellence.hu</a></span><span><a href="tel:+36706910920">+36 70 691 0920</a></span><span class="muted small">Munkanapokon 9–17 között, e-mailre 1 munkanapon belül válaszolok.</span></div></div></div>
@@ -951,7 +953,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     setStatus('Kiküldve',true);$('#cmodal').hidden=true;$('#cdone').hidden=true;$('#customBtn').hidden=false;
   }
   function fmtDate(x){return x.toLocaleDateString('hu-HU');}
-  function renderThanks(){const pd=state.accept&&state.accept.pending;$('#tPend').hidden=!pd;$('#tInvLi').hidden=!!pd;$('#tOrdLi').hidden=!!pd;if(pd)$('#tPend').innerHTML=pd==='approval'?'<b>Ellenőrzés:</b> a kalkulációt kollégánk 1 munkanapon belül ellenőrzi, utána e-mailben küldjük a megrendelés visszaigazolását és a díjbekérőt.':'<b>Egyeztetés:</b> a kiválasztott kiegészítők miatt kollégánk 1 munkanapon belül felveszi veled a kapcsolatot, és utána küldjük a díjbekérőt.';const T=totals();$('#tName').textContent=(state.company.contact||'').split(' ').slice(-1)[0]||'';$('#tNo').textContent=$('#qNo').textContent;$('#tGross').textContent=ft(state.accept&&state.accept.gross?state.accept.gross:T.gross);}
+  function renderThanks(){const pd=state.accept&&state.accept.pending;$('#tPend').hidden=!pd;$('#tInvLi').hidden=!!pd;$('#tOrdLi').hidden=!!pd;if(pd)$('#tPend').innerHTML=pd==='approval'?'<b>Ellenőrzés:</b> a kalkulációt kollégánk 1 munkanapon belül ellenőrzi, utána e-mailben küldjük a megrendelés visszaigazolását és a díjbekérőt.':(selected().some(x=>x.type==='live')?'<b>Egyeztetés:</b> az élő képzés miatt kollégánk 1 munkanapon belül felveszi veled a kapcsolatot: egyeztetjük az oktatási napokat és a szerződést, utána küldjük a díjbekérőt.':'<b>Egyeztetés:</b> a kiválasztott kiegészítők miatt kollégánk 1 munkanapon belül felveszi veled a kapcsolatot, és utána küldjük a díjbekérőt.');const T=totals();$('#tName').textContent=(state.company.contact||'').split(' ').slice(-1)[0]||'';$('#tNo').textContent=$('#qNo').textContent;$('#tGross').textContent=ft(state.accept&&state.accept.gross?state.accept.gross:T.gross);}
   function renderPdf(){const T=totals();const d=new Date(),v=new Date(d.getTime()+14*864e5),d7=new Date(d.getTime()+7*864e5);
     const hasE=T.L.some(l=>l.type!=='live'),hasL=T.L.some(l=>l.type==='live');const kind=hasE&&hasL?'Komplex':hasL?'Élő':'E-learning';
     const no=$('#qNo').textContent,first=(state.company.contact||'Ajánlatkérő').split(' ').slice(-1)[0];
@@ -1186,7 +1188,7 @@ const ICONSRC={"pbi":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYA
     EXC_API.nav(raw).catch(()=>({})).then(j=>{const r=(j&&j.found)?{name:j.name,addr:j.addr}:NAV_DEMO[raw];if(r){$('#company').value=r.name;$('#addr').value=r.addr;h.textContent='Megtaláltuk, ellenőrizd az adatokat.';h.className='help ok';}
       else{h.textContent='Nem találtuk a NAV-nál (demó). Töltsd ki kézzel a cégnevet és a székhelyet.';h.className='help err';$('#company').focus();}});});
   $('#reqForm').addEventListener('submit',e=>{e.preventDefault();const f=e.target;if(!f.checkValidity()){f.reportValidity();return;}
-    state.company={name:$('#company').value,addr:$('#addr').value,contact:$('#name').value,role:$('#role').value,email:$('#email').value,phone:$('#phone').value,taxid:$('#taxid').value};
+    state.company={name:$('#company').value,addr:$('#addr').value,contact:$('#name').value,role:$('#role').value,email:$('#email').value,phone:$('#phone').value,taxid:$('#taxid').value,billEmail:$('#billEmail').value.trim(),po:$('#po').value.trim()};
     const t0=showBusy('quote');
     EXC_API.quote(state.company,EXC_API.selectionFrom(state,selected,qtyOf),state.customReq).then(j=>{state.qno=j.no;state.version=1;save();busyDone(t0,()=>go('quote'));})
       .catch(err=>{toast('Nem sikerült elküldeni: '+err.message);go('form');});});

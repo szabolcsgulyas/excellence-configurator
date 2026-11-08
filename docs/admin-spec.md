@@ -20,6 +20,10 @@
 - Teendő az adminban + **24 óra múlva emlékeztető levél** a mentett összeállítás linkjével.
 
 ## Elfogadás utáni folyamat
+- (Gábor, 2026-11-08) Ha a rendelésben **élő képzés** van, az egész rendelés egyeztetésre megy (időpontok az oktatóval, szerződés ügyféllel és oktatóval, FAR); díjbekérő csak jóváhagyás után.
+- Díjbekérő **30 napos** fizetési határidővel, a **számlabefogadó e-mail címre**, **PO-számmal** (ha van). A számlát az Excellence kézzel állítja ki.
+- Résztvevők listája (név, e-mail, képzés): jelezzük, hogy kell, felvesszük a kapcsolatot; letölthető Excel-sablon (`/resztvevok-sablon.xlsx`).
+- Hivatalos tanúsítvány: csak jelzés; a felnőttképzési szerződést és a FAR-adatokat az Excellence intézi a saját rendszerében.
 - Ha bármely **kiegészítő** (tanúsítvány, tudásellenőrzés, haladáskövetés) be van jelölve → nincs automatikus díjbekérő, „egyeztetés alatt”, lead a sales csatornára.
 - **Pilot**: az első `PILOT_ORDERS` (alap: 20) rendelésnél jóváhagyás kell az elfogadás után, a díjbekérő előtt (A változat; a B – jóváhagyás az ajánlat előtt – nem kell).
 - Jóváhagyó: **bárki az Excellence-felhasználók közül** (owner nem hagyhat jóvá).
@@ -35,7 +39,7 @@
 - **Ki zárta**: ha a megrendelést az ügyfél a kalkulátorban adta le → automatikusan Szabolcsé (teljes sáv); egyébként a CRM dönt (sales → fele).
 - Megújulásra is jár jutalék (Nóri: „mindenre jár jutalék”).
 - **Alap**: kifizetett nettó (élő képzéssel együtt); a 30 napos visszafizetési idő után végleges.
-- Fizetés: **Számlázz.hu-ból automatikusan** (banki kapcsolat → végszámla).
+- Fizetés: **kézzel jelöli** az Excellence pénzügye az adminban (a Számlázz.hu nem állít ki automatikusan számlát vállalati ügyfélnél).
 
 ## TIG (teljesítésigazolás)
 - **Negyedévente** készül a még TIG-en nem szereplő, végleges tételekből; az Excellence hagyja jóvá az adminban.
@@ -50,5 +54,4 @@
 2. kör (kész): statisztikák (tölcsér, források, képzések, havi bontás), jutalék-nézet, fizetés/visszafizetés rögzítése, negyedéves TIG (tervezet → Excellence-jóváhagyás → nyomtatható/CSV), korrekciós sorok.
 
 ## Nyitott
-- A Számlázz.hu fizetés-lekérdezés válaszszerkezetét a teszt-fiókkal ellenőrizni kell; addig a fizetés kézzel is jelölhető.
 - Megújulások jutaléka (Nóri: „mindenre jár jutalék”) – a megújítási folyamattal együtt.

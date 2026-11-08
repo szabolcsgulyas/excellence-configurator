@@ -20,8 +20,8 @@ ${btn(link(q), 'Ajánlat megnyitása')}
 export const acceptMail = (q, proformaNo) => ({
   subject: `Köszönjük – szerződés és díjbekérő (${q.no})`,
   html: wrap(`<p>Szia ${first(q.company.contact)}!</p>
-<p>Köszönöm a döntést. Mellékelve küldöm a szerződést és a díjbekérőt (${proformaNo}), a fizetendő összeg <b>${ft(q.accept.gross)}</b> (bruttó), átutalással, 8 napos határidővel.</p>
-<p>Ami ezután történik: a díjbekérő kiegyenlítése után 1 munkanapon belül létrehozzuk a hozzáféréseket, és a résztvevők e-mailben kapják a belépőjüket. Ehhez kérlek, küldd el a résztvevők nevét és e-mail-címét válaszban (egy Excel is jó).</p>
+<p>Köszönöm a döntést. Mellékelve küldöm a szerződést és a díjbekérőt (${proformaNo}), a fizetendő összeg <b>${ft(q.accept.gross)}</b> (bruttó), átutalással, 30 napos határidővel${q.company.po ? `, PO: ${q.company.po}` : ''}.</p>
+<p>Ami ezután történik: a hozzáférésekhez szükségünk lesz a résztvevők nevére, e-mail címére, és arra, hogy ki melyik képzést kapja. Kollégánk felveszi veled a kapcsolatot; a listát válaszlevélben, ebben a sablonban is elküldheted: <a href="${cfg.publicUrl}/resztvevok-sablon.xlsx">Résztvevők – Excel-sablon</a>. A díjbekérő kiegyenlítése után létrehozzuk a hozzáféréseket, és a résztvevők e-mailben kapják a belépőjüket.</p>
 ${btn(link(q), 'Ajánlat és dokumentumok')}${sig}`)
 });
 
@@ -55,7 +55,7 @@ export const contractHtml = q => `<!doctype html><html lang="hu"><meta charset="
 <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%"><tr><th align="left">Képzés</th><th>Mennyiség</th><th align="right">Nettó</th></tr>
 ${q.calc.lines.map(l => `<tr><td>${l.name}</td><td align="center">${l.n} ${l.type === 'live' ? 'alkalom' : 'fő'}</td><td align="right">${ft(l.net)}</td></tr>`).join('')}${q.calc.certRequested ? '<tr><td colspan="3">Hivatalos tanúsítvány: igényelve – egyeztetés után külön számlázzuk (5 000 Ft/fő/tananyag).</td></tr>' : ''}
 <tr><td colspan="2"><b>Összesen nettó${q.accept?.fast ? ` (gyors döntési ${q.calc.fastPct}% levonva)` : ''}</b></td><td align="right"><b>${ft(q.accept?.net ?? q.calc.net)}</b></td></tr></table>
-<p>Hozzáférés: 1 év az aktiválástól, nem hosszabbodik automatikusan, a rögzített áron hosszabbítható. Fizetés: átutalás díjbekérő alapján, 8 napon belül. 30 napos pénzvisszafizetési garancia az e-learning tételekre. Az élő képzések időpontját a felek külön egyeztetik.</p>
+<p>Hozzáférés: 1 év az aktiválástól, nem hosszabbodik automatikusan, a rögzített áron hosszabbítható. Fizetés: átutalás díjbekérő alapján, 30 napon belül. 30 napos pénzvisszafizetési garancia az e-learning tételekre. Az élő képzések időpontját a felek külön egyeztetik.</p>
 <p>Kelt: ${new Date().toLocaleDateString('hu-HU')}</p></body></html>`;
 
 // ---- Admin és jóváhagyási folyamat ----
@@ -67,7 +67,7 @@ export const pendingApprovalMail = q => ({
 });
 export const coordinationMail = q => ({
   subject: `Megrendelés rögzítve – egyeztetünk (${q.no})`,
-  html: wrap(`<p>Szia ${first(q.company.contact)}!</p><p>Köszönöm a megrendelést, rögzítettük <b>${q.no}</b> számon. A kiválasztott kiegészítők (${q.calc.lines.filter(l => l.type === 'extra').map(l => l.name).concat(q.calc.certRequested ? ['hivatalos tanúsítvány'] : []).join(', ')}) miatt kollégánk 1 munkanapon belül felveszi veled a kapcsolatot, és utána küldjük a díjbekérőt.</p>${btn(link(q), 'Ajánlat megnyitása')}${sig}`)
+  html: wrap(`<p>Szia ${first(q.company.contact)}!</p><p>Köszönöm a megrendelést, rögzítettük <b>${q.no}</b> számon. A kiválasztott ${q.calc.lines.some(l => l.type === 'live') ? 'élő képzés' : 'kiegészítők'} (${q.calc.lines.filter(l => l.type === 'live' || l.type === 'extra').map(l => l.name).concat(q.calc.certRequested ? ['hivatalos tanúsítvány'] : []).join(', ')}) miatt kollégánk 1 munkanapon belül felveszi veled a kapcsolatot${q.calc.lines.some(l => l.type === 'live') ? ' (élő képzésnél egyeztetjük az oktatási napokat és a szerződést)' : ''}, és utána küldjük a díjbekérőt.</p>${btn(link(q), 'Ajánlat megnyitása')}${sig}`)
 });
 export const approvalRequestMail = (q, reminder = false) => ({
   subject: `${reminder ? '[EMLÉKEZTETŐ] ' : ''}Jóváhagyásra vár: ${q.company.name} – ${ft(q.accept?.net ?? q.calc.net)} (${q.no})`,

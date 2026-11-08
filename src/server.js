@@ -63,7 +63,7 @@ app.post('/api/quote', wrap(async (req, res) => {
   saveQuote(q); attachQuoteToVisit(sid, q.no);
   const summary = calc.lines.map(l => `${l.name} × ${l.n}`).join(', ') + (calc.certRequested ? ' | HIVATALOS TANÚSÍTVÁNYT KÉR – egyeztetni (5 000 Ft/fő/tananyag, külön számla)' : '');
   const lead = await bevetel.createLead({ name: `${company.name} – ${company.contact}`, email: company.email, phone: company.phone, utm,
-    message: `Ajánlat ${q.no}: ${summary}. Nettó ${calc.net.toLocaleString('hu-HU')} Ft${q.belowMin ? ' (500 000 Ft minimum alatt)' : ''}. ${cfg.publicUrl}/a/${q.no}${customReq ? ' · Egyedi árkérés: ' + customReq : ''}` });
+    message: `Ajánlat ${q.no}: ${summary}.${company.po ? ' PO: ' + company.po + '.' : ''}${company.billEmail ? ' Számlabefogadó: ' + company.billEmail + '.' : ''} Nettó ${calc.net.toLocaleString('hu-HU')} Ft${q.belowMin ? ' (500 000 Ft minimum alatt)' : ''}. ${cfg.publicUrl}/a/${q.no}${customReq ? ' · Egyedi árkérés: ' + customReq : ''}` });
   q.crm = { leadId: lead.id || lead.leadId || null }; saveQuote(q);
   logEvent(q.no, 'quote_created', { leadId: q.crm.leadId });
   res.json({ ok: true, no: q.no, url: `${cfg.publicUrl}/a/${q.no}`, calc, validUntil: q.validUntil, fastUntil: q.fastUntil });
@@ -83,9 +83,10 @@ app.post('/api/quote/:no/accept', wrap(async (req, res) => {
   const fast = new Date() <= new Date(q.fastUntil);
   const net = fast ? q.calc.netFast : q.calc.net;
   const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString().split(',')[0].trim();
-  q.accept = { at: new Date().toISOString(), fast, net, gross: Math.round(net * 1.27), gift: req.body.gift || null, dueDate: addDays(8).slice(0, 10), ip, userAgent: (req.headers['user-agent'] || '').slice(0, 200) };
+  q.accept = { at: new Date().toISOString(), fast, net, gross: Math.round(net * 1.27), gift: req.body.gift || null, dueDate: addDays(30).slice(0, 10), ip, userAgent: (req.headers['user-agent'] || '').slice(0, 200) };
   q.closedBy = 'self'; // a kalkulátorban leadott megrendelés automatikusan a partneré (teljes jutalék)
-  const hasExtras = q.calc.certRequested || q.calc.lines.some(l => l.type === 'extra');
+  const hasLive = q.calc.lines.some(l => l.type === 'live');
+  const hasExtras = hasLive || q.calc.certRequested || q.calc.lines.some(l => l.type === 'extra'); // élő képzés vagy kiegészítő: az egész rendelés egyeztetésre megy
   const pilot = priorOrders < pilotLimit();
   if (hasExtras || pilot) {
     q.stage = hasExtras ? 'coordination' : 'pending_approval'; saveQuote(q);
@@ -94,7 +95,7 @@ app.post('/api/quote/:no/accept', wrap(async (req, res) => {
     (async () => {
       await sendMail({ to: q.company.email, ...(hasExtras ? T.coordinationMail(q) : T.pendingApprovalMail(q)) });
       for (const to of users().partners) await sendMail({ to, ...T.approvalRequestMail(q) });
-      if (hasExtras) await bevetel.createLead({ name: `${q.company.name} – MEGRENDELÉS, EGYEZTETNI`, email: q.company.email, phone: q.company.phone, message: `Ajánlat ${q.no} elfogadva, de kiegészítő miatt egyeztetni kell: ${q.calc.lines.filter(l => l.type === 'extra').map(l => l.name).concat(q.calc.certRequested ? ['hivatalos tanúsítvány'] : []).join(', ')}. Nettó ${net.toLocaleString('hu-HU')} Ft. ${cfg.publicUrl}/a/${q.no}`, utm: q.utm });
+      if (hasExtras) await bevetel.createLead({ name: `${q.company.name} – MEGRENDELÉS, EGYEZTETNI`, email: q.company.email, phone: q.company.phone, message: `Ajánlat ${q.no} elfogadva, egyeztetni kell: ${[hasLive ? 'élő képzés (időpontok, szerződés, FAR)' : null, ...q.calc.lines.filter(l => l.type === 'extra').map(l => l.name), q.calc.certRequested ? 'hivatalos tanúsítvány (felnőttképzési szerződés, FAR)' : null].filter(Boolean).join(', ')}.${q.company.po ? ' PO: ' + q.company.po + '.' : ''}${q.company.billEmail ? ' Számlabefogadó: ' + q.company.billEmail + '.' : ''} Nettó ${net.toLocaleString('hu-HU')} Ft. ${cfg.publicUrl}/a/${q.no}`, utm: q.utm });
       if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, hasExtras ? 'ELFOGADVA – egyeztetni' : 'ELFOGADVA – jóváhagyásra vár') });
     })().catch(e => console.error('Háttér hiba:', e.message));
     return;
@@ -113,7 +114,7 @@ async function finalizeOrder(q) {
     try { const pdf = await renderQuotePdf(q.no, { force: true, doc: 'order' }); attachments.push({ filename: `${q.no}-megrendeles-visszaigazolas.pdf`, content: pdf.toString('base64') }); } catch (e) { console.error('PDF hiba:', e.message); }
     try { const pdf = await renderQuotePdf(q.no); attachments.push({ filename: `${q.no}-ajanlat.pdf`, content: pdf.toString('base64') }); } catch (e) { console.error('PDF hiba:', e.message); }
     if (pf.pdfBase64) attachments.push({ filename: `${pf.number}-dijbekero.pdf`, content: pf.pdfBase64 });
-    await sendMail({ to: q.company.email, ...T.acceptMail(q, pf.number), attachments });
+    await sendMail({ to: [...new Set([q.company.email, q.company.billEmail].filter(Boolean))], ...T.acceptMail(q, pf.number), attachments });
     await bevetel.createLead({ name: `${q.company.name} – ELFOGADVA`, email: q.company.email, message: `Ajánlat ${q.no} elfogadva. Díjbekérő: ${pf.number}, nettó ${net.toLocaleString('hu-HU')} Ft.${fast ? ' Gyors döntési 5% érvényesítve.' : ''}` , utm: q.utm });
     if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'ELFOGADVA', `Díjbekérő: ${pf.number}`) }); })().catch(e => console.error('Háttér hiba:', e.message));
   return { proforma: pf.number };

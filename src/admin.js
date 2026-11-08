@@ -9,7 +9,6 @@ import { getQuote, saveQuote, listQuotes, logEvent, deleteQuote } from './store.
 import { sendMail } from './integrations/mail.js';
 import * as T from './templates.js';
 import { ALL } from './catalog.js';
-import * as szamlazz from './integrations/szamlazz.js';
 
 const D = cfg.dataDir;
 const readJ = (f, d) => { try { return JSON.parse(fs.readFileSync(path.join(D, f), 'utf8')); } catch { return d; } };
@@ -109,7 +108,7 @@ export function mountAdmin(app, { wrap, finalizeOrder }) {
     const qs = listQuotes().filter(q => !q.deleted); const T2 = [];
     for (const q of qs) {
       if (q.stage === 'pending_approval') T2.push({ kind: 'approval', no: q.no, at: q.accept.at, title: `Jóváhagyásra vár: ${q.company.name}`, sub: `${q.accept.net.toLocaleString('hu-HU')} Ft nettó · pilot` });
-      if (q.stage === 'coordination') T2.push({ kind: 'coordination', no: q.no, at: q.accept.at, title: `Kiegészítő miatt egyeztetni: ${q.company.name}`, sub: q.calc.lines.filter(l => l.type === 'extra').map(l => l.name).concat(q.calc.certRequested ? ['hivatalos tanúsítvány'] : []).join(', ') });
+      if (q.stage === 'coordination') T2.push({ kind: 'coordination', no: q.no, at: q.accept.at, title: `${q.calc.lines.some(l => l.type === 'live') ? 'Élő képzés – időpont, szerződés, FAR' : 'Kiegészítő miatt egyeztetni'}: ${q.company.name}`, sub: q.calc.lines.filter(l => l.type === 'live' || l.type === 'extra').map(l => l.name).concat(q.calc.certRequested ? ['hivatalos tanúsítvány'] : []).join(', ') });
       else if (q.calc.certRequested && !q.certHandled) T2.push({ kind: 'cert', no: q.no, at: q.createdAt, title: `Tanúsítványt kér: ${q.company.name}`, sub: 'Egyeztetni, mely tananyagokhoz (5 000 Ft/fő/tananyag)' });
       if (q.callback && !q.callbackHandled) T2.push({ kind: 'callback', no: q.no, at: q.callback.at, title: `Visszahívást kér: ${q.company.name}`, sub: [q.callback.phone, q.callback.slot].filter(Boolean).join(' · ') });
       if (q.customReq && !q.customHandled) T2.push({ kind: 'custom', no: q.no, at: q.customReq.at, title: `Egyedi árat kér: ${q.company.name}`, sub: [q.customReq.why, q.customReq.headcount && q.customReq.headcount + ' fő'].filter(Boolean).join(' · ') });
@@ -298,7 +297,6 @@ ${t.status === 'approved' ? `<p><b>Jóváhagyta:</b> ${t.approvedBy}, ${d(t.appr
       const lastPing = Math.max(...[q.accept.at, ...(q.events || []).filter(e => e.type === 'approval_reminder').map(e => e.at)].map(x => +new Date(x)));
       if (now - lastPing > DAY) { for (const to of users().partners) await sendMail({ to, ...T.approvalRequestMail(q, true) }); if (cfg.mail.notifyTo) await sendMail({ to: cfg.mail.notifyTo, ...T.notifyMail(q, 'Jóváhagyás késik', '1 munkanapja vár jóváhagyásra') }); logEvent(q.no, 'approval_reminder'); }
     }
-    for (const q of listQuotes()) if (q.accept?.proformaNo && !q.paidAt && !q.deleted) { const r = await szamlazz.checkPaid(q).catch(() => null); if (r?.paid) { q.paidAt = new Date(r.paidAt).toISOString(); q.paidSource = 'Számlázz.hu: ' + r.invoiceNo; saveQuote(q); logEvent(q.no, 'paid', { invoice: r.invoiceNo }); } }
     for (const [k, t] of Object.entries(tokens)) if (t.exp < now) delete tokens[k];
     for (const [k, s] of Object.entries(sessions)) if (s.exp < now) delete sessions[k];
   }
