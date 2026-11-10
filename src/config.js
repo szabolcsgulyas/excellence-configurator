@@ -25,7 +25,7 @@ export const cfg = {
     channelSpecId: e.BEVETEL_CHANNEL_SPEC_ID || '', serviceId: e.BEVETEL_BOOKING_SERVICE_ID || '', resourceId: e.BEVETEL_BOOKING_RESOURCE_ID || ''
   },
   szamlazz: { key: e.SZAMLAZZ_AGENT_KEY || '', bank: e.SZAMLAZZ_BANK || '', account: e.SZAMLAZZ_BANK_ACCOUNT || '', prefix: e.SZAMLAZZ_INVOICE_PREFIX || 'EXC' },
-  mail: { provider: e.MAIL_PROVIDER || 'resend', key: e.MAIL_API_KEY || '', from: e.MAIL_FROM || 'ajanlat@localhost', replyTo: e.MAIL_REPLY_TO || '', notifyTo: e.NOTIFY_TO || '' },
+  mail: { provider: (e.MAIL_PROVIDER || 'resend').trim().toLowerCase(), key: e.MAIL_API_KEY || '', from: e.MAIL_FROM || 'ajanlat@localhost', replyTo: e.MAIL_REPLY_TO || '', notifyTo: e.NOTIFY_TO || '' },
   nav: { login: e.NAV_LOGIN || '', password: e.NAV_PASSWORD || '', signKey: e.NAV_SIGN_KEY || '', exchangeKey: e.NAV_EXCHANGE_KEY || '', taxNumber: e.NAV_TAX_NUMBER || '' },
   fb: { verifyToken: e.FB_VERIFY_TOKEN || '', pageToken: e.FB_PAGE_TOKEN || '' },
   contact: { name: 'Gulyás Szabolcs', title: 'értékesítési partner', email: e.MAIL_REPLY_TO || 'gulyas.szabolcs@excellence.hu' }
